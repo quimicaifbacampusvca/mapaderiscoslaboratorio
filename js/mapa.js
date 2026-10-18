@@ -286,7 +286,7 @@ function persistDraftNow() {
   clearTimeout(autoSaveTimer);
   autoSaveTimer = null;
   const saved = writeLocalDraft(AUTOSAVE_KEY, JSON.stringify(projectSnapshot()));
-  if (saved) { autoSaveErrorShown = false; scheduleRoomSync(); }
+  if (saved) { autoSaveErrorShown = false; scheduleRoomSync(); window.dispatchEvent(new CustomEvent("mapa:autosaved", {detail:{payload:projectSnapshot()}})); }
   return saved;
 }
 function scheduleAutoSave() {
@@ -301,7 +301,7 @@ function scheduleAutoSave() {
       autoSaveErrorShown = true;
       showToast("Autosave indisponível neste navegador. Baixe o arquivo JSON antes de sair.", "error");
     }
-    if (saved) { autoSaveErrorShown = false; scheduleRoomSync(); }
+    if (saved) { autoSaveErrorShown = false; scheduleRoomSync(); window.dispatchEvent(new CustomEvent("mapa:autosaved", {detail:{payload:projectSnapshot()}})); }
   }, 800);
 }
 
@@ -2581,6 +2581,7 @@ function replaceProjectSafely(nextAreas, nextActiveId, successMessage) {
   syncAreaConnections();
   updateAreaUI();
   enterEditor();
+  window.dispatchEvent(new CustomEvent("mapa:project-replaced", {detail:{previousRaw, nextPayload:projectSnapshot(), targetLibraryId:window.MAPA_LIBRARY_OPEN_TARGET||null}}));
   showToast(successMessage, "success");
   return true;
 }
@@ -3228,6 +3229,20 @@ $("homeImportModel")?.addEventListener("click", importModelFromHome);
 $("homeContinue")?.addEventListener("click", () => loadAutosaveIntoState());
 $("homeRestorePrevious")?.addEventListener("click", () => loadAutosaveIntoState(RECOVERY_KEY));
 
+// Ponte restrita à biblioteca: a lógica geométrica e os arquivos JSON v4 não mudam.
+window.MAPA_RUNTIME.snapshot = () => projectSnapshot();
+window.MAPA_RUNTIME.persist = persistDraftNow;
+window.MAPA_RUNTIME.openLibraryPayload = (payload, targetId = null) => {
+  validateProjectPayload(payload);
+  const areas = normalizeModelAreas(payload.areas);
+  if (!areas.length) return false;
+  window.MAPA_LIBRARY_OPEN_TARGET = targetId;
+  try { return replaceProjectSafely(areas, areas.find(a=>a.id===payload.areaAtiva)?.id || areas[0].id,
+    "Projeto da biblioteca aberto"); }
+  finally {window.MAPA_LIBRARY_OPEN_TARGET = null;}
+};
+window.MAPA_RUNTIME.confirmReplacement = confirmProjectReplacement;
+window.MAPA_RUNTIME.toast = showToast;
 window.addEventListener("resize", resizeCanvas);
 window.addEventListener("DOMContentLoaded", () => {
   state.areas.forEach(a => a.objetos.forEach(normalizeObject));

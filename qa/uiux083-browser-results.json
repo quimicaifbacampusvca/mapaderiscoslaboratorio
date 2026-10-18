@@ -1,0 +1,187 @@
+{
+  "mode": "Chromium with actual HTML/CSS/JS; simulated IndexedDB and localStorage due administrator origin blocks",
+  "passed": 36,
+  "total": 36,
+  "checks": [
+    {
+      "check": "1440 library-dialog",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 empty-library",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 no-horizontal-overflow",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 close-escape",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 editor",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 initial-project-saved",
+      "passed": true,
+      "detail": "Laboratório\n1 área(s) · Atualizado 18/10/2026, 23:52 · Projeto ativo\nAbrir\nRenomear\nRevisões"
+    },
+    {
+      "check": "1440 has-revision",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 confirm-on-switch",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 two-projects",
+      "passed": true,
+      "detail": "Laboratório\n1 área(s) · Atualizado 18/10/2026, 23:52 · Projeto ativo\nAbrir\nRenomear\nRevisões\nLaboratório\n1 área(s) · Atualizado 18/10/2026, 23:52\nAbrir\nRenomear\nRevisões\nExcluir"
+    },
+    {
+      "check": "1440 inline-rename",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 renamed",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 no-page-errors",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "390 library-dialog",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 empty-library",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 no-horizontal-overflow",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 close-escape",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 editor",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 initial-project-saved",
+      "passed": true,
+      "detail": "Laboratório\n1 área(s) · Atualizado 18/10/2026, 23:52 · Projeto ativo\nAbrir\nRenomear\nRevisões"
+    },
+    {
+      "check": "390 has-revision",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 confirm-on-switch",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 two-projects",
+      "passed": true,
+      "detail": "Laboratório\n1 área(s) · Atualizado 18/10/2026, 23:52\nAbrir\nRenomear\nRevisões\nExcluir\nLaboratório\n1 área(s) · Atualizado 18/10/2026, 23:52 · Projeto ativo\nAbrir\nRenomear\nRevisões"
+    },
+    {
+      "check": "390 inline-rename",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 renamed",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 no-page-errors",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "320 library-dialog",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 empty-library",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 no-horizontal-overflow",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 close-escape",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 editor",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 initial-project-saved",
+      "passed": true,
+      "detail": "Laboratório\n1 área(s) · Atualizado 18/10/2026, 23:52 · Projeto ativo\nAbrir\nRenomear\nRevisões"
+    },
+    {
+      "check": "320 has-revision",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 confirm-on-switch",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 two-projects",
+      "passed": true,
+      "detail": "Laboratório\n1 área(s) · Atualizado 18/10/2026, 23:52 · Projeto ativo\nAbrir\nRenomear\nRevisões\nLaboratório\n1 área(s) · Atualizado 18/10/2026, 23:52\nAbrir\nRenomear\nRevisões\nExcluir"
+    },
+    {
+      "check": "320 inline-rename",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 renamed",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 no-page-errors",
+      "passed": true,
+      "detail": "[]"
+    }
+  ]
+}

@@ -255,3 +255,25 @@ header.topbar .brand strong {font-family:"Exo 2","Segoe UI",Arial,sans-serif;fon
 .pwa-controls button:focus-visible { outline: 2px solid #f59e0b; outline-offset: 2px; }
 .pwa-controls button:disabled { opacity: .62; cursor: wait; }
 @media (max-width: 540px) { .pwa-controls { width: calc(100vw - 24px); } }
+
+/* UIUX-0.8.3 — Biblioteca IndexedDB, design Alerta e Precisão. */
+.library-home-launch{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 18px;margin:18px 0;border:1px solid rgba(56,189,248,.27);border-radius:14px;background:linear-gradient(115deg,#192b38,#111e29)}
+.library-home-launch>div{display:flex;flex-direction:column;gap:4px}
+.library-home-launch strong{color:#e5eef7;font-size:16px}.library-home-launch span{font-size:12px;line-height:1.5;color:#b3cad7}
+.library-home-launch button,#librarySaveRevision{border:1px solid rgba(56,189,248,.6);background:#1b3e52;color:#e9f9ff;border-radius:8px;cursor:pointer;font:inherit;padding:10px 16px;min-height:40px}
+.library-home-launch button:hover,#librarySaveRevision:hover{background:#225676}
+.library-modal{position:fixed;inset:0;z-index:950;background:rgba(2,9,14,.8);display:flex;align-items:center;justify-content:center;padding:16px}
+.library-modal.hidden{display:none!important}.library-panel{width:min(810px,100%);max-height:min(92dvh,800px);overflow:auto;border:1px solid #33576e;border-radius:18px;background:#101d27;color:#e5eef7;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+.library-panel header{position:sticky;top:0;background:#142533;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid #355163;z-index:1}
+.library-panel header h2{margin:6px 0;font-size:22px}.library-panel header p{margin:0;color:#b8ccd7;font-size:13px;line-height:1.5}
+.library-eyebrow{font-size:10px;letter-spacing:.15em;color:#38bdf8}.library-panel button{font:inherit;cursor:pointer;border:1px solid #406075;border-radius:8px;background:#1c303e;color:#e5eef7;padding:8px 10px;min-height:36px}
+.library-panel button:hover{background:#29485d}.library-panel button:focus-visible{outline:2px solid #38bdf8;outline-offset:2px}
+.library-panel #libraryClose{min-width:42px;min-height:42px;font-size:24px}
+.library-status{padding:12px 20px;font-size:12px;color:#a9bfce;min-height:38px}
+.library-list{padding:0 20px;display:grid;gap:10px}.library-item{border:1px solid #355064;border-radius:12px;padding:13px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:#152633}
+.library-item-info{min-width:180px;flex:1;display:flex;flex-direction:column;gap:5px}.library-item-info strong{font-size:15px;overflow-wrap:anywhere}.library-item-info small{color:#a3bdcd;font-size:12px}.library-actions{display:flex;flex-wrap:wrap;gap:7px}.library-actions .library-primary{background:#17638c;border-color:#38bdf8}
+.library-revisions{width:100%;border-top:1px solid #335163;padding-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.library-revisions strong{width:100%;font-size:12px}.library-revisions span{font-size:12px}
+.library-empty{padding:12px 0 30px;color:#a9bfce}.library-panel footer{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px;padding:16px 20px;margin-top:14px;border-top:1px solid #355163}
+@media(max-width:540px){.library-home-launch{flex-direction:column;align-items:stretch}.library-home-launch button{width:100%}.library-panel header h2{font-size:19px}.library-panel{max-height:95dvh}.library-list{padding:0 12px}.library-panel header{padding:15px}.library-item{align-items:stretch}.library-actions button{flex:1}}
+
+.library-rename-form{display:flex;flex-wrap:wrap;gap:8px;width:100%;border-top:1px solid #36576c;padding-top:10px}.library-rename-form input{flex:1;min-width:160px;background:#0b1821;color:#f1f7fb;border:1px solid #4b778f;border-radius:8px;padding:8px 10px;font:inherit}.library-rename-form input:focus-visible{outline:2px solid #38bdf8}

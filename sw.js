@@ -1,13 +1,14 @@
 /* UIUX-0.8.2 — Offline app shell, cache versionado e atualização explícita. */
 'use strict';
 const CACHE_PREFIX = 'mapa-riscos-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'uiux-0.8.2-v1';
+const CACHE_NAME = CACHE_PREFIX + 'uiux-0.8.3-v1';
 // Apenas o shell local: nunca armazenar projetos, JSON do usuário ou APIs remotas.
 const SHELL_PATHS = [
   './', './index.html', './manifest.webmanifest',
   './css/mapa.css', './css/identidade-alerta-precisao.css',
   './js/types.js', './js/geometry.js', './js/validation.js',
   './js/metric-ruler.js', './js/mapa.js', './js/pwa.js',
+  './js/project-library.js', './js/library-ui.js',
   './assets/svg/mrl-symbol.svg', './assets/svg/mrl-app-icon.svg',
   './assets/svg/risk-biological.svg', './assets/svg/risk-chemical.svg',
   './assets/svg/risk-electrical.svg', './assets/svg/risk-ergonomic.svg',

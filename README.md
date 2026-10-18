@@ -83,3 +83,14 @@ O Mapa de Riscos possui manifesto (`manifest.webmanifest`), ícones PNG 192/512 
 **Dados dos projetos:** o service worker não acessa `localStorage`, não grava nem sincroniza JSONs, e não interfere no GAS. O autosave local e uma cópia anterior continuam no navegador, sob as mesmas chaves anteriores. Para proteção contra limpeza do navegador, mudança de dispositivo ou modo privado, continue usando **Baixar JSON**. Biblioteca de projetos e IndexedDB pertencem à etapa posterior, não a esta série.
 
 Ver `qa/RELATORIO-UIUX-0.8.2.md`. Testes automatizados: `node tests/uiux-082-pwa.mjs`, `python qa/uiux082-http-assets.py`, além das suítes existentes. Para testes manuais reais de service worker no GitHub Pages, consulte a matriz de homologação do relatório.
+
+
+## UIUX-0.8.3 — Biblioteca local de projetos (IndexedDB)
+
+A Home inclui **Abrir biblioteca**. Os projetos do editor agora recebem um identificador interno **exclusivo do IndexedDB** e são salvos em registros separados, preservando o `localStorage` atual como rascunho e cópia de segurança adicional. O editor também dispõe da ação **Revisão** para guardar um ponto de recuperação explícito. A biblioteca permite abrir, renomear, recuperar revisão e excluir projetos não ativos mediante confirmação em duas etapas. O histórico mantém **no máximo 10 revisões por mapa**.
+
+Na primeira inicialização, o programa **copia** o autosave e a cópia anterior válidos para o IndexedDB, sem apagar suas chaves originais. A migração usa marcador transacional para não duplicar importações. O formato JSON v4 permanece intacto; arquivos legados com `room/objects` são aceitos na migração.
+
+**Limitações:** biblioteca local, sem conta, nuvem ou sincronização entre dispositivos; limpar os dados do site também pode apagar IndexedDB. Exportar JSON continua sendo o caminho portável para backups. O service worker 0.8.3 inclui os dois novos scripts e instala o cache completo antes da atualização. Abertura online inicial, instalação e modo offline hospedado precisam de conferência real no GitHub Pages.
+
+Testes: `node tests/uiux-083-library.mjs` e `python qa/uiux083-browser.py` (modo Chromium isolado com API IndexedDB simulada). Veja `qa/RELATORIO-UIUX-0.8.3.md`.

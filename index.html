@@ -83,6 +83,11 @@
         <button type="button" id="homeRestorePrevious" class="home-restore-previous">Restaurar cópia anterior</button>
       </div>
 
+      <div class="library-home-launch">
+        <div><strong>Biblioteca de projetos</strong><span>Organize vários mapas e recupere versões neste dispositivo.</span></div>
+        <button id="homeLibrary" type="button">Abrir biblioteca</button>
+      </div>
+
       <div class="proto-section-caption"><h2 class="home-start-title">Como você quer começar?</h2><span>SELECIONE UM FLUXO</span></div>
 
 
@@ -168,6 +173,7 @@
           <svg viewbox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 15h.01M12 7a3 3 0 0 1 3 3c0 2-3 3-3 3"></path></svg>
           <span class="btn-label">Ajuda</span>
         </button>
+        <button id="librarySaveRevision" type="button" title="Guardar revisão do projeto na biblioteca" aria-label="Guardar revisão do projeto na biblioteca"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h13l3 3v15H4zM7 3v6h9V3M7 21v-8h10v8M14 16h-4M12 14v4"/></svg><span>Revisão</span></button>
         <button id="save" title="Baixar arquivo de projeto JSON" aria-label="Baixar arquivo JSON do projeto">
           <svg viewbox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2zM17 21v-8H7v8M7 3v5h8"></path></svg>
           <span>Baixar JSON</span>
@@ -510,6 +516,15 @@
       <span id="globalLoaderText">Carregando…</span>
     </div>
   </div>
+  <!-- Biblioteca local: dados somente no IndexedDB deste navegador. -->
+  <div id="libraryModal" class="library-modal hidden" role="dialog" aria-modal="true" aria-labelledby="libraryTitle" tabindex="-1">
+    <section class="library-panel">
+      <header><div><span class="library-eyebrow">ARMAZENAMENTO LOCAL</span><h2 id="libraryTitle">Biblioteca de projetos</h2><p>Projetos neste dispositivo. Para transportar ou compartilhar, baixe o JSON.</p></div><button id="libraryClose" type="button" aria-label="Fechar biblioteca">×</button></header>
+      <div id="libraryStatus" class="library-status" role="status" aria-live="polite"></div>
+      <div id="libraryList" class="library-list" aria-live="polite"></div>
+      <footer><button id="librarySaveCurrent" type="button">Guardar projeto atual</button><button id="libraryCloseFooter" type="button">Fechar</button></footer>
+    </section>
+  </div>
   <!-- PWA: ações apresentadas apenas quando realmente disponíveis. -->
   <div id="pwaControls" class="pwa-controls" hidden>
     <span id="pwaOfflineStatus" role="status" hidden>Sem conexão · Editor disponível</span>
@@ -526,6 +541,8 @@
   <script defer src="js/metric-ruler.js"></script>
   <!-- Orquestração do editor, UI, desenho e eventos. -->
   <script defer src="js/mapa.js"></script>
+  <script defer src="js/project-library.js"></script>
+  <script defer src="js/library-ui.js"></script>
   <script defer src="js/pwa.js"></script>
 </body>
 </html>

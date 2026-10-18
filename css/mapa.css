@@ -2201,3 +2201,152 @@ input[aria-invalid="true"], select[aria-invalid="true"] { border-color:#ef7777; 
   .modal-backdrop:not(.hidden) .modal-card, .toast { animation:none; }
   .modal-card button, .toast-leaving { transition:none; }
 }
+
+/* UIUX-0.5.0 — responsividade conservadora (desktop, tablet e mobile).
+   O projeto continua em Canvas 2D; somente as superfícies de comando mudam de arranjo. */
+.app { height:100vh; height:100dvh; min-height:0; }
+.workspace, .canvas-area { min-width:0; min-height:0; }
+.topbar-action-cluster { display:flex; align-items:center; gap:6px; min-width:0; }
+.topbar-action-cluster button { min-height:36px; }
+.canvas-toolbar { box-sizing:border-box; }
+.canvas-toolbar .tool-group, .canvas-toolbar .zoom { flex:0 0 auto; }
+.canvas-toolbar button { touch-action:manipulation; }
+.mobile-panel-backdrop { touch-action:manipulation; }
+@media (min-width:769px) and (max-width:1200px) {
+  header.topbar {
+    height:auto; min-height:50px; padding:6px 10px; gap:6px 10px;
+    flex-wrap:wrap; overflow:visible; align-content:center;
+  }
+  header.topbar > * { flex-shrink:0; }
+  header.topbar .brand { min-width:0; }
+  header.topbar .area-switcher { flex:0 1 210px; min-width:145px; }
+  header.topbar .stepper-hint { display:none; }
+  header.topbar .topbar-action-cluster { flex:1 1 auto; justify-content:flex-end; }
+  .topbar-action-cluster .top-action-edit { margin-left:0; }
+  .topbar-action-cluster .top-action-group { flex:0 0 auto; }
+}
+@media (max-width:768px) {
+  header.topbar {
+    height:auto; min-height:50px; padding:6px 8px;
+    flex:0 0 auto; flex-wrap:wrap; justify-content:flex-start;
+    align-items:center; align-content:center; gap:6px;
+    overflow:visible;
+  }
+  header.topbar > * { min-width:0; }
+  header.topbar .brand { flex:0 0 auto; }
+  header.topbar .brand-mark { width:34px; height:34px; }
+  header.topbar .mobile-nav-controls { display:flex; flex:0 0 auto; gap:4px; }
+  header.topbar .mobile-only-btn { min-width:40px; min-height:40px; padding:8px; }
+  header.topbar .area-switcher { flex:1 1 116px; min-width:94px; max-width:none; margin-left:0; }
+  header.topbar .area-switcher select { font-size:12px; }
+  header.topbar .stepper-hint { display:none; }
+  header.topbar .topbar-action-cluster {
+    display:flex; flex:1 1 100%; align-items:center; justify-content:center;
+    min-width:0; gap:6px; border-top:1px solid var(--line); padding-top:5px;
+  }
+  header.topbar .topbar-action-cluster .top-action-group {
+    display:flex; flex:0 1 auto; align-items:center; min-width:0;
+    padding-left:5px; margin:0; gap:4px;
+  }
+  header.topbar .topbar-action-cluster .top-action-group:first-child { border-left:0; padding-left:0; }
+  header.topbar .topbar-action-cluster button {
+    flex:0 0 auto; width:40px; min-width:40px; height:40px;
+    padding:8px; justify-content:center;
+  }
+  header.topbar .topbar-action-cluster button span { display:none; }
+  .canvas-toolbar {
+    left:50%; right:auto; width:min(100% - 20px, 600px);
+    max-width:calc(100% - 20px); display:flex;
+    flex-wrap:wrap; justify-content:center; align-content:center;
+    gap:4px 6px; overflow:visible; padding:6px 5px;
+  }
+  .canvas-toolbar .tool-group { min-width:0; gap:3px; padding-right:6px; margin-right:0; }
+  .canvas-toolbar .zoom { padding:0 3px; gap:4px; }
+  .canvas-toolbar button { min-height:42px; min-width:42px; padding:8px; }
+  .canvas-toolbar .zoom #zoomText { min-width:52px; white-space:nowrap; }
+  .left-panel, .right-panel {
+    top:var(--uiux-header-height, 96px);
+    height:calc(100dvh - var(--uiux-header-height, 96px));
+    max-height:calc(100dvh - var(--uiux-header-height, 96px));
+    bottom:0;
+    padding:0;
+  }
+  .left-panel .mobile-panel-header, .right-panel .mobile-panel-header { flex:0 0 44px; }
+  .left-panel .mobile-panel-close, .right-panel .mobile-panel-close { min-width:40px; min-height:40px; }
+  .left-panel .panel-section, .right-panel .panel-section { flex-shrink:0; }
+}
+@media (max-width:540px) {
+  .canvas-toolbar { width:calc(100% - 16px); max-width:calc(100% - 16px); }
+  .canvas-toolbar .tool-group button span { display:none; }
+  .canvas-toolbar .tool-group { gap:3px; padding-right:5px; }
+  .canvas-toolbar .tool-group button { width:44px; min-width:44px; height:44px; }
+  .canvas-toolbar .zoom button { width:44px; min-width:44px; height:44px; }
+  .canvas-toolbar .zoom { border:0; }
+  .canvas-help { max-width:calc(100% - 24px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+}
+@media (max-width:400px) {
+  .canvas-toolbar { gap:3px 6px; }
+  .canvas-toolbar .tool-group { padding-right:5px; }
+  .canvas-toolbar .tool-group button { width:44px; }
+  .canvas-toolbar .zoom #zoomText { min-width:56px; }
+}
+@media (max-height:540px) {
+  .canvas-toolbar { top:6px; }
+  .contextual-toolbar { bottom:8px; max-width:calc(100% - 20px); }
+  .canvas-help { display:none; }
+  .modal-card { max-height:calc(100dvh - 16px); }
+}
+
+/* Tablets estreitos usam os mesmos painéis laterais recolhíveis do mobile:
+   manter os painéis fixos consumia 600px, deixando somente 220px de Canvas em 820px. */
+@media (min-width:769px) and (max-width:1100px) {
+  .mobile-nav-controls { display:flex; gap:6px; flex:0 0 auto; }
+  .mobile-only-btn { min-width:40px; min-height:40px; }
+  header.topbar .stepper, header.topbar .stepper-hint, header.topbar .project-name { display:none; }
+  .left-panel, .right-panel {
+    display:flex; position:fixed;
+    top:var(--uiux-header-height, 96px); bottom:0;
+    height:calc(100dvh - var(--uiux-header-height, 96px));
+    max-height:calc(100dvh - var(--uiux-header-height, 96px));
+    z-index:40; padding:0; overflow-y:auto; overflow-x:hidden;
+    overscroll-behavior:contain; box-shadow:0 14px 32px rgba(0,0,0,.38);
+    transition:transform .18s ease, visibility .18s ease;
+    visibility:hidden; pointer-events:none;
+  }
+  .left-panel { left:0; width:min(88vw,340px); transform:translateX(-102%); }
+  .right-panel { right:0; width:min(92vw,360px); transform:translateX(102%); }
+  .left-panel.mobile-open, .right-panel.mobile-open {
+    transform:translateX(0); visibility:visible; pointer-events:auto;
+  }
+  .mobile-panel-header {
+    display:flex; align-items:center; justify-content:space-between;
+    gap:8px; flex:0 0 44px; padding:8px 10px;
+    background:var(--panel); border-bottom:1px solid var(--line);
+    position:sticky; top:0; z-index:3;
+  }
+  .mobile-panel-close { min-width:40px; min-height:40px; }
+  .mobile-panel-backdrop {
+    position:fixed; inset:var(--uiux-header-height, 96px) 0 0;
+    z-index:39; display:block; background:rgba(0,0,0,.48);
+  }
+  .mobile-panel-backdrop[hidden] { display:none; }
+  .panel-tabs { position:sticky; top:44px; z-index:2; }
+  .panel-tab-content { overflow-y:auto; }
+}
+@media (max-width:768px) {
+  .mobile-panel-backdrop { top:var(--uiux-header-height, 96px); }
+}
+@media (min-width:1201px) {
+  header.topbar .topbar-action-cluster { display:block; }
+}
+@media (min-width:769px) and (max-width:1100px) {
+  header.topbar .topbar-action-cluster { flex:1 1 100%; justify-content:center; border-top:1px solid var(--line); padding-top:5px; }
+  header.topbar .topbar-action-cluster button span { display:none; }
+  header.topbar .topbar-action-cluster button { min-width:40px; min-height:40px; }
+  header.topbar .area-switcher { margin-left:auto; flex:0 1 240px; }
+}
+@media (min-width:1201px) and (max-width:1650px) {
+  /* Ações de arquivo preservam seu nome acessível, mas não extrapolam a barra. */
+  .topbar-action-cluster .top-action-file button span { display:none; }
+  .topbar-action-cluster .top-action-file button { min-width:36px; }
+}

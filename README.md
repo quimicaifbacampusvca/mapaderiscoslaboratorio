@@ -46,3 +46,9 @@ Para regressão local, execute `node tests/uiux-030-metric-ruler.mjs` e os teste
 Os diálogos de confirmação, modelos, atalhos e relatório agora compartilham navegação por teclado, retorno de foco, gerenciamento de sobreposição e dimensionamento responsivo. Ações que exigem confirmação são bloqueadas se a janela estiver indisponível. Notificações aparecem também na Home e têm empilhamento limitado. A identidade visual, o Canvas, a geometria e o formato JSON foram preservados.
 
 Ver `qa/RELATORIO-UIUX-0.4.0.md` e executar `node tests/uiux-040-dialogs.mjs`. Para regressão Chromium com Playwright: `python qa/uiux040-browser.py` (dependências: Python Playwright e Chromium disponível).
+
+## UIUX-0.5.0 — Responsividade do editor
+
+Nas larguras de **320 a 1100 px**, a barra superior mantém todas as ações de projeto acessíveis e os painéis de Ferramentas e Propriedades funcionam como drawers com botões explícitos de fechar, backdrop e retorno de foco. Em tablet estreito, isso libera espaço para o Canvas sem refazer a estrutura do editor. Em 320–540 px, a barra de ferramentas se distribui em duas linhas, mantendo seleção, movimentação, grade, snap, cotas e zoom inteiramente visíveis. As alturas dos drawers acompanham a altura real da barra superior.
+
+Não houve alteração do motor Canvas, do formato JSON, do autosave nem do backend. Testes: `node tests/uiux-050-responsive.mjs` e `python qa/uiux050-browser.py`. Os testes do navegador foram executados no Chromium em modo isolado; Firefox, WebKit/Safari e implantação HTTP/GitHub Pages requerem homologação externa.

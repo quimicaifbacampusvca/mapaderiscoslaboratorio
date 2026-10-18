@@ -1,0 +1,1403 @@
+[
+  {
+    "name": "320x420 no horizontal header overflow",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 320,
+      "canvasH": 315,
+      "toolbarLeft": 8,
+      "toolbarRight": 312,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "320x420 no page overflow",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 canvas usable",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 320,
+      "canvasH": 315,
+      "toolbarLeft": 8,
+      "toolbarRight": 312,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "320x420 toolbar visible #selectMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 toolbar visible #panMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 toolbar visible #grid",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 toolbar visible #snap",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 toolbar visible #ruler",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 toolbar visible #zoomOut",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 toolbar visible #zoomIn",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 mobile panel buttons visible",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 tools open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 backdrop shown",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 focus tools close",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 drawer stays inside viewport",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 esc closes tools",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 esc returns trigger focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 properties open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 close properties returns focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 backdrop closes drawer",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 home cleanup panels",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 resize preserves geometry, zoom and selection",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x420 no runtime JS errors",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 no horizontal header overflow",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 320,
+      "canvasH": 463,
+      "toolbarLeft": 8,
+      "toolbarRight": 312,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "320x568 no page overflow",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 canvas usable",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 320,
+      "canvasH": 463,
+      "toolbarLeft": 8,
+      "toolbarRight": 312,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "320x568 toolbar visible #selectMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 toolbar visible #panMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 toolbar visible #grid",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 toolbar visible #snap",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 toolbar visible #ruler",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 toolbar visible #zoomOut",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 toolbar visible #zoomIn",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 mobile panel buttons visible",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 tools open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 backdrop shown",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 focus tools close",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 drawer stays inside viewport",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 esc closes tools",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 esc returns trigger focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 properties open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 close properties returns focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 backdrop closes drawer",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 home cleanup panels",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 resize preserves geometry, zoom and selection",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "320x568 no runtime JS errors",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 no horizontal header overflow",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 360,
+      "canvasH": 535,
+      "toolbarLeft": 8,
+      "toolbarRight": 352,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "360x640 no page overflow",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 canvas usable",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 360,
+      "canvasH": 535,
+      "toolbarLeft": 8,
+      "toolbarRight": 352,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "360x640 toolbar visible #selectMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 toolbar visible #panMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 toolbar visible #grid",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 toolbar visible #snap",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 toolbar visible #ruler",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 toolbar visible #zoomOut",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 toolbar visible #zoomIn",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 mobile panel buttons visible",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 tools open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 backdrop shown",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 focus tools close",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 drawer stays inside viewport",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 esc closes tools",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 esc returns trigger focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 properties open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 close properties returns focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 backdrop closes drawer",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 home cleanup panels",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 resize preserves geometry, zoom and selection",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "360x640 no runtime JS errors",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 no horizontal header overflow",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 390,
+      "canvasH": 739,
+      "toolbarLeft": 8,
+      "toolbarRight": 382,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "390x844 no page overflow",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 canvas usable",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 390,
+      "canvasH": 739,
+      "toolbarLeft": 8,
+      "toolbarRight": 382,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "390x844 toolbar visible #selectMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 toolbar visible #panMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 toolbar visible #grid",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 toolbar visible #snap",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 toolbar visible #ruler",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 toolbar visible #zoomOut",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 toolbar visible #zoomIn",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 mobile panel buttons visible",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 tools open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 backdrop shown",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 focus tools close",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 drawer stays inside viewport",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 esc closes tools",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 esc returns trigger focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 properties open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 close properties returns focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 backdrop closes drawer",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 home cleanup panels",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 resize preserves geometry, zoom and selection",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "390x844 no runtime JS errors",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 no horizontal header overflow",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 414,
+      "canvasH": 791,
+      "toolbarLeft": 8,
+      "toolbarRight": 406,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "414x896 no page overflow",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 canvas usable",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 414,
+      "canvasH": 791,
+      "toolbarLeft": 8,
+      "toolbarRight": 406,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "414x896 toolbar visible #selectMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 toolbar visible #panMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 toolbar visible #grid",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 toolbar visible #snap",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 toolbar visible #ruler",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 toolbar visible #zoomOut",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 toolbar visible #zoomIn",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 mobile panel buttons visible",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 tools open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 backdrop shown",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 focus tools close",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 drawer stays inside viewport",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 esc closes tools",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 esc returns trigger focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 properties open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 close properties returns focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 backdrop closes drawer",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 home cleanup panels",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 resize preserves geometry, zoom and selection",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "414x896 no runtime JS errors",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 no horizontal header overflow",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 768,
+      "canvasH": 919,
+      "toolbarLeft": 84,
+      "toolbarRight": 684,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "768x1024 no page overflow",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 canvas usable",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 768,
+      "canvasH": 919,
+      "toolbarLeft": 84,
+      "toolbarRight": 684,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "768x1024 toolbar visible #selectMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 toolbar visible #panMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 toolbar visible #grid",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 toolbar visible #snap",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 toolbar visible #ruler",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 toolbar visible #zoomOut",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 toolbar visible #zoomIn",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 mobile panel buttons visible",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 tools open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 backdrop shown",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 focus tools close",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 drawer stays inside viewport",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 esc closes tools",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 esc returns trigger focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 properties open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 close properties returns focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 backdrop closes drawer",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 home cleanup panels",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 resize preserves geometry, zoom and selection",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "768x1024 no runtime JS errors",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 no horizontal header overflow",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 820,
+      "canvasH": 495,
+      "toolbarLeft": 116.015625,
+      "toolbarRight": 703.984375,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "820x600 no page overflow",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 canvas usable",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 820,
+      "canvasH": 495,
+      "toolbarLeft": 116.015625,
+      "toolbarRight": 703.984375,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "820x600 toolbar visible #selectMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 toolbar visible #panMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 toolbar visible #grid",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 toolbar visible #snap",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 toolbar visible #ruler",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 toolbar visible #zoomOut",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 toolbar visible #zoomIn",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 mobile panel buttons visible",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 tools open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 backdrop shown",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 focus tools close",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 drawer stays inside viewport",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 esc closes tools",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 esc returns trigger focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 properties open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 close properties returns focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 backdrop closes drawer",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 home cleanup panels",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 resize preserves geometry, zoom and selection",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "820x600 no runtime JS errors",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 no horizontal header overflow",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 1024,
+      "canvasH": 663,
+      "toolbarLeft": 218.015625,
+      "toolbarRight": 805.984375,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "1024x768 no page overflow",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 canvas usable",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 1024,
+      "canvasH": 663,
+      "toolbarLeft": 218.015625,
+      "toolbarRight": 805.984375,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "1024x768 toolbar visible #selectMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 toolbar visible #panMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 toolbar visible #grid",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 toolbar visible #snap",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 toolbar visible #ruler",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 toolbar visible #zoomOut",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 toolbar visible #zoomIn",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 mobile panel buttons visible",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 tools open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 backdrop shown",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 focus tools close",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 drawer stays inside viewport",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 esc closes tools",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 esc returns trigger focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 properties open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 close properties returns focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 backdrop closes drawer",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 home cleanup panels",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 resize preserves geometry, zoom and selection",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1024x768 no runtime JS errors",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1440x900 no horizontal header overflow",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 840,
+      "canvasH": 850,
+      "toolbarLeft": 406.015625,
+      "toolbarRight": 993.984375,
+      "headerH": 50
+    }
+  },
+  {
+    "name": "1440x900 no page overflow",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1440x900 canvas usable",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 840,
+      "canvasH": 850,
+      "toolbarLeft": 406.015625,
+      "toolbarRight": 993.984375,
+      "headerH": 50
+    }
+  },
+  {
+    "name": "1440x900 toolbar visible #selectMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1440x900 toolbar visible #panMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1440x900 toolbar visible #grid",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1440x900 toolbar visible #snap",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1440x900 toolbar visible #ruler",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1440x900 toolbar visible #zoomOut",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1440x900 toolbar visible #zoomIn",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1440x900 resize preserves geometry, zoom and selection",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "1440x900 no runtime JS errors",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 no horizontal header overflow",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 844,
+      "canvasH": 285,
+      "toolbarLeft": 128.015625,
+      "toolbarRight": 715.984375,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "844x390 no page overflow",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 canvas usable",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 844,
+      "canvasH": 285,
+      "toolbarLeft": 128.015625,
+      "toolbarRight": 715.984375,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "844x390 toolbar visible #selectMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 toolbar visible #panMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 toolbar visible #grid",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 toolbar visible #snap",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 toolbar visible #ruler",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 toolbar visible #zoomOut",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 toolbar visible #zoomIn",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 mobile panel buttons visible",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 tools open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 backdrop shown",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 focus tools close",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 drawer stays inside viewport",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 esc closes tools",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 esc returns trigger focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 properties open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 close properties returns focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 backdrop closes drawer",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 home cleanup panels",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 resize preserves geometry, zoom and selection",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "844x390 no runtime JS errors",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 no horizontal header overflow",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 600,
+      "canvasH": 255,
+      "toolbarLeft": 10,
+      "toolbarRight": 590,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "600x360 no page overflow",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 canvas usable",
+    "ok": true,
+    "detail": {
+      "headerOverflow": false,
+      "bodyOverflow": false,
+      "canvasW": 600,
+      "canvasH": 255,
+      "toolbarLeft": 10,
+      "toolbarRight": 590,
+      "headerH": 105
+    }
+  },
+  {
+    "name": "600x360 toolbar visible #selectMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 toolbar visible #panMode",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 toolbar visible #grid",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 toolbar visible #snap",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 toolbar visible #ruler",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 toolbar visible #zoomOut",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 toolbar visible #zoomIn",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 mobile panel buttons visible",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 tools open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 backdrop shown",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 focus tools close",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 drawer stays inside viewport",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 esc closes tools",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 esc returns trigger focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 properties open",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 close properties returns focus",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 backdrop closes drawer",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 home cleanup panels",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 resize preserves geometry, zoom and selection",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "600x360 no runtime JS errors",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "tablet-to-desktop drawer closed",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "desktop panels interactive",
+    "ok": true,
+    "detail": null
+  },
+  {
+    "name": "tablet-to-desktop no runtime errors",
+    "ok": true,
+    "detail": null
+  }
+]

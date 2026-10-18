@@ -2600,6 +2600,8 @@ function showHomeScreen() {
   const home = $("homeScreen");
   const app = $("app");
   if (!home || !app) return;
+  // O drawer móvel não pode permanecer aberto ao sair do editor.
+  document.dispatchEvent(new Event("mapa:close-mobile-panels"));
   home.classList.remove("hidden");
   app.classList.add("hidden");
   updateHomeRecent();
@@ -2612,6 +2614,7 @@ function enterEditor() {
   if (!app) return;
   home?.classList.add("hidden");
   app.classList.remove("hidden");
+  window.dispatchEvent(new Event("resize"));
   resizeCanvas();
   fitRoom();
   updateUI();
@@ -3195,56 +3198,91 @@ window.addEventListener("DOMContentLoaded", () => {
 
   if (!leftPanel || !rightPanel || !backdrop) return;
 
-  const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
+  const isMobile = () => window.matchMedia("(max-width: 1100px)").matches;
 
-  /**
-   * Fecha os painéis laterais responsivos e atualiza o estado ARIA.
-   */
-  function closePanels() {
+  function syncPanelOffset() {
+    const header = document.querySelector("header.topbar");
+    document.documentElement.style.setProperty("--uiux-header-height", `${Math.ceil(header?.getBoundingClientRect().height || 50)}px`);
+  }
+  window.addEventListener("resize", syncPanelOffset);
+  syncPanelOffset();
+
+  let panelReturnFocus = null;
+
+  /** Mantém drawers fechados fora do mobile e devolve foco após o fechamento. */
+  function closePanels({ restoreFocus = true } = {}) {
+    const wasOpen = leftPanel.classList.contains("mobile-open") || rightPanel.classList.contains("mobile-open");
     leftPanel.classList.remove("mobile-open");
     rightPanel.classList.remove("mobile-open");
     backdrop.hidden = true;
+    backdrop.setAttribute("aria-hidden", "true");
     toggleTools?.setAttribute("aria-expanded", "false");
     toggleProps?.setAttribute("aria-expanded", "false");
     document.body.classList.remove("mobile-panel-active");
+    if (isMobile()) {
+      leftPanel.inert = true;
+      rightPanel.inert = true;
+    } else {
+      leftPanel.inert = false;
+      rightPanel.inert = false;
+    }
+    if (wasOpen && restoreFocus && panelReturnFocus?.isConnected && !$("app")?.classList.contains("hidden")) {
+      panelReturnFocus.focus({ preventScroll: true });
+    }
+    panelReturnFocus = null;
   }
 
-  /**
-   * Abre um painel lateral responsivo específico.
-   */
-  function openPanel(panel) {
+  /** Apenas um drawer pode estar aberto por vez. */
+  function openPanel(panel, trigger) {
     if (!isMobile()) return;
-    leftPanel.classList.toggle("mobile-open", panel === "left");
-    rightPanel.classList.toggle("mobile-open", panel === "right");
+    panelReturnFocus = trigger;
+    const leftOpen = panel === "left";
+    leftPanel.classList.toggle("mobile-open", leftOpen);
+    rightPanel.classList.toggle("mobile-open", !leftOpen);
+    leftPanel.inert = !leftOpen;
+    rightPanel.inert = leftOpen;
     backdrop.hidden = false;
     backdrop.setAttribute("aria-hidden", "false");
-    toggleTools?.setAttribute("aria-expanded", panel === "left" ? "true" : "false");
-    toggleProps?.setAttribute("aria-expanded", panel === "right" ? "true" : "false");
+    toggleTools?.setAttribute("aria-expanded", String(leftOpen));
+    toggleProps?.setAttribute("aria-expanded", String(!leftOpen));
     document.body.classList.add("mobile-panel-active");
-    (panel === "left" ? closeTools : closeProps)?.focus({ preventScroll: true });
+    // A transição de visibility do drawer precisa começar antes de mover o foco.
+    window.setTimeout(() => {
+      if ((leftOpen ? leftPanel : rightPanel).classList.contains("mobile-open")) {
+        (leftOpen ? closeTools : closeProps)?.focus({ preventScroll: true });
+      }
+    }, 40);
   }
 
-  toggleTools?.setAttribute("aria-expanded", "false");
-  toggleProps?.setAttribute("aria-expanded", "false");
+  toggleTools?.setAttribute("aria-controls", "leftPanel");
+  toggleProps?.setAttribute("aria-controls", "rightPanel");
   toggleTools?.addEventListener("click", () => {
-    const open = leftPanel.classList.contains("mobile-open");
-    open ? closePanels() : openPanel("left");
+    leftPanel.classList.contains("mobile-open") ? closePanels() : openPanel("left", toggleTools);
   });
   toggleProps?.addEventListener("click", () => {
-    const open = rightPanel.classList.contains("mobile-open");
-    open ? closePanels() : openPanel("right");
+    rightPanel.classList.contains("mobile-open") ? closePanels() : openPanel("right", toggleProps);
   });
-  closeTools?.addEventListener("click", closePanels);
-  closeProps?.addEventListener("click", closePanels);
-  backdrop.addEventListener("click", closePanels);
-
+  closeTools?.addEventListener("click", () => closePanels());
+  closeProps?.addEventListener("click", () => closePanels());
+  backdrop.addEventListener("click", () => closePanels());
+  document.addEventListener("mapa:close-mobile-panels", () => closePanels({ restoreFocus: false }));
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && isMobile() && !backdrop.hidden) closePanels();
+    if (event.key !== "Escape" || !isMobile() || backdrop.hidden || topAppModal()) return;
+    event.preventDefault();
+    closePanels();
   });
-
   window.addEventListener("resize", () => {
-    if (!isMobile()) closePanels();
+    if (!isMobile()) {
+      closePanels({ restoreFocus: false });
+    } else if (backdrop.hidden) {
+      leftPanel.inert = true;
+      rightPanel.inert = true;
+    }
   });
+  if (isMobile()) {
+    leftPanel.inert = true;
+    rightPanel.inert = true;
+  }
 
   document.querySelectorAll(".panel-section > summary").forEach(summary => {
     summary.addEventListener("click", () => {

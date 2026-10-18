@@ -2371,3 +2371,10 @@ input[aria-invalid="true"], select[aria-invalid="true"] { border-color:#ef7777; 
     scroll-behavior:auto !important;
   }
 }
+
+/* UIUX-0.7.0 — regressão mobile: o card não pode oscilar sob o ponteiro.
+   Manter borda, contraste e sombra de hover/foco sem deslocar a área clicável. */
+@media (max-width: 540px) {
+  .home-card:hover,
+  .home-card:focus-visible { transform: none; }
+}

@@ -1,0 +1,617 @@
+{
+  "environment": "Chromium locally injected HTML/CSS/JS (not HTTP), localStorage simulated, reduced motion",
+  "passed": 122,
+  "total": 122,
+  "checks": [
+    {
+      "check": "1440 home",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 logo-loaded",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 wordmark",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 graphite",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 home-actions-visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 no-overflow",
+      "passed": true,
+      "detail": "1440"
+    },
+    {
+      "check": "1440 no-legacy-banner",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 open-models",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 close-models",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 open-editor",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 canvas-size",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 real-measures",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 editor-symbol",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 ruler-toggle",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 zoom-in",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 no-exceptions",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "1024 home",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1024 logo-loaded",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1024 wordmark",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1024 graphite",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1024 home-actions-visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1024 no-overflow",
+      "passed": true,
+      "detail": "1024"
+    },
+    {
+      "check": "1024 no-legacy-banner",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1024 open-models",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1024 close-models",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1024 open-editor",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1024 canvas-size",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1024 real-measures",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1024 editor-symbol",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1024 ruler-toggle",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1024 zoom-in",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1024 no-exceptions",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "768 home",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 logo-loaded",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 wordmark",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 graphite",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 home-actions-visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 no-overflow",
+      "passed": true,
+      "detail": "768"
+    },
+    {
+      "check": "768 no-legacy-banner",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 open-models",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 close-models",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 open-editor",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 canvas-size",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 real-measures",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 editor-symbol",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 ruler-toggle",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 zoom-in",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 drawer-open",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 drawer-close",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "768 no-exceptions",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "414 home",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 logo-loaded",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 wordmark",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 graphite",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 home-actions-visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 no-overflow",
+      "passed": true,
+      "detail": "414"
+    },
+    {
+      "check": "414 no-legacy-banner",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 open-models",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 close-models",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 open-editor",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 canvas-size",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 real-measures",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 editor-symbol",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 ruler-toggle",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 zoom-in",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 drawer-open",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 drawer-close",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "414 no-exceptions",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "390 home",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 logo-loaded",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 wordmark",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 graphite",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 home-actions-visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 no-overflow",
+      "passed": true,
+      "detail": "390"
+    },
+    {
+      "check": "390 no-legacy-banner",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 open-models",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 close-models",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 open-editor",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 canvas-size",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 real-measures",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 editor-symbol",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 ruler-toggle",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 zoom-in",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 drawer-open",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 drawer-close",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 no-exceptions",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "360 home",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 logo-loaded",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 wordmark",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 graphite",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 home-actions-visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 no-overflow",
+      "passed": true,
+      "detail": "360"
+    },
+    {
+      "check": "360 no-legacy-banner",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 open-models",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 close-models",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 open-editor",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 canvas-size",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 real-measures",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 editor-symbol",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 ruler-toggle",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 zoom-in",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 drawer-open",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 drawer-close",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "360 no-exceptions",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "320 home",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 logo-loaded",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 wordmark",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 graphite",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 home-actions-visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 no-overflow",
+      "passed": true,
+      "detail": "320"
+    },
+    {
+      "check": "320 no-legacy-banner",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 open-models",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 close-models",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 open-editor",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 canvas-size",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 real-measures",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 editor-symbol",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 ruler-toggle",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 zoom-in",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 drawer-open",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 drawer-close",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 no-exceptions",
+      "passed": true,
+      "detail": "[]"
+    }
+  ]
+}

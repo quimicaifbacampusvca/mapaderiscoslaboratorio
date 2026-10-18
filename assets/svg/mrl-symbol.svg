@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+<title id="title">Mapa de Riscos do Laboratório</title><desc id="desc">Hexágono técnico azul contendo a planta isométrica de um laboratório e um aviso âmbar</desc>
+<path d="M80 8 145 45 145 114 80 151 15 114 15 45Z" fill="#101C26" stroke="#38BDF8" stroke-width="10" stroke-linejoin="round"/>
+<path d="M80 22 132 52 132 108 80 138 28 108 28 52Z" fill="none" stroke="#DDEFF8" stroke-width="1.8" stroke-opacity=".75"/>
+<!-- laboratory isometric floor and walls -->
+<path d="M39 64 81 40 121 63 79 89Z" fill="#132C3B" stroke="#E5EEF7" stroke-width="3" stroke-linejoin="round"/>
+<path d="M39 64 39 107 79 129 79 89M121 63 121 107 79 129" fill="none" stroke="#E5EEF7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M45 72 80 92 113 74M52 76 52 105M110 77 110 107" fill="none" stroke="#C8E4F4" stroke-width="1.5" stroke-opacity=".7"/>
+<!-- colored mapped cells -->
+<path d="M48 105 62 97 73 104 60 112Z" fill="#22C55E"/><path d="M62 97 76 89 87 96 73 104Z" fill="#F59E0B"/>
+<path d="M60 112 73 104 86 112 73 120Z" fill="#38BDF8"/><path d="M73 104 87 96 100 104 86 112Z" fill="#E8753C"/>
+<path d="M84 52v23l12 7V58" fill="none" stroke="#E5EEF7" stroke-width="2"/><path d="M84 62l12 7" stroke="#E5EEF7" stroke-width="1"/>
+<!-- amber hazard indicator, attached to corner -->
+<path d="M121 11q3-6 7 0l24 41q3 6-4 6h-49q-7 0-4-6Z" fill="#F59E0B" stroke="#111920" stroke-width="4" stroke-linejoin="round"/>
+<path d="M124 28v14" stroke="#17212B" stroke-width="5" stroke-linecap="round"/><circle cx="124" cy="49" r="2.8" fill="#17212B"/>
+</svg>

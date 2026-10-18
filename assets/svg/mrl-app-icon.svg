@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192" role="img" aria-label="Mapa de Riscos do Laboratório">
+<defs><linearGradient id="b" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#243C4D"/><stop offset="1" stop-color="#0F141A"/></linearGradient></defs>
+<rect x="4" y="4" width="184" height="184" rx="42" fill="url(#b)" stroke="#45647B" stroke-width="3"/>
+<path d="M95 27 154 62 154 128 95 162 36 128 36 62Z" fill="#172B38" stroke="#38BDF8" stroke-width="10" stroke-linejoin="round"/>
+<path d="M55 81 96 58 135 81 96 104Z" stroke="#E5EEF7" stroke-width="3" fill="#162C38"/>
+<path d="M55 81v38l41 24 39-24V81M96 104v39" stroke="#E5EEF7" stroke-width="3" fill="none"/>
+<path d="M61 116 76 107 90 115 75 124Z" fill="#22C55E"/><path d="M76 107 91 98 104 106 90 115Z" fill="#F59E0B"/><path d="M90 115 104 106 118 114 104 123Z" fill="#E8753C"/>
+<path d="M149 21q4-7 8 0l23 38q4 7-4 7h-47q-8 0-4-7Z" fill="#F59E0B" stroke="#0F141A" stroke-width="5"/><path d="M153 38v13" stroke="#101820" stroke-width="5" stroke-linecap="round"/><circle cx="153" cy="58" r="2.7" fill="#101820"/>
+</svg>

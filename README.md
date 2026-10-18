@@ -58,3 +58,8 @@ Não houve alteração do motor Canvas, do formato JSON, do autosave nem do back
 O aviso introdutório sobre login e salvamento foi retirado da Home. A navegação do editor respeita atalhos essenciais do navegador: **Alt+Shift+L/P** direcionam para camadas e propriedades, e **Alt+Shift+D** duplica a seleção quando o Canvas está focado. O teclado não modifica o desenho quando o usuário está interagindo com botões ou formulários. Abas, alternâncias e notificações anunciam seus estados de forma mais consistente, com redução de animações conforme a preferência do sistema.
 
 O **formato JSON v4 não mudou**. Para os testes e ressalvas, consulte `qa/RELATORIO-UIUX-0.6.0.md`. A reformulação visual e as estratégias PWA/offline estão em discussão futura na `UIUX-0.8.x`, sem implementação nesta rodada.
+
+
+## UIUX-0.8.1 — Identidade Alerta e Precisão
+
+O logotipo, wordmark, ícone e nova camada de estilo constam em `assets/svg/mrl-symbol.svg`, `assets/svg/mrl-app-icon.svg` e `css/identidade-alerta-precisao.css`. A Home e o editor ganharam a identidade escolhida. A lógica do editor e o formato JSON v4 não mudaram. Ver `qa/RELATORIO-UIUX-0.8.1.md`. O PWA e armazenamento offline aprimorado continuam pendentes.

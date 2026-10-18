@@ -4,20 +4,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mapa de Riscos — Laboratório</title>
   <link rel="stylesheet" href="css/mapa.css">
+  <link rel="stylesheet" href="css/identidade-alerta-precisao.css">
+  <meta name="theme-color" content="#0F141A">
+  <meta name="description" content="Editor 2D de plantas e mapas de riscos para laboratórios, com medidas reais, símbolos de risco e exportação JSON.">
+  <link rel="icon" type="image/svg+xml" href="assets/svg/mrl-app-icon.svg">
 </head>
 <body>
   <!-- Página inicial sem autenticação: novo projeto, autosave, modelos e importação. -->
 <section id="homeScreen" class="home-screen" aria-labelledby="homeTitle">
     <div class="home-content">
+      <div class="proto-topline" aria-label="Protótipo visual, não versão de produção">
+        <span class="proto-topline-kicker"><span class="proto-pulse"></span> MAPA DE RISCOS / INSTRUMENTAÇÃO DIGITAL</span>
+        <span class="proto-topline-right">PLANEJAR · IDENTIFICAR · PREVENIR</span>
+      </div>
       <div class="home-brand">
+      <div class="proto-brand-copy">
         <div class="home-brand-mark" aria-hidden="true">
-          <svg viewbox="0 0 32 32"><path d="M9 4h14M12 4v9l-6 10a4 4 0 0 0 3.5 5.9h13A4 4 0 0 0 26 23l-6-10V4M8 21h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <img class="identity-symbol" src="assets/svg/mrl-symbol.svg" alt="" width="72" height="72">
         </div>
         <div>
-          <span class="home-eyebrow">MAPEAMENTO · SEGURANÇA LABORATORIAL</span>
-          <h1 id="homeTitle">Mapa de Riscos do Laboratório</h1>
-          <p>Editor 2D em escala métrica para construir, conferir e documentar plantas de risco.</p>
+          <span class="home-eyebrow">ALERTA E PRECISÃO · SEGURANÇA LABORATORIAL</span>
+          <h1 id="homeTitle" class="brand-wordmark"><span class="brand-wordmark-top">Mapa de <em>Riscos</em></span><span class="brand-wordmark-bottom">do Laboratório</span></h1><div class="brand-wordmark-rule" aria-hidden="true"></div>
+          <p>Instrumentação digital para planejar ambientes e mapear riscos laboratoriais com precisão métrica.</p>
         </div>
+        <div class="proto-capabilities" aria-label="Características do editor">
+          <span><i class="proto-signal-dot"></i> Editor geométrico 2D</span>
+          <span>Escala métrica</span>
+          <span>Exportação JSON / SVG</span>
+        </div>
+      </div>
+      <div class="proto-showcase" aria-label="Visualização conceitual de uma planta de laboratório de 12 por 8 metros">
+        <div class="proto-showcase-head"><span>01 / ÁREA DE SIMULAÇÃO</span><span class="proto-showcase-live"><b></b> ESQUEMA ILUSTRATIVO</span></div>
+        <svg viewBox="0 0 440 294" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <pattern id="protoGrid" width="19" height="19" patternUnits="userSpaceOnUse"><path d="M19 0H0V19" fill="none" stroke="#91bdd4" stroke-opacity=".13" stroke-width=".8"/></pattern>
+            <linearGradient id="protoFloor" x1="0" x2="1"><stop stop-color="#132531"/><stop offset="1" stop-color="#192d37"/></linearGradient>
+          </defs>
+          <rect x="4" y="3" width="432" height="284" rx="8" fill="#0b1721"/>
+          <rect x="4" y="3" width="432" height="284" fill="url(#protoGrid)"/>
+          <g transform="translate(67 39)">
+            <rect width="306" height="198" rx="2" fill="url(#protoFloor)" stroke="#a7d4e9" stroke-width="2.5"/>
+            <rect x="20" y="20" width="266" height="158" fill="none" stroke="#3c5a6c" stroke-dasharray="3 5"/>
+            <g fill="#254450" stroke="#8abdd1" stroke-width="1.2">
+              <rect x="32" y="36" width="92" height="32" rx="3"/><rect x="164" y="36" width="104" height="32" rx="3"/>
+              <rect x="32" y="106" width="94" height="34" rx="3"/><rect x="173" y="105" width="93" height="36" rx="3"/>
+            </g>
+            <g fill="none" stroke="#adcbd8" stroke-width="1" stroke-dasharray="5 5"><path d="M145 11V188"/><path d="M10 90H297"/></g>
+            <g><circle cx="116" cy="90" r="13" fill="#cf9360" fill-opacity=".15" stroke="#d8a56e" stroke-width="1.5"/><path d="M111 85l10 10m0-10l-10 10" stroke="#ecbc82" stroke-width="2"/><circle cx="242" cy="161" r="10" fill="#89c7b1" fill-opacity=".15" stroke="#89c7b1" stroke-width="1.5"/><path d="M242 155v12m-6-6h12" stroke="#8fd5b7" stroke-width="1.7"/></g>
+            <rect x="129" y="190" width="52" height="12" fill="#0b1721"/><path d="M129 198v-10m52 10v-10" stroke="#86b3c8" stroke-width="1.8"/>
+            <g fill="#8daeba" font-family="monospace" font-size="9"><text x="133" y="210">ACESSO</text><text x="37" y="55">BANCADA</text><text x="177" y="55">BANCADA</text><text x="40" y="126">PREPARO</text><text x="184" y="127">CAPELA</text></g>
+          </g>
+          <g stroke="#d7a65a" stroke-width="1" opacity=".9"><path d="M68 29H371M68 25v8m303-8v8"/><path d="M52 40v196m-4-196h8m-8 196h8"/></g>
+          <g fill="#e5b676" font-size="10" font-family="monospace"><text x="198" y="21">12,00 m</text><text x="33" y="144" transform="rotate(-90 33 144)">8,00 m</text></g>
+          <g stroke="#82adc2" opacity=".35"><path d="M26 16h25M26 16v25M414 255h-25M414 255v-25"/></g>
+        </svg>
+        <div class="proto-showcase-bottom"><span>REFERÊNCIA MÉTRICA <b>1 m</b></span><span>LAB / VISTA SUPERIOR</span></div>
+      </div>
       </div>
 
       <p id="homeStorageWarning" class="home-storage-warning" role="alert" hidden></p>
@@ -37,7 +79,7 @@
         <button type="button" id="homeRestorePrevious" class="home-restore-previous">Restaurar cópia anterior</button>
       </div>
 
-      <h2 class="home-start-title">Como você quer começar?</h2>
+      <div class="proto-section-caption"><h2 class="home-start-title">Como você quer começar?</h2><span>SELECIONE UM FLUXO</span></div>
 
 
       <div class="home-actions" aria-label="Como deseja começar?">
@@ -72,13 +114,11 @@
 
       <button id="homeBtn" type="button" title="Voltar à tela inicial" aria-label="Voltar à tela inicial" class="topbar-icon-btn"><svg viewbox="0 0 24 24" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5M5 9v11h14V9M9 20v-6h6v6"></path></svg></button><div class="brand">
         <div class="brand-mark" aria-hidden="true">
-          <svg viewbox="0 0 32 32">
-            <path d="M9 4h14M12 4v9l-6 10a4 4 0 0 0 3.5 5.9h13A4 4 0 0 0 26 23l-6-10V4M8 21h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
+          <img class="identity-symbol" src="assets/svg/mrl-symbol.svg" alt="" width="36" height="36">
         </div>
         <div>
-          <strong>Mapa de Riscos do Laboratório</strong>
-          <small>Editor 2D em escala métrica</small>
+          <strong>Mapa de <span class="identity-blue">Riscos</span> do Laboratório</strong>
+          <small>ALERTA E PRECISÃO · EDITOR 2D</small>
         </div>
       </div>
 
@@ -280,6 +320,7 @@
 
         <!-- Canvas principal onde a planta é desenhada e editada. -->
 <canvas id="canvas" tabindex="0" role="application" aria-label="Área de trabalho interativa do Mapa de Riscos"></canvas>
+        <div class="proto-canvas-caption" aria-hidden="true"><b></b> PLANTA TÉCNICA <span>•</span> ÁREA ATIVA</div>
 
         <div class="canvas-help">Dica: Setas movem elementos. R gira. + / - redimensiona. Alt+Shift+L para camadas, Alt+Shift+P para propriedades.</div>
       </section>

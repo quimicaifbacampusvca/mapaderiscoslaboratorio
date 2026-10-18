@@ -68,3 +68,18 @@ O logotipo, wordmark, ícone e nova camada de estilo constam em `assets/svg/mrl-
 ## UIUX-0.8.1.1 — Medições mais discretas
 
 Redução da intensidade das réguas, rótulos, linhas métricas e badge de dimensões sem retirar os intervalos de 1 m a 1 cm. A malha de 10 cm também foi suavizada, sem alterar as coordenadas dos objetos ou o JSON v4. Consulte `qa/RELATORIO-UIUX-0.8.1.1.md` e execute `node tests/uiux-0811-discreet-metrics.mjs`.
+
+
+## UIUX-0.8.2 — PWA instalável e uso offline
+
+O Mapa de Riscos possui manifesto (`manifest.webmanifest`), ícones PNG 192/512 (incluindo máscaras para Android), ícone Apple Touch e service worker (`sw.js`) de cache local **versionado e atômico**. Tudo é relativo à raiz do projeto e também funciona quando publicado em um subcaminho como `/mapaderiscoslaboratorio/`.
+
+**Primeira instalação:** abrir a página online por HTTPS (GitHub Pages) ou localhost, aguardar o carregamento completo e então, no navegador compatível, usar o comando de instalar o aplicativo. Em iPhone/iPad, usar o menu de compartilhamento do Safari e a opção de adicionar à Tela de Início (quando disponível). O botão **Instalar aplicativo** aparece apenas em navegadores que fornecem a opção `beforeinstallprompt`; a ausência do botão não implica ausência do PWA.
+
+**Uso offline:** depois que a instalação do service worker concluir com sucesso, a Home, o editor e os assets estáticos essenciais podem ser recarregados sem conexão. O botão de instalação não é necessário para usar o cache offline. Em `file://`, o editor continua abrindo como página estática quando permitido, **mas o PWA não funciona**; para a primeira instalação é necessário HTTPS/localhost.
+
+**Atualizações:** uma nova versão do service worker deve alterar `CACHE_NAME` e listar todos os arquivos obrigatórios em `SHELL_PATHS`. O download ocorre antes da troca; se um arquivo falhar, o SW anterior continua ativo. Quando uma atualização estiver pronta, o aplicativo oferece o botão **Atualização disponível · Atualizar**; não reinicializa o editor automaticamente. O usuário deve exportar em JSON qualquer trabalho importante antes da troca de versão.
+
+**Dados dos projetos:** o service worker não acessa `localStorage`, não grava nem sincroniza JSONs, e não interfere no GAS. O autosave local e uma cópia anterior continuam no navegador, sob as mesmas chaves anteriores. Para proteção contra limpeza do navegador, mudança de dispositivo ou modo privado, continue usando **Baixar JSON**. Biblioteca de projetos e IndexedDB pertencem à etapa posterior, não a esta série.
+
+Ver `qa/RELATORIO-UIUX-0.8.2.md`. Testes automatizados: `node tests/uiux-082-pwa.mjs`, `python qa/uiux082-http-assets.py`, além das suítes existentes. Para testes manuais reais de service worker no GitHub Pages, consulte a matriz de homologação do relatório.

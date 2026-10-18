@@ -236,3 +236,22 @@ header.topbar .brand strong {font-family:"Exo 2","Segoe UI",Arial,sans-serif;fon
  header.topbar .brand-mark {width:31px;height:31px;flex:0 0 31px;}
 }
 @media (max-width:360px){.brand-wordmark{font-size:22px!important;}}
+
+/* UIUX-0.8.2 — Feedback PWA compacto, sem aviso permanente na Home. */
+.pwa-controls {
+  position: fixed; z-index: 900; bottom: max(16px, env(safe-area-inset-bottom));
+  left: 50%; transform: translateX(-50%); display: flex; align-items: center;
+  justify-content: center; flex-wrap: wrap; gap: 9px; max-width: calc(100vw - 24px);
+  padding: 8px 12px; background: rgba(15,20,26,.96);
+  border: 1px solid rgba(56,189,248,.35); color: #e5eef7;
+  border-radius: 12px; box-shadow: 0 8px 28px rgba(0,0,0,.38);
+  font: 500 12px system-ui, -apple-system, sans-serif;
+}
+.pwa-controls[hidden], .pwa-controls [hidden] { display: none !important; }
+.pwa-controls button { appearance: none; cursor: pointer; min-height: 36px;
+  border: 1px solid rgba(56,189,248,.6); border-radius: 8px;
+  padding: 8px 12px; color: #e5eef7; background: #203b4d; font: inherit; }
+.pwa-controls button:hover { background: #28516b; }
+.pwa-controls button:focus-visible { outline: 2px solid #f59e0b; outline-offset: 2px; }
+.pwa-controls button:disabled { opacity: .62; cursor: wait; }
+@media (max-width: 540px) { .pwa-controls { width: calc(100vw - 24px); } }

@@ -8,6 +8,10 @@
   <meta name="theme-color" content="#0F141A">
   <meta name="description" content="Editor 2D de plantas e mapas de riscos para laboratórios, com medidas reais, símbolos de risco e exportação JSON.">
   <link rel="icon" type="image/svg+xml" href="assets/svg/mrl-app-icon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
   <!-- Página inicial sem autenticação: novo projeto, autosave, modelos e importação. -->
@@ -506,6 +510,12 @@
       <span id="globalLoaderText">Carregando…</span>
     </div>
   </div>
+  <!-- PWA: ações apresentadas apenas quando realmente disponíveis. -->
+  <div id="pwaControls" class="pwa-controls" hidden>
+    <span id="pwaOfflineStatus" role="status" hidden>Sem conexão · Editor disponível</span>
+    <button type="button" id="pwaInstall" hidden>Instalar aplicativo</button>
+    <button type="button" id="pwaUpdate" hidden>Atualização disponível · Atualizar</button>
+  </div>
   <!-- Constantes, tipos, riscos, EPI e modelos. -->
   <script defer src="js/types.js"></script>
   <!-- Funções de geometria, colisão, contenção e clearance. -->
@@ -516,5 +526,6 @@
   <script defer src="js/metric-ruler.js"></script>
   <!-- Orquestração do editor, UI, desenho e eventos. -->
   <script defer src="js/mapa.js"></script>
+  <script defer src="js/pwa.js"></script>
 </body>
 </html>

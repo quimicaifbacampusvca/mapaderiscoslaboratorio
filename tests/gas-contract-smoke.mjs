@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const gas=fs.readFileSync(new URL('../gas/Code.gs',import.meta.url),'utf8');
+const room=fs.readFileSync(new URL('../js/room-gas.js',import.meta.url),'utf8');
+const html=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
+for(const name of ['doGet','doPost','createRoom','joinRoom','getRoomStatus','saveProject','endRoom','sendSignal','getSignals','authMe']) assert.ok(gas.includes(`function ${name}(`),name);
+for(const action of ['criar','entrar','status','salvar','encerrar','enviarSinal','receberSinal','authMe']) assert.ok(gas.includes(`case '${action}'`),action);
+assert.match(gas,/LockService\.getScriptLock/);
+assert.match(room,/window\.RoomBackend/);
+assert.match(room,/'\/api\/auth\/me': 'authMe'/);
+assert.match(html,/js\/room-gas\.js/);
+console.log('GAS contract smoke: OK');

@@ -1,0 +1,387 @@
+[
+  {
+    "name": "new_project_320",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cotas_pressed_320",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "initial_marks_320",
+    "ok": true,
+    "detail": "20.0px/m; 1 m"
+  },
+  {
+    "name": "centimeter_320",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "centimeter_pixel_spacing_320",
+    "ok": true,
+    "detail": "11.5px/cm"
+  },
+  {
+    "name": "geometry_unchanged_320",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "pan_coordinate_alignment_320",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cotas_off_320",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "no_errors_320",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "new_project_360",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cotas_pressed_360",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "initial_marks_360",
+    "ok": true,
+    "detail": "23.3px/m; 1 m"
+  },
+  {
+    "name": "centimeter_360",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "centimeter_pixel_spacing_360",
+    "ok": true,
+    "detail": "11.5px/cm"
+  },
+  {
+    "name": "geometry_unchanged_360",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "pan_coordinate_alignment_360",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cotas_off_360",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "no_errors_360",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "new_project_390",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cotas_pressed_390",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "initial_marks_390",
+    "ok": true,
+    "detail": "25.8px/m; 1 m"
+  },
+  {
+    "name": "centimeter_390",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "centimeter_pixel_spacing_390",
+    "ok": true,
+    "detail": "11.5px/cm"
+  },
+  {
+    "name": "geometry_unchanged_390",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "pan_coordinate_alignment_390",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cotas_off_390",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "no_errors_390",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "new_project_414",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cotas_pressed_414",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "initial_marks_414",
+    "ok": true,
+    "detail": "27.8px/m; 1 m"
+  },
+  {
+    "name": "centimeter_414",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "centimeter_pixel_spacing_414",
+    "ok": true,
+    "detail": "11.5px/cm"
+  },
+  {
+    "name": "geometry_unchanged_414",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "pan_coordinate_alignment_414",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cotas_off_414",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "no_errors_414",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "new_project_768",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cotas_pressed_768",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "initial_marks_768",
+    "ok": true,
+    "detail": "57.3px/m; 1 m"
+  },
+  {
+    "name": "centimeter_768",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "centimeter_pixel_spacing_768",
+    "ok": true,
+    "detail": "11.5px/cm"
+  },
+  {
+    "name": "geometry_unchanged_768",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "pan_coordinate_alignment_768",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cotas_off_768",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "no_errors_768",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "new_project_1024",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cotas_pressed_1024",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "initial_marks_1024",
+    "ok": true,
+    "detail": "28.7px/m; 1 m"
+  },
+  {
+    "name": "centimeter_1024",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "centimeter_pixel_spacing_1024",
+    "ok": true,
+    "detail": "11.5px/cm"
+  },
+  {
+    "name": "geometry_unchanged_1024",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "pan_coordinate_alignment_1024",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cotas_off_1024",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "no_errors_1024",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "new_project_1440",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cotas_pressed_1440",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "initial_marks_1440",
+    "ok": true,
+    "detail": "63.3px/m; 1 m"
+  },
+  {
+    "name": "centimeter_1440",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "centimeter_pixel_spacing_1440",
+    "ok": true,
+    "detail": "11.5px/cm"
+  },
+  {
+    "name": "geometry_unchanged_1440",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "pan_coordinate_alignment_1440",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "cotas_off_1440",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "no_errors_1440",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "buttons_reach_centimeter",
+    "ok": true,
+    "detail": "initial 63.3 -> 1200.0 px/m"
+  },
+  {
+    "name": "buttons_clamped_to_max",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "fit_returns",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "wheel_zoom",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "wheel_still_limits",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "ui_no_errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "large_room_viewport_performance",
+    "ok": true,
+    "detail": "avg=0.7ms peak=2.5ms"
+  },
+  {
+    "name": "large_room_no_errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "import_geometry",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "import_ruler_dimensions",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "json_unchanged_schema",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "json_dimensions",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "svg_export_ok",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "import_errors",
+    "ok": true,
+    "detail": ""
+  }
+]

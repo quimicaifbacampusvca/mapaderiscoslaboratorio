@@ -297,6 +297,8 @@ function scheduleAutoSave() {
 
 // --- RENDERIZADOR OTIMIZADO ---
 let animFrameId = null;
+// Graduação do nível anterior para estabilizar a troca de escala durante zoom contínuo.
+let lastMetricStep = 1;
 /**
  * Solicita um novo ciclo de renderização do Canvas via requestAnimationFrame.
  */
@@ -587,15 +589,41 @@ function draw() {
   ctx.fillStyle = "#c6ccd0"; ctx.fillRect(tl.x, tl.y, rw, rh);
 
   if (state.grid) {
-    ctx.save(); ctx.beginPath(); ctx.rect(tl.x, tl.y, rw, rh); ctx.clip();
-    const step = Math.max(5, state.cam.zoom * 0.1);
-    ctx.strokeStyle = "#78858b30"; ctx.lineWidth = 1;
-    for (let x = tl.x; x <= tl.x + rw; x += step) { ctx.beginPath(); ctx.moveTo(x, tl.y); ctx.lineTo(x, tl.y + rh); ctx.stroke(); }
-    for (let y = tl.y; y <= tl.y + rh; y += step) { ctx.beginPath(); ctx.moveTo(tl.x, y); ctx.lineTo(tl.x + rw, y); ctx.stroke(); }
-    ctx.restore();
+    // A malha tradicional de 10 cm permanece independente de Cotas.
+    // No zoom elevado, percorremos somente a área visível para não bloquear o editor.
+    const left = Math.max(0, tl.x), right = Math.min(W, tl.x + rw);
+    const top = Math.max(0, tl.y), bottom = Math.min(H, tl.y + rh);
+    if (right > left && bottom > top) {
+      ctx.save(); ctx.beginPath(); ctx.rect(left, top, right - left, bottom - top); ctx.clip();
+      const step = Math.max(5, state.cam.zoom * 0.1);
+      ctx.strokeStyle = "#78858b30"; ctx.lineWidth = 1;
+      const startX = Math.max(0, Math.ceil((left - tl.x) / step));
+      const endX = Math.min(Math.floor(rw / step), Math.floor((right - tl.x) / step));
+      const startY = Math.max(0, Math.ceil((top - tl.y) / step));
+      const endY = Math.min(Math.floor(rh / step), Math.floor((bottom - tl.y) / step));
+      for (let n = startX; n <= endX; n++) {
+        const x = tl.x + n * step;
+        ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke();
+      }
+      for (let n = startY; n <= endY; n++) {
+        const y = tl.y + n * step;
+        ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke();
+      }
+      ctx.restore();
+    }
   }
 
-  ctx.strokeStyle = "#f1f3f4"; ctx.lineWidth = Math.max(4, state.cam.zoom * 0.12); ctx.strokeRect(tl.x, tl.y, rw, rh);
+  ctx.strokeStyle = "#f1f3f4"; ctx.lineWidth = Math.max(4, Math.min(8, state.cam.zoom * 0.12)); ctx.strokeRect(tl.x, tl.y, rw, rh);
+
+  // A camada de cotas é uma representação visual: não altera snap, objetos ou JSON.
+  let metricLevel = null;
+  if (state.ruler) {
+    metricLevel = MetricRuler.render(ctx, {
+      width: W, height: H, roomWidth: state.room.w, roomHeight: state.room.h,
+      zoom: state.cam.zoom, originX: tl.x, originY: tl.y, previousStep: lastMetricStep
+    });
+    if (metricLevel) lastMetricStep = metricLevel.meters;
+  }
 
   if (state.guides && state.guides.length > 0) {
     state.guides.forEach(g => {
@@ -632,6 +660,11 @@ function draw() {
   }
 
   drawMarquee();
+  if (state.ruler && metricLevel) {
+    MetricRuler.renderSummary(ctx, {
+      width: W, height: H, roomWidth: state.room.w, roomHeight: state.room.h, level: metricLevel
+    });
+  }
 }
 
 /**
@@ -1390,7 +1423,7 @@ canvas.addEventListener("pointerup", e => {
 canvas.addEventListener("wheel", e => {
   e.preventDefault();
   const before = screenToWorld(e.offsetX, e.offsetY);
-  state.cam.zoom = clamp(state.cam.zoom * (e.deltaY < 0 ? 1.1 : 0.9), 15, 220);
+  state.cam.zoom = clamp(state.cam.zoom * (e.deltaY < 0 ? 1.1 : 0.9), MetricRuler.MIN_ZOOM, MetricRuler.MAX_ZOOM);
   const after = screenToWorld(e.offsetX, e.offsetY);
   state.cam.x += before.x - after.x;
   state.cam.y += before.y - after.y;
@@ -2181,6 +2214,7 @@ document.querySelectorAll(".palette button[data-type]").forEach(b => b.addEventL
 // O botão Cotas alterna a exibição persistente das dimensões do objeto selecionado.
 on("ruler", "click", () => {
   state.ruler = !state.ruler;
+  lastMetricStep = 1;
   $("ruler")?.classList.toggle("active", state.ruler);
   $("ruler")?.setAttribute("aria-pressed", String(state.ruler));
   requestDraw();
@@ -2207,12 +2241,12 @@ on("snap", "click", () => {
   showToast(`Snap ${state.snap ? "ativado" : "desativado"}`, "info");
 });
 on("zoomIn", "click", () => {
-  state.cam.zoom = clamp(state.cam.zoom * 1.15, 15, 220);
+  state.cam.zoom = clamp(state.cam.zoom * 1.15, MetricRuler.MIN_ZOOM, MetricRuler.MAX_ZOOM);
   updateZoomText();
   requestDraw();
 });
 on("zoomOut", "click", () => {
-  state.cam.zoom = clamp(state.cam.zoom * 0.87, 15, 220);
+  state.cam.zoom = clamp(state.cam.zoom * 0.87, MetricRuler.MIN_ZOOM, MetricRuler.MAX_ZOOM);
   updateZoomText();
   requestDraw();
 });

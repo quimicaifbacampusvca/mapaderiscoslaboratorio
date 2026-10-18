@@ -250,7 +250,7 @@
               <svg viewbox="0 0 24 24"><path d="M6 3v6a6 6 0 0 0 12 0V3M4 3h4M16 3h4M12 15v6M9 18h6"></path></svg>
               <span>Snap</span>
             </button>
-            <button id="ruler" title="Exibir cotas e medidas" aria-label="Alternar exibição de cotas e medidas">
+            <button id="ruler" title="Exibir cotas e graduação métrica adaptativa" aria-label="Alternar cotas e graduação métrica" aria-pressed="false">
               <svg viewbox="0 0 24 24"><path d="M2 4h20v16H2zM6 4v4M10 4v2M14 4v4M18 4v2"></path></svg>
               <span>Cotas</span>
             </button>
@@ -472,6 +472,8 @@
   <script defer src="js/geometry.js"></script>
   <!-- Regras de validação do mapa e dos objetos. -->
   <script defer src="js/validation.js"></script>
+  <!-- Graduação métrica do workspace: geometria de tela e réguas adaptativas. -->
+  <script defer src="js/metric-ruler.js"></script>
   <!-- Orquestração do editor, UI, desenho e eventos. -->
   <script defer src="js/mapa.js"></script>
 </body>

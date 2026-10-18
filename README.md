@@ -32,3 +32,11 @@ Ver `LICENSE`.
 - O botão antigo **Sair** foi retirado por não existir autenticação nesta versão.
 
 Testes: `node tests/uiux-020-project-safety.mjs` e `python qa/uiux020-browser.py`. O teste de navegador usa uma página isolada com armazenamento simulado, não substituindo testes HTTP no GitHub Pages e nos motores Firefox/WebKit.
+
+## UIUX-0.3.0 — Cotas e graduação adaptativa
+
+No editor, ative **Cotas** para exibir as dimensões reais da área ativa e réguas métricas horizontal e vertical. As marcas começam em **1 m** e ganham subdivisões à medida que o zoom aumenta: 50, 20, 10, 5, 2 e **1 cm**. O limite máximo é 1200 pixels por metro (12 px/cm). Alterar o zoom não modifica objetos, paredes ou dimensões salvas.
+
+Os traços de graduação são uma sobreposição visual no Canvas, não editável e não gravada no JSON. A exportação SVG preserva o conteúdo anterior, sem a régua. Mais detalhes e evidências em `qa/RELATORIO-UIUX-0.3.0.md`.
+
+Para regressão local, execute `node tests/uiux-030-metric-ruler.mjs` e os testes existentes. A suíte Chromium requer Playwright Python e executável do Chromium; o relatório informa as limitações de browsers ainda não testados.

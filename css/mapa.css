@@ -2143,3 +2143,18 @@ summary:focus-visible {
 .home-card-primary:hover small, .home-card-primary:focus-visible small { color:var(--muted); }
 #modelsModal { z-index: 650; }
 #confirmModal { z-index: 700; }
+
+/* UIUX-0.2.0 — proteção de projetos sem alterar a linguagem visual existente. */
+.home-storage-warning { border:1px solid rgba(225,112,86,.5); color:#ffcec4; background:rgba(225,112,86,.09); border-radius:10px; padding:11px 14px; font-size:13px; line-height:1.5; margin:0 0 16px; }
+.home-previous { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin:0 0 18px; padding:12px 14px; border:1px solid var(--line); border-radius:10px; color:var(--muted); font-size:13px; }
+.home-restore-previous { background:transparent; color:var(--accent); border:1px solid var(--line); border-radius:8px; padding:10px 14px; min-height:44px; font:inherit; cursor:pointer; }
+.home-restore-previous:hover { border-color:var(--accent); }
+.home-restore-previous:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.confirm-actions { flex-wrap:wrap; }
+#confirmBackup { min-height:44px; }
+[hidden], .home-previous[hidden], .home-storage-warning[hidden], #confirmBackup[hidden] { display:none!important; }
+@media (max-width:540px) {
+  .home-restore-previous { width:100%; }
+  #confirmBackup { flex:1 1 100%; order:2; }
+  #cancelConfirm, #confirmAction { flex:1 1 auto; }
+}

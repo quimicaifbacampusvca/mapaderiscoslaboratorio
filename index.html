@@ -20,7 +20,8 @@
         </div>
       </div>
 
-      <p class="home-storage-note" role="note">Sem conta e sem senha. Seus trabalhos ficam neste navegador; para guardar uma cópia ou compartilhar, exporte o projeto em JSON.</p>
+      <p class="home-storage-note" role="note">Sem login. O projeto atual é salvo automaticamente neste navegador; use <strong>Baixar JSON</strong> para guardar ou compartilhar um arquivo.</p>
+      <p id="homeStorageWarning" class="home-storage-warning" role="alert" hidden></p>
 
       <div class="home-recent home-recent-top" id="recentProjects" hidden>
         <div class="home-recent-head">
@@ -31,6 +32,10 @@
           <button id="homeContinue" class="home-continue" type="button">Continuar último projeto</button>
         </div>
         <div id="recentList" class="recent-list"></div>
+      </div>
+      <div id="previousProjectRow" class="home-previous" hidden>
+        <span>Uma cópia local do projeto anterior está disponível neste navegador.</span>
+        <button type="button" id="homeRestorePrevious" class="home-restore-previous">Restaurar cópia anterior</button>
       </div>
 
       <h2 class="home-start-title">Como você quer começar?</h2>
@@ -65,7 +70,7 @@
 <div class="app hidden" id="app">
     <!-- Barra superior: navegação, área ativa, stepper e ações globais. -->
 <header class="topbar" role="banner">
-      <button id="logoutBtn" type="button" class="topbar-text-btn" title="Sair da conta" aria-label="Sair da conta">Sair</button>
+
       <button id="homeBtn" type="button" title="Voltar à tela inicial" aria-label="Voltar à tela inicial" class="topbar-icon-btn"><svg viewbox="0 0 24 24" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5M5 9v11h14V9M9 20v-6h6v6"></path></svg></button><div class="brand">
         <div class="brand-mark" aria-hidden="true">
           <svg viewbox="0 0 32 32">
@@ -120,9 +125,9 @@
           <svg viewbox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 15h.01M12 7a3 3 0 0 1 3 3c0 2-3 3-3 3"></path></svg>
           <span class="btn-label">Ajuda</span>
         </button>
-        <button id="save" title="Salvar Arquivo JSON" aria-label="Salvar projeto em formato JSON">
+        <button id="save" title="Baixar arquivo de projeto JSON" aria-label="Baixar arquivo JSON do projeto">
           <svg viewbox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2zM17 21v-8H7v8M7 3v5h8"></path></svg>
-          <span>Salvar</span>
+          <span>Baixar JSON</span>
         </button>
         <button id="exportSvg" title="Exportar Mapa em SVG" aria-label="Exportar imagem do mapa em SVG">
           <svg viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M12 18v-6M9 15l3 3 3-3"></path></svg>
@@ -418,6 +423,7 @@
           <p id="confirmMessage">Tem certeza que deseja continuar?</p>
           <div class="confirm-actions">
             <button class="btn-secondary" id="cancelConfirm" type="button">Cancelar</button>
+            <button class="btn-secondary" id="confirmBackup" type="button" hidden>Baixar JSON anterior</button>
             <button class="btn-danger" id="confirmAction" type="button">Confirmar</button>
           </div>
         </div>

@@ -74,20 +74,11 @@ function normalizeModelAreas(rawAreas) {
  * Aplica um modelo selecionado ao projeto atual, substituindo suas áreas após a confirmação.
  */
 function applyModel(model) {
+  validateProjectPayload({ areas: model.areas });
   const nextAreas = normalizeModelAreas(model.areas);
   if (!nextAreas.length) throw new Error("Modelo sem áreas válidas");
-  pushHistory();
-  state.areas = nextAreas;
-  state.areaAtiva = nextAreas[0].id;
-  state.viewMode = "area";
-  state.selected = null;
-  state.selectedObjects = [];
-  state.history = state.history; // preserva histórico já criado por pushHistory
-  state.future = [];
-  syncAreaConnections();
-  updateAreaUI();
-  enterEditor();
-  showToast(`Modelo “${sanitizeNoEmoji(model.nome, "Modelo")}” aplicado`, "success");
+  return replaceProjectSafely(nextAreas, nextAreas[0].id,
+    `Modelo “${sanitizeNoEmoji(model.nome, "Modelo")}” aplicado`);
 }
 Object.defineProperties(state,{
   room:{get(){return activeArea().dimensoes;},set(v){activeArea().dimensoes={w:Number(v.w),h:Number(v.h)};}},
@@ -255,16 +246,52 @@ function undo(){ if(!canEdit())return showToast("Ação disponível apenas para 
 function redo(){ if(!canEdit())return showToast("Ação disponível apenas para o professor","info"); if(!state.future.length)return; state.history.push(makeHistorySnapshot()); restoreSnapshot(state.future.pop()); fitRoom(); updateUI(); requestDraw(); showToast("Ação refeita","info"); }
 
 // --- PERSISTÊNCIA AUTOMÁTICA ---
+const AUTOSAVE_KEY = "mapa_riscos_autosave";
+const RECOVERY_KEY = "mapa_riscos_previous_autosave";
 let autoSaveTimer = null;
+let autoSaveErrorShown = false;
+
+/** Serializa o projeto sem alterar sua estrutura JSON v4. */
+function projectSnapshot(areas = state.areas, activeId = state.areaAtiva) {
+  return { version: 4, date: new Date().toISOString(), areas, areaAtiva: activeId };
+}
+
+/** A leitura é protegida contra navegação privada e armazenamento bloqueado. */
+function readLocalDraft(key = AUTOSAVE_KEY) {
+  try { return { raw: localStorage.getItem(key), error: null }; }
+  catch (error) { return { raw: null, error }; }
+}
+function writeLocalDraft(key, raw) {
+  try { localStorage.setItem(key, raw); return true; }
+  catch (error) {
+    console.warn("Armazenamento local indisponível", error);
+    showToast("Não foi possível guardar o projeto neste navegador. Baixe o JSON para não perder suas alterações.", "error");
+    return false;
+  }
+}
 /**
- * Agenda a gravação automática do projeto depois de alterações.
+ * Garante um autosave coerente e informa erros de armazenamento sem lançar exceções.
  */
+function persistDraftNow() {
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = null;
+  const saved = writeLocalDraft(AUTOSAVE_KEY, JSON.stringify(projectSnapshot()));
+  if (saved) { autoSaveErrorShown = false; scheduleRoomSync(); }
+  return saved;
+}
 function scheduleAutoSave() {
   clearTimeout(autoSaveTimer);
   autoSaveTimer = setTimeout(() => {
-    const data = { version: 4, date: new Date().toISOString(), areas: state.areas, areaAtiva: state.areaAtiva };
-    localStorage.setItem("mapa_riscos_autosave", JSON.stringify(data));
-    scheduleRoomSync();
+    autoSaveTimer = null;
+    const saved = (() => {
+      try { localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(projectSnapshot())); return true; }
+      catch (error) { console.warn("Falha no autosave", error); return false; }
+    })();
+    if (!saved && !autoSaveErrorShown) {
+      autoSaveErrorShown = true;
+      showToast("Autosave indisponível neste navegador. Baixe o arquivo JSON antes de sair.", "error");
+    }
+    if (saved) { autoSaveErrorShown = false; scheduleRoomSync(); }
   }, 800);
 }
 
@@ -1456,6 +1483,7 @@ const confirmTitle = $("confirmTitle");
 const confirmMessage = $("confirmMessage");
 const closeConfirm = $("closeConfirm");
 const cancelConfirm = $("cancelConfirm");
+const confirmBackup = $("confirmBackup");
 const confirmAction = $("confirmAction");
 let confirmModalState = null;
 let confirmReturnFocus = null;
@@ -1502,9 +1530,13 @@ function showConfirmModal(message, onConfirm, options = {}) {
   confirmMessage.textContent = message;
   confirmAction.textContent = options.confirmLabel || "Confirmar";
   cancelConfirm.textContent = options.cancelLabel || "Cancelar";
+  if (confirmBackup) {
+    confirmBackup.hidden = !options.onBackup;
+    confirmBackup.textContent = options.backupLabel || "Baixar JSON";
+  }
 
   const promise = new Promise(resolve => {
-    confirmModalState = { resolve, onConfirm, onCancel: options.onCancel };
+    confirmModalState = { resolve, onConfirm, onCancel: options.onCancel, onBackup: options.onBackup };
   });
 
   confirmModal.classList.remove("hidden", "closing");
@@ -1524,6 +1556,7 @@ function closeConfirmModalByCancel() {
 
 closeConfirm?.addEventListener("click", closeConfirmModalByCancel);
 cancelConfirm?.addEventListener("click", closeConfirmModalByCancel);
+confirmBackup?.addEventListener("click", () => confirmModalState?.onBackup?.());
 confirmAction?.addEventListener("click", () => {
   if (!confirmModalState) return;
   const { onConfirm } = confirmModalState;
@@ -2310,13 +2343,157 @@ let homeLastFocus = null;
 /**
  * Verifica se existe um autosave válido no armazenamento local.
  */
+/** Valida estrutura e dimensões antes de tocar no estado do editor. */
+function validateProjectPayload(data) {
+  if (!data || typeof data !== "object" || Array.isArray(data)) throw new Error("O JSON não é um projeto válido.");
+  const areas = Array.isArray(data.areas) ? data.areas :
+    (data.room && Array.isArray(data.objects) ? [{ nome: "Laboratório", dimensoes: data.room, objetos: data.objects, posicaoGlobal: { x: 0, y: 0 } }] : null);
+  if (!areas || !areas.length || areas.length > 200) throw new Error("O arquivo não contém áreas válidas.");
+  areas.forEach((area, i) => {
+    if (!area || typeof area !== "object" || Array.isArray(area)) throw new Error(`Área ${i + 1} inválida.`);
+    const dims = area.dimensoes || area.room;
+    const w = Number(dims?.w), h = Number(dims?.h);
+    if (!Number.isFinite(w) || !Number.isFinite(h) || w <= 0 || h <= 0 || w > 10000 || h > 10000) {
+      throw new Error(`Dimensões inválidas na área ${i + 1}.`);
+    }
+    const objects = area.objetos ?? area.objects ?? [];
+    if (!Array.isArray(objects) || objects.length > 20000) throw new Error(`Objetos inválidos na área ${i + 1}.`);
+    objects.forEach((o, j) => {
+      if (!o || typeof o !== "object" || typeof o.type !== "string" ||
+          ![o.x, o.y, o.w, o.h].every(v => Number.isFinite(Number(v))) ||
+          Number(o.w) <= 0 || Number(o.h) <= 0) {
+        throw new Error(`Objeto ${j + 1} inválido na área ${i + 1}.`);
+      }
+    });
+  });
+  return areas;
+}
+function parseLocalSnapshot(raw) {
+  if (!raw) return null;
+  const data = JSON.parse(raw);
+  validateProjectPayload(data);
+  return data;
+}
+/** Não confunde uma planta vazia padrão com trabalho efetivamente realizado. */
+function hasProjectWork(areas) {
+  if (!Array.isArray(areas) || areas.length !== 1) return Array.isArray(areas) && areas.length > 0;
+  const a = areas[0];
+  return (a.objetos || []).length > 0 ||
+    a.nome !== "Laboratório" || a.tipo !== "laboratorio" ||
+    Number(a.dimensoes?.w) !== 12 || Number(a.dimensoes?.h) !== 8 ||
+    Number(a.posicaoGlobal?.x || 0) !== 0 || Number(a.posicaoGlobal?.y || 0) !== 0;
+}
+function hasWorkToPreserve() {
+  if (hasProjectWork(state.areas)) return true;
+  const { raw, error } = readLocalDraft();
+  if (error) return true; // falha na leitura: nunca descartar às cegas
+  if (!raw) return false;
+  try {
+    const data = parseLocalSnapshot(raw);
+    return hasProjectWork(data.areas || [{ dimensoes: data.room, objetos: data.objects, nome: "Laboratório", tipo: "laboratorio" }]);
+  } catch (_) { return true; } // autosave danificado também merece proteção
+}
 function hasAutosave() {
-  return Boolean(localStorage.getItem("mapa_riscos_autosave"));
+  const { raw, error } = readLocalDraft();
+  if (error || !raw) return false;
+  try { return Boolean(parseLocalSnapshot(raw)); } catch (_) { return false; }
 }
 
+/** Download explícito; não se confunde com o autosave local. */
+function downloadProjectJSON() {
+  try {
+    const data = JSON.stringify(projectSnapshot(), null, 2);
+    const blob = new Blob([data], { type: "application/json" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.href = url;
+    link.download = `mapa_riscos_${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    showToast("Download do JSON iniciado. Confira o arquivo antes de descartar o projeto.", "success");
+    return true;
+  } catch (error) {
+    console.error("Falha ao exportar JSON", error);
+    showToast("Não foi possível baixar o JSON. O projeto foi mantido.", "error");
+    return false;
+  }
+}
 /**
- * Exibe a Home e atualiza as informações de projetos recentes.
+ * Substituição transacional: só aplica novo conteúdo depois de preservar a
+ * cópia anterior e gravar o novo autosave. Protege inclusive timers pendentes.
  */
+function replaceProjectSafely(nextAreas, nextActiveId, successMessage) {
+  const previous = readLocalDraft();
+  if (previous.error) {
+    showToast("Armazenamento indisponível. O projeto atual foi preservado; baixe seu JSON.", "error");
+    return false;
+  }
+  const inMemoryWork = hasProjectWork(state.areas);
+  const previousRaw = inMemoryWork ? JSON.stringify(projectSnapshot()) : previous.raw;
+  const oldRecovery = readLocalDraft(RECOVERY_KEY);
+  if (oldRecovery.error) {
+    showToast("Não foi possível proteger a cópia anterior; nenhuma alteração foi realizada.", "error");
+    return false;
+  }
+  const needsBackup = Boolean(previousRaw && (inMemoryWork || hasWorkToPreserve()));
+  if (needsBackup && !writeLocalDraft(RECOVERY_KEY, previousRaw)) return false;
+  // Cancela agendamentos do projeto antigo antes de salvar o novo projeto.
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = null;
+  const fresh = JSON.stringify(projectSnapshot(nextAreas, nextActiveId));
+  if (!writeLocalDraft(AUTOSAVE_KEY, fresh)) {
+    // Uma falha ao salvar o novo rascunho não deve consumir a cópia anterior.
+    if (needsBackup) {
+      try {
+        if (oldRecovery.raw === null) localStorage.removeItem(RECOVERY_KEY);
+        else localStorage.setItem(RECOVERY_KEY, oldRecovery.raw);
+      } catch (error) { console.warn("Falha ao reverter a cópia de segurança", error); }
+    }
+    return false;
+  }
+  state.areas = nextAreas;
+  state.areaAtiva = nextActiveId;
+  state.viewMode = "area";
+  state.selected = null;
+  state.selectedObjects = [];
+  state.history = [];
+  state.future = [];
+  state.pendingHistory = false;
+  state.overviewCam = { x: 6, y: 4, zoom: 50 };
+  state.cam = { x: 6, y: 4, zoom: 70 };
+  syncAreaConnections();
+  updateAreaUI();
+  enterEditor();
+  showToast(successMessage, "success");
+  return true;
+}
+/** Apresenta Cancelar / Baixar JSON / Substituir para operações destrutivas. */
+function confirmProjectReplacement(message, perform) {
+  if (!hasWorkToPreserve()) { perform(); return; }
+  if (!confirmModal || !confirmAction || !cancelConfirm) {
+    showToast("Não foi possível abrir a confirmação; o projeto foi preservado.", "error");
+    return;
+  }
+  showConfirmModal(message, perform, {
+    title: "Preservar o projeto anterior",
+    confirmLabel: "Substituir projeto",
+    cancelLabel: "Cancelar",
+    backupLabel: "Baixar JSON anterior",
+    onBackup: () => {
+      const { raw } = readLocalDraft();
+      if (hasProjectWork(state.areas)) { downloadProjectJSON(); return; }
+      if (!raw) { showToast("Nenhum projeto anterior disponível para exportar.", "error"); return; }
+      try {
+        const url = URL.createObjectURL(new Blob([raw], {type:"application/json"}));
+        const a = document.createElement("a");
+        a.href = url; a.download = `mapa_riscos_anterior_${new Date().toISOString().slice(0, 10)}.json`;
+        a.click(); setTimeout(() => URL.revokeObjectURL(url), 2000);
+        showToast("Download da cópia anterior iniciado.", "success");
+      } catch (error) { showToast("Não foi possível exportar a cópia anterior.", "error"); }
+    }
+  });
+}
+/** Exibe a Home sem descartar o projeto que está aberto. */
 function showHomeScreen() {
   const home = $("homeScreen");
   const app = $("app");
@@ -2326,10 +2503,7 @@ function showHomeScreen() {
   updateHomeRecent();
   requestAnimationFrame(() => $("homeNewProject")?.focus());
 }
-
-/**
- * Oculta a Home e entra no editor, ajustando câmera e interface.
- */
+/** Entra no editor, preservando a geometria e o estado corrente. */
 function enterEditor() {
   const home = $("homeScreen");
   const app = $("app");
@@ -2341,48 +2515,36 @@ function enterEditor() {
   updateUI();
   requestDraw();
 }
-
-/**
- * Cria um projeto novo e vazio com uma área Laboratório padrão.
- */
 function resetToNewProject() {
-  const a = createArea("Laboratório", "laboratorio", 12, 8, 0, 0);
-  state.areas = [a];
-  state.areaAtiva = a.id;
-  state.viewMode = "area";
-  state.selected = null;
-  state.selectedObjects = [];
-  state.history = [];
-  state.future = [];
-  state.pendingHistory = false;
-  state.overviewCam = { x: 6, y: 4, zoom: 50 };
-  state.cam = { x: 6, y: 4, zoom: 70 };
-  updateAreaUI();
-  enterEditor();
-  showToast("Novo projeto criado", "success");
+  confirmProjectReplacement(
+    "Você possui um projeto anterior. Criar outro substituirá o autosave deste navegador. Cancele ou baixe o JSON antes de continuar. Uma única cópia anterior também ficará disponível para recuperação local.",
+    () => {
+      const area = createArea("Laboratório", "laboratorio", 12, 8, 0, 0);
+      replaceProjectSafely([area], area.id, "Novo projeto criado e salvo neste navegador");
+    }
+  );
 }
-
-/**
- * Lê o autosave e restaura o projeto para o estado atual do editor.
- */
-function loadAutosaveIntoState() {
-  const saved = localStorage.getItem("mapa_riscos_autosave");
-  if (!saved) return false;
+/** Restaura somente após validar integralmente o conteúdo; nunca destrói ao falhar. */
+function loadAutosaveIntoState(key = AUTOSAVE_KEY) {
+  const result = readLocalDraft(key);
+  if (result.error) { showToast("Não foi possível acessar os dados salvos neste navegador.", "error"); return false; }
+  if (!result.raw) { showToast("Não há projeto salvo neste navegador.", "info"); return false; }
   try {
-    const data = JSON.parse(saved);
-    if (data.areas) {
-      state.areas = normalizeModelAreas(data.areas);
-      const target = data.areaAtiva;
-      state.areaAtiva = state.areas.find(a => a.id === target)?.id || state.areas[0]?.id;
-    } else if (data.room && data.objects) {
-      const a = createArea("Laboratório", "laboratorio", data.room.w, data.room.h, 0, 0);
-      a.objetos = Array.isArray(data.objects) ? data.objects : [];
-      a.objetos.forEach(normalizeObject);
-      state.areas = [a];
-      state.areaAtiva = a.id;
-    } else return false;
-    state.areas.forEach((a, i) => { a.id ||= crypto.randomUUID(); a.nome = sanitizeNoEmoji(a.nome || `Área ${i + 1}`, `Área ${i + 1}`); a.tipo ||= "apoio"; a.dimensoes ||= { w: 12, h: 8 }; a.posicaoGlobal ||= { x: i * 14, y: 0 }; a.objetos ||= []; a.objetos.forEach(normalizeObject); });
-    state.areaAtiva ||= state.areas[0]?.id;
+    const data = parseLocalSnapshot(result.raw);
+    const areas = normalizeModelAreas(data.areas || [{ nome: "Laboratório", dimensoes: data.room, objetos: data.objects }]);
+    const activeIndex = data.areas?.findIndex(a => a.id === data.areaAtiva) ?? 0;
+    const activeId = areas[Math.max(0, activeIndex)]?.id || areas[0].id;
+    if (key === RECOVERY_KEY) {
+      confirmProjectReplacement("Restaurar a cópia anterior substituirá o projeto atual salvo neste navegador.", () => {
+        replaceProjectSafely(areas, activeId, "Cópia anterior restaurada");
+      });
+      return true;
+    }
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = null;
+    state.areas = areas;
+    state.areaAtiva = activeId;
+    state.viewMode = "area";
     state.selected = null;
     state.selectedObjects = [];
     state.history = [];
@@ -2392,34 +2554,36 @@ function loadAutosaveIntoState() {
     enterEditor();
     showToast("Último projeto restaurado", "success");
     return true;
-  } catch (err) {
-    console.error("Erro ao restaurar autosave", err);
-    showToast("Não foi possível restaurar o último projeto", "error");
+  } catch (error) {
+    console.warn("Autosave inválido", error);
+    showToast("Autosave inválido. Nenhum dado foi apagado; recupere sua cópia JSON.", "error");
     return false;
   }
 }
-
-/**
- * Atualiza a apresentação dos projetos/autosave recentes na Home.
- */
 function updateHomeRecent() {
   const recent = $("recentProjects");
   const list = $("recentList");
+  const backupRow = $("previousProjectRow");
   if (!recent || !list) return;
-  const saved = localStorage.getItem("mapa_riscos_autosave");
-  if (!saved) {
-    recent.hidden = true;
-    return;
+  const { raw, error } = readLocalDraft();
+  let valid = null;
+  if (raw && !error) { try { valid = parseLocalSnapshot(raw); } catch (_) {} }
+  recent.hidden = !valid;
+  if (valid) {
+    const areas = valid.areas || [{ nome: "Laboratório", dimensoes: valid.room }];
+    const date = valid.date ? new Date(valid.date) : null;
+    const dateText = date && !Number.isNaN(date.getTime()) ? date.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : "Data indisponível";
+    list.innerHTML = `<span class="recent-chip">${areas.length} área(s)</span><span class="recent-chip">Salvo neste navegador: ${escapeHtml(dateText)}</span>`;
   }
-  try {
-    const data = JSON.parse(saved);
-    const areas = Array.isArray(data.areas) ? data.areas : (data.room ? [{ nome: "Laboratório", dimensoes: data.room }] : []);
-    const date = data.date ? new Date(data.date) : null;
-    const dateText = date && !Number.isNaN(date.getTime()) ? date.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : "Autosave disponível";
-    recent.hidden = false;
-    list.innerHTML = `<span class="recent-chip">${areas.length} área(s)</span><span class="recent-chip">Última edição: ${escapeHtml(dateText)}</span>`;
-  } catch {
-    recent.hidden = true;
+  const previous = readLocalDraft(RECOVERY_KEY);
+  let previousValid = false;
+  if (previous.raw && !previous.error) { try { previousValid = Boolean(parseLocalSnapshot(previous.raw)); } catch (_) {} }
+  if (backupRow) backupRow.hidden = !previousValid;
+  const warning = $("homeStorageWarning");
+  if (warning) {
+    warning.hidden = !error && !(raw && !valid);
+    warning.textContent = error ? "Armazenamento bloqueado: exporte seus projetos em JSON." :
+      "O autosave não pôde ser lido. Ele não foi apagado; baixe seus arquivos antes de substituí-lo.";
   }
 }
 
@@ -2539,13 +2703,12 @@ function renderModelCards() {
     card.addEventListener("click", () => {
       const model = MODELOS.find(m => m.id === card.dataset.modelId);
       if (!model) return;
-      showConfirmModal(
-        `Aplicar o modelo “${model.nome}”? O projeto atual será substituído pelo layout do modelo.`,
+      confirmProjectReplacement(
+        `Aplicar o modelo “${model.nome}” substituirá seu projeto atual. Cancele ou baixe o JSON anterior antes de continuar.`,
         () => {
           try { applyModel(model); closeModelsModal(); }
           catch (err) { console.error(err); showToast("Não foi possível aplicar o modelo", "error"); }
-        },
-        {title:"Aplicar Modelo", confirmLabel:"Aplicar", cancelLabel:"Cancelar"}
+        }
       );
     });
   });
@@ -2584,21 +2747,21 @@ modelFileInput?.addEventListener("change", e => {
       if (!areas && data.room && data.objects) {
         areas = [{nome:"Laboratório", tipo:"laboratorio", dimensoes:data.room, posicaoGlobal:{x:0,y:0}, objetos:data.objects}];
       }
-      if (!Array.isArray(areas) || !areas.length) throw new Error("Formato inválido");
+      validateProjectPayload({ areas });
       const model = { nome: file.name.replace(/\.json$/i, "") || "Modelo importado", areas };
-      showConfirmModal(
-        `Importar “${file.name}”? O projeto atual será substituído pelo conteúdo do arquivo.`,
+      confirmProjectReplacement(
+        `Importar “${file.name}” substituirá o projeto atual. Cancele ou baixe o JSON anterior antes de continuar.`,
         () => {
           try { applyModel(model); closeModelsModal(); }
           catch (err) { console.error(err); showToast("Não foi possível importar o modelo", "error"); }
-        },
-        {title:"Importar Modelo", confirmLabel:"Importar", cancelLabel:"Cancelar"}
+        }
       );
     } catch (err) {
       console.error(err);
       showToast("Arquivo JSON de modelo inválido", "error");
     }
   };
+  reader.onerror = () => showToast("Não foi possível ler o modelo JSON.", "error");
   reader.readAsText(file);
 });
 
@@ -2614,36 +2777,35 @@ document.addEventListener("keydown", e => {
 
 // PERSISTÊNCIA JSON / EXPORTAÇÃO SVG
 on("save", "click", () => {
-  if (!canEdit()) return showToast("Estudantes não podem salvar alterações", "info");
-  const data = JSON.stringify({ version: 4, date: new Date().toISOString(), areas: state.areas, areaAtiva: state.areaAtiva }, null, 2);
-  const blob = new Blob([data], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `mapa_riscos_${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  scheduleRoomSync();
-  showToast("Arquivo JSON salvo com sucesso", "success");
+  if (!canEdit()) return;
+  downloadProjectJSON();
 });
 
 on("load", "click", () => {
-  if (!canEdit()) return showToast("Estudantes não podem carregar projetos", "info");
+  if (!canEdit()) return;
   const input = document.createElement("input");
   input.type = "file";
-  input.accept = ".json";
+  input.accept = ".json,application/json";
   input.addEventListener("change", e => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
+    reader.onerror = () => showToast("Não foi possível ler o arquivo selecionado.", "error");
     reader.onload = ev => {
+      let nextAreas;
       try {
         const data = JSON.parse(ev.target.result);
-        pushHistory();
-        if(data.areas){ state.areas=sanitizeAreaNames(data.areas.map((a,i)=>({id:a.id||crypto.randomUUID(),nome:a.nome||`Área ${i+1}`,tipo:a.tipo||"apoio",dimensoes:a.dimensoes||{w:a.room?.w||12,h:a.room?.h||8},posicaoGlobal:a.posicaoGlobal||{x:i*14,y:0},objetos:a.objetos||a.objects||[],conexoes:a.conexoes||[]}))); state.areaAtiva=data.areaAtiva||state.areas[0]?.id; }
-        else if(data.room&&data.objects){ const a=createArea("Laboratório","laboratorio",data.room.w,data.room.h,0,0);a.objetos=data.objects;state.areas=[a];state.areaAtiva=a.id; }
-        syncAreaConnections(); updateAreaUI(); enterEditor(); showToast("Mapa carregado com sucesso","success");
-      } catch (err) {
-        showToast("Erro ao carregar o arquivo JSON", "error");
+        validateProjectPayload(data);
+        nextAreas = normalizeModelAreas(data.areas || [{ nome: "Laboratório", tipo: "laboratorio", dimensoes: data.room, objetos: data.objects }]);
+      } catch (error) {
+        console.warn("Projeto importado inválido", error);
+        showToast("Arquivo JSON inválido ou incompatível; o projeto atual foi mantido.", "error");
+        return;
       }
+      confirmProjectReplacement(
+        `Abrir “${file.name}” substituirá o projeto aberto e o autosave local. Você pode baixar o JSON anterior ou cancelar.`,
+        () => replaceProjectSafely(nextAreas, nextAreas[0].id, "Projeto JSON aberto com sucesso")
+      );
     };
     reader.readAsText(file);
   });
@@ -2912,27 +3074,12 @@ window.addEventListener("keydown", e => {
   }
 });
 
-// RESTAURAÇÃO DE AUTOSAVE NO CARREGAMENTO
-/**
- * Tenta restaurar automaticamente uma sessão salva anteriormente.
- */
-function tryRestoreAutoSave() {
-  const saved = localStorage.getItem("mapa_riscos_autosave");
-  if (saved) {
-    try {
-      const data = JSON.parse(saved);
-      if(data.areas){state.areas=sanitizeAreaNames(data.areas);state.areaAtiva=data.areaAtiva||data.areas[0]?.id;}else if(data.room&&data.objects){const a=createArea("Laboratório","laboratorio",data.room.w,data.room.h,0,0);a.objetos=data.objects;state.areas=[a];state.areaAtiva=a.id;}
-      state.areas.forEach((a,i)=>{a.id ||= crypto.randomUUID();a.nome ||= `Área ${i+1}`;a.tipo ||= "apoio";a.dimensoes ||= {w:12,h:8};a.posicaoGlobal ||= {x:i*14,y:0};a.objetos ||= [];});
-      state.areaAtiva ||= state.areas[0].id; syncAreaConnections(); updateAreaUI();
-    } catch(err) { console.error("Erro ao carregar autosave", err); }
-  }
-}
-
 $("homeNewProject")?.addEventListener("click", resetToNewProject);
 $("homeOpenProject")?.addEventListener("click", openProjectFileFromHome);
 $("homeUseModel")?.addEventListener("click", openModelPickerFromHome);
 $("homeImportModel")?.addEventListener("click", importModelFromHome);
-$("homeContinue")?.addEventListener("click", loadAutosaveIntoState);
+$("homeContinue")?.addEventListener("click", () => loadAutosaveIntoState());
+$("homeRestorePrevious")?.addEventListener("click", () => loadAutosaveIntoState(RECOVERY_KEY));
 
 window.addEventListener("resize", resizeCanvas);
 window.addEventListener("DOMContentLoaded", () => {

@@ -21,3 +21,14 @@ O frontend não solicita conta, e-mail ou senha. O módulo de login `js/auth.js`
 ## Licença
 
 Ver `LICENSE`.
+
+## Refinamento UIUX-0.2.0 — Projetos e prevenção de perda de dados
+
+- **Novo Projeto**, modelos e importação de JSON validam os dados e confirmam a substituição quando existe trabalho a preservar.
+- O diálogo oferece **Cancelar**, **Baixar JSON anterior** e **Substituir projeto**. Cancelar deixa o estado e o autosave intactos.
+- A cópia recuperável mais recente é mantida localmente em `mapa_riscos_previous_autosave` e pode ser restaurada pela Home. **Há somente uma cópia anterior; não é um histórico ilimitado**. Limpar os dados do navegador remove ambas.
+- O autosave atual continua em `mapa_riscos_autosave`. O botão superior **Baixar JSON** baixa o arquivo; não salva na nuvem.
+- Um autosave inválido não é exibido como válido nem apagado silenciosamente. Em caso de armazenamento bloqueado/quota, o sistema avisa, preserva o trabalho em memória e recomenda baixar JSON.
+- O botão antigo **Sair** foi retirado por não existir autenticação nesta versão.
+
+Testes: `node tests/uiux-020-project-safety.mjs` e `python qa/uiux020-browser.py`. O teste de navegador usa uma página isolada com armazenamento simulado, não substituindo testes HTTP no GitHub Pages e nos motores Firefox/WebKit.

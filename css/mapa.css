@@ -2158,3 +2158,46 @@ summary:focus-visible {
   #confirmBackup { flex:1 1 100%; order:2; }
   #cancelConfirm, #confirmAction { flex:1 1 auto; }
 }
+
+/* UIUX-0.4.0 — contrato conservador e único dos componentes globais. */
+:root { --ui-control-radius: 8px; --ui-control-height: 36px; --ui-dialog-radius: 12px; }
+.modal-backdrop { padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); box-sizing: border-box; overflow: hidden; }
+#modelsModal, #shortcutsModal, #complianceReportModal { z-index: 650; }
+#confirmModal { z-index: 700; }
+.modal-card { display:flex; flex-direction:column; width:min(420px,100%); min-width:0; max-width:min(95vw,960px); max-height:min(90vh, 900px); max-height:min(90dvh, 900px); border-radius:var(--ui-dialog-radius); }
+.models-modal-card { width:min(920px,100%); }
+.report-modal-card { width:min(520px,100%); }
+.confirm-modal-card { width:min(440px,100%); }
+.modal-header { flex:0 0 auto; gap:12px; min-width:0; }
+.modal-header h3 { font-size:15px; line-height:1.4; overflow-wrap:anywhere; }
+.modal-body { min-width:0; min-height:0; flex:1 1 auto; max-height:none; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; }
+.modal-card button { border-radius:var(--ui-control-radius); transition:background-color .16s ease, border-color .16s ease, color .16s ease, transform .12s ease, opacity .16s ease; }
+.modal-card button:active:not(:disabled) { transform:translateY(1px); }
+.modal-card .btn-close { display:grid; place-items:center; flex:0 0 38px; width:38px; height:38px; padding:0; border:1px solid transparent; border-radius:var(--ui-control-radius); line-height:1; font-size:24px; color:var(--muted); background:transparent; }
+.modal-card .btn-close:hover { color:var(--text); border-color:var(--line); background:var(--panel2); }
+.modal-card .btn-close:active { transform:scale(.96); }
+.confirm-actions { gap:10px; }
+.confirm-actions button { min-height:40px; padding:9px 13px; }
+.model-card { min-width:0; }
+.model-card:focus-visible, .home-card:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+.modal-card input:not([type="range"]), .modal-card select, .modal-card textarea { max-width:100%; border-radius:var(--ui-control-radius); }
+input[type="number"], input[type="text"], select { border-radius:var(--ui-control-radius); }
+input:disabled, select:disabled, textarea:disabled { opacity:.55; cursor:not-allowed; }
+input[aria-invalid="true"], select[aria-invalid="true"] { border-color:#ef7777; box-shadow:0 0 0 2px rgba(239,68,68,.16); }
+.toast-container { z-index:750; max-width:min(380px,calc(100vw - 24px)); }
+.toast { min-width:0; max-width:100%; border-radius:var(--ui-control-radius); line-height:1.45; overflow-wrap:anywhere; }
+.toast-leaving { opacity:0; transform:translateY(6px); transition:opacity .2s ease,transform .2s ease; }
+.dialog-is-open { overflow:hidden; }
+@media (max-width:540px) {
+  .modal-backdrop { align-items:center; }
+  .modal-card { max-height:calc(100dvh - 24px); width:100%; max-width:100%; }
+  .modal-body { padding:14px; }
+  .modal-card .btn-close { flex-basis:44px; width:44px; height:44px; }
+  .confirm-actions button { min-height:44px; }
+  .models-grid { grid-template-columns:minmax(0,1fr); }
+  .toast-container { right:12px; bottom:max(12px,env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .modal-backdrop:not(.hidden) .modal-card, .toast { animation:none; }
+  .modal-card button, .toast-leaving { transition:none; }
+}

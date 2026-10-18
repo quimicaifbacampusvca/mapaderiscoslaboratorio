@@ -40,3 +40,9 @@ No editor, ative **Cotas** para exibir as dimensões reais da área ativa e rég
 Os traços de graduação são uma sobreposição visual no Canvas, não editável e não gravada no JSON. A exportação SVG preserva o conteúdo anterior, sem a régua. Mais detalhes e evidências em `qa/RELATORIO-UIUX-0.3.0.md`.
 
 Para regressão local, execute `node tests/uiux-030-metric-ruler.mjs` e os testes existentes. A suíte Chromium requer Playwright Python e executável do Chromium; o relatório informa as limitações de browsers ainda não testados.
+
+## Atualização UIUX-0.4.0 — componentes e diálogos
+
+Os diálogos de confirmação, modelos, atalhos e relatório agora compartilham navegação por teclado, retorno de foco, gerenciamento de sobreposição e dimensionamento responsivo. Ações que exigem confirmação são bloqueadas se a janela estiver indisponível. Notificações aparecem também na Home e têm empilhamento limitado. A identidade visual, o Canvas, a geometria e o formato JSON foram preservados.
+
+Ver `qa/RELATORIO-UIUX-0.4.0.md` e executar `node tests/uiux-040-dialogs.mjs`. Para regressão Chromium com Playwright: `python qa/uiux040-browser.py` (dependências: Python Playwright e Chromium disponível).

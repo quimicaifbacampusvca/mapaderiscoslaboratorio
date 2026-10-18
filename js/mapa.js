@@ -200,8 +200,11 @@ function updateGuides(activeObj) {
 function showToast(msg, type = "info") {
   const container = $("toastContainer");
   if (!container) return;
+  // Evita uma coluna ilimitada de avisos, mantendo os mais recentes.
+  while (container.children.length >= 3) container.firstElementChild.remove();
   const toast = document.createElement("div");
   toast.className = `toast toast-${type}`;
+  toast.setAttribute("role", type === "error" ? "alert" : "status");
   const icon = document.createElement("span");
   icon.className = "toast-icon";
   icon.setAttribute("aria-hidden", "true");
@@ -211,16 +214,15 @@ function showToast(msg, type = "info") {
       ? '<svg viewBox="0 0 24 24"><path d="M12 8v5M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>'
       : '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg>';
   icon.innerHTML = svg;
-  const text = document.createElement("span");
-  text.textContent = msg;
-  toast.append(icon, text);
+  const message = document.createElement("span");
+  message.textContent = String(msg);
+  toast.append(icon, message);
   container.appendChild(toast);
   setTimeout(() => {
-    toast.style.opacity = "0";
-    toast.style.transform = "translateY(6px)";
-    toast.style.transition = "opacity 0.2s ease, transform 0.2s ease";
+    if (!toast.isConnected) return;
+    toast.classList.add("toast-leaving");
     setTimeout(() => toast.remove(), 220);
-  }, 2800);
+  }, type === "error" ? 4600 : 3000);
 }
 
 // --- HISTÓRICO UNDO / REDO ---
@@ -1522,30 +1524,112 @@ let confirmModalState = null;
 let confirmReturnFocus = null;
 let confirmCloseTimer = null;
 
+// UIUX-0.4.0 — contrato unificado dos diálogos, sem substituir seus handlers.
+const appModalReturnFocus = new WeakMap();
+const appDialogIds = ["modelsModal", "shortcutsModal", "complianceReportModal", "confirmModal"];
+for (const id of appDialogIds) {
+  const modal = $(id);
+  // Mantém todos os diálogos fora de áreas ocultáveis/inertes do editor.
+  if (modal && modal.parentElement !== document.body) document.body.appendChild(modal);
+}
+// Notificações devem permanecer visíveis na Home e quando o editor estiver inerte.
+const globalToastHost = $("toastContainer");
+if (globalToastHost && globalToastHost.parentElement !== document.body) document.body.appendChild(globalToastHost);
+function appFocusableElements(modal) {
+  if (!modal) return [];
+  return [...modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+    .filter(el => !el.disabled && !el.hidden && el.getAttribute("aria-hidden") !== "true" && el.getClientRects().length > 0);
+}
+function topAppModal() {
+  const open = appDialogIds.map(id => $(id)).filter(el => el && !el.classList.contains("hidden"));
+  // Confirmação é sempre o último diálogo quando aberta sobre o seletor de modelos.
+  if (!open.length) return null;
+  return open.sort((a,b) => (Number.parseInt(getComputedStyle(a).zIndex,10)||0)-(Number.parseInt(getComputedStyle(b).zIndex,10)||0)).at(-1);
+}
+function syncAppModalState() {
+  const top = topAppModal();
+  for (const id of ["homeScreen", "app"]) { const root = $(id); if (root) root.inert = Boolean(top); }
+  for (const id of appDialogIds) {
+    const modal = $(id);
+    if (modal) modal.inert = Boolean(top) && modal !== top;
+  }
+  document.body.classList.toggle("dialog-is-open", Boolean(top));
+}
+function showAppModal(modal, preferredFocus) {
+  if (!modal?.isConnected) return false;
+  if (modal.classList.contains("hidden")) {
+    appModalReturnFocus.set(modal, document.activeElement instanceof HTMLElement ? document.activeElement : null);
+  }
+  modal.classList.remove("hidden", "closing");
+  syncAppModalState();
+  requestAnimationFrame(() => {
+    if (topAppModal() === modal) (preferredFocus || appFocusableElements(modal)[0] || modal).focus({preventScroll:true});
+  });
+  return true;
+}
+function hideAppModal(modal, restoreFocus = true) {
+  if (!modal || modal.classList.contains("hidden")) return;
+  const prior = appModalReturnFocus.get(modal);
+  appModalReturnFocus.delete(modal);
+  modal.classList.add("hidden");
+  modal.classList.remove("closing");
+  syncAppModalState();
+  if (!restoreFocus) return;
+  const restore = () => {
+    const top = topAppModal();
+    if (prior && prior.isConnected && !prior.closest('.hidden') && !prior.inert && (!top || top.contains(prior)) && prior.getClientRects().length) {
+      prior.focus({preventScroll:true});
+    } else if (top) {
+      (appFocusableElements(top)[0] || top).focus({preventScroll:true});
+    } else if ($( "app") && !$("app").classList.contains("hidden")) {
+      $("canvas")?.focus?.({preventScroll:true});
+    } else {
+      $("homeNewProject")?.focus?.({preventScroll:true});
+    }
+  };
+  restore();
+  // A animação e a restauração de foco do navegador não devem expulsar o foco do diálogo subjacente.
+  requestAnimationFrame(() => {
+    const top = topAppModal();
+    if (top && !top.contains(document.activeElement)) (appFocusableElements(top)[0] || top).focus({preventScroll:true});
+  });
+}
+// O diálogo em primeiro plano controla Escape e a ordem de Tab, inclusive sobre outros modais.
+document.addEventListener("keydown", event => {
+  const top = topAppModal();
+  if (!top || !["Escape", "Tab"].includes(event.key)) return;
+  if (event.key === "Escape") {
+    event.preventDefault(); event.stopImmediatePropagation();
+    if (top.id === "confirmModal") closeConfirmModalByCancel();
+    else if (top.id === "modelsModal") closeModelsModal();
+    else if (top.id === "shortcutsModal") hideAppModal(top);
+    else if (top.id === "complianceReportModal") closeComplianceReport();
+    return;
+  }
+  const items = appFocusableElements(top);
+  if (!items.length) { event.preventDefault(); top.focus(); return; }
+  const first = items[0], last = items[items.length - 1];
+  if (!top.contains(document.activeElement)) { event.preventDefault(); (event.shiftKey ? last : first).focus(); }
+  else if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+  else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+}, true);
+
 /**
  * Retorna os elementos focalizáveis disponíveis em um modal.
  */
 function getModalFocusableElements() {
-  if (!confirmModal) return [];
-  return [...confirmModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
-    .filter(el => !el.disabled && el.offsetParent !== null);
+  return appFocusableElements(confirmModal);
 }
 
 /**
  * Finaliza o ciclo do modal de confirmação, resolve a ação e devolve o foco.
  */
 function finishConfirmModal(result) {
-  if (!confirmModal || !confirmModalState) return;
+  if (!confirmModalState) return;
   const { resolve } = confirmModalState;
   confirmModalState = null;
-  confirmModal.classList.add("closing");
-  clearTimeout(confirmCloseTimer);
-  confirmCloseTimer = setTimeout(() => {
-    confirmModal.classList.add("hidden");
-    confirmModal.classList.remove("closing");
-    confirmReturnFocus?.focus?.();
-    confirmReturnFocus = null;
-  }, 120);
+  hideAppModal(confirmModal);
+  confirmReturnFocus = null;
   resolve(result);
 }
 
@@ -1553,11 +1637,13 @@ function finishConfirmModal(result) {
  * Abre o modal de confirmação customizado e registra a ação a executar.
  */
 function showConfirmModal(message, onConfirm, options = {}) {
-  if (!confirmModal || !confirmMessage || !confirmAction) {
-    onConfirm?.();
-    return Promise.resolve(true);
+  if (!confirmModal?.isConnected || !confirmTitle?.isConnected || !confirmMessage?.isConnected || !confirmAction?.isConnected || !cancelConfirm?.isConnected) {
+    console.error("Diálogo de confirmação indisponível; ação bloqueada.");
+    showToast("Não foi possível confirmar a ação. Nenhuma alteração foi realizada.", "error");
+    return Promise.resolve(false);
   }
-  if (confirmModalState) finishConfirmModal(false);
+  // Não substitui um diálogo ainda aguardando resposta por outro sem autorização.
+  if (confirmModalState) return Promise.resolve(false);
   confirmReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   confirmTitle.textContent = options.title || "Confirmar ação";
   confirmMessage.textContent = message;
@@ -1572,8 +1658,7 @@ function showConfirmModal(message, onConfirm, options = {}) {
     confirmModalState = { resolve, onConfirm, onCancel: options.onCancel, onBackup: options.onBackup };
   });
 
-  confirmModal.classList.remove("hidden", "closing");
-  requestAnimationFrame(() => cancelConfirm?.focus());
+  showAppModal(confirmModal, cancelConfirm);
   return promise;
 }
 
@@ -1600,24 +1685,7 @@ confirmModal?.addEventListener("click", e => {
   if (e.target === confirmModal) closeConfirmModalByCancel();
 });
 
-document.addEventListener("keydown", e => {
-  if (!confirmModal || confirmModal.classList.contains("hidden")) return;
-  if (e.key === "Escape") {
-    e.preventDefault();
-    closeConfirmModalByCancel();
-    return;
-  }
-  if (e.key !== "Tab") return;
-  const focusables = getModalFocusableElements();
-  if (!focusables.length) return;
-  const first = focusables[0];
-  const last = focusables[focusables.length - 1];
-  if (e.shiftKey && document.activeElement === first) {
-    e.preventDefault(); last.focus();
-  } else if (!e.shiftKey && document.activeElement === last) {
-    e.preventDefault(); first.focus();
-  }
-});
+// Tratamento de teclado centralizado em UIUX-0.4.0.
 
 /**
  * Solicita confirmação e remove a área ativa, reparando conexões e seleção.
@@ -2148,12 +2216,12 @@ function openComplianceReport(){
   const pending=rows.length-compliant;
   $("reportSummary").innerHTML=`<div class="report-stat"><b>${rows.length}</b><span>Áreas</span></div><div class="report-stat"><b>${compliant}</b><span>Conformes (10/10)</span></div><div class="report-stat"><b>${pending}</b><span>Com pendências</span></div>`;
   $("reportList").innerHTML=rows.map(({area,score})=>`<div class="report-row"><div><strong>${escapeHtml(area.nome)}</strong><small>${escapeHtml(area.tipo||"apoio")} · ${area.conexoes.length} conexão(ões)</small></div><span class="report-score ${score.okCount===10?"ok":"pending"}">${score.okCount}/10</span></div>`).join("");
-  modal.classList.remove("hidden"); $("btnCloseComplianceReport")?.focus();
+  showAppModal(modal, $("btnCloseComplianceReport"));
 }
 /**
  * Fecha o modal do relatório consolidado.
  */
-function closeComplianceReport(){ $("complianceReportModal")?.classList.add("hidden"); }
+function closeComplianceReport(){ hideAppModal($("complianceReportModal")); }
 
 let stepHighlightTimer=null;
 /**
@@ -2705,17 +2773,14 @@ let modelsReturnFocus = null;
  * Obtém os elementos focalizáveis do modal de modelos.
  */
 function getModelFocusableElements() {
-  if (!modelsModal) return [];
-  return [...modelsModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
-    .filter(el => !el.disabled && el.offsetParent !== null);
+  return appFocusableElements(modelsModal);
 }
 /**
  * Fecha o modal de seleção de modelos e restaura o foco anterior.
  */
 function closeModelsModal() {
   if (!modelsModal) return;
-  modelsModal.classList.add("hidden");
-  modelsReturnFocus?.focus?.();
+  hideAppModal(modelsModal);
   modelsReturnFocus = null;
 }
 /**
@@ -2754,8 +2819,7 @@ function openModelsModal() {
   if (!modelsModal) return;
   modelsReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   renderModelCards();
-  modelsModal.classList.remove("hidden");
-  requestAnimationFrame(() => getModelFocusableElements()[0]?.focus());
+  showAppModal(modelsModal);
 }
 /**
  * Lê um arquivo JSON de modelo e entrega os dados ao fluxo de aplicação.
@@ -2799,15 +2863,7 @@ modelFileInput?.addEventListener("change", e => {
   reader.readAsText(file);
 });
 
-document.addEventListener("keydown", e => {
-  if (!modelsModal || modelsModal.classList.contains("hidden") || ($("confirmModal") && !$("confirmModal").classList.contains("hidden"))) return;
-  if (e.key === "Escape") { e.preventDefault(); closeModelsModal(); return; }
-  if (e.key !== "Tab") return;
-  const focusables = getModelFocusableElements(); if (!focusables.length) return;
-  const first = focusables[0], last = focusables[focusables.length - 1];
-  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-});
+// Teclado do catálogo centralizado no controlador de diálogos.
 
 // PERSISTÊNCIA JSON / EXPORTAÇÃO SVG
 on("save", "click", () => {
@@ -2988,25 +3044,26 @@ const btnCloseShortcuts = $("btnCloseShortcuts");
 
 if (btnShortcuts && shortcutsModal) {
   btnShortcuts.addEventListener("click", () => {
-    shortcutsModal.classList.remove("hidden");
-    btnCloseShortcuts?.focus();
+    showAppModal(shortcutsModal, btnCloseShortcuts);
   });
 }
 
 if (btnCloseShortcuts && shortcutsModal) {
-  btnCloseShortcuts.addEventListener("click", () => { shortcutsModal.classList.add("hidden"); });
+  btnCloseShortcuts.addEventListener("click", () => hideAppModal(shortcutsModal));
 }
 
 if (shortcutsModal) {
   shortcutsModal.addEventListener("click", (e) => {
     if (e.target === shortcutsModal) {
-      shortcutsModal.classList.add("hidden");
+      hideAppModal(shortcutsModal);
     }
   });
 }
 
 // CONTROLES E ATALHOS DE TECLADO
 window.addEventListener("keydown", e => {
+  // Atalhos globais não podem manipular o mapa atrás de um diálogo ativo.
+  if (topAppModal()) return;
   const active = document.activeElement;
   const isInput = ["INPUT", "TEXTAREA", "SELECT"].includes(active.tagName);
   const isCtrl = e.ctrlKey || e.metaKey;
@@ -3058,7 +3115,7 @@ window.addEventListener("keydown", e => {
   else if (e.key === "Escape") {
     e.preventDefault();
     if (shortcutsModal && !shortcutsModal.classList.contains("hidden")) {
-      shortcutsModal.classList.add("hidden");
+      hideAppModal(shortcutsModal);
     } else {
       state.selectedObjects = []; state.selected = null; updateUI(); requestDraw();
     }

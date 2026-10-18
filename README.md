@@ -63,3 +63,8 @@ O **formato JSON v4 não mudou**. Para os testes e ressalvas, consulte `qa/RELAT
 ## UIUX-0.8.1 — Identidade Alerta e Precisão
 
 O logotipo, wordmark, ícone e nova camada de estilo constam em `assets/svg/mrl-symbol.svg`, `assets/svg/mrl-app-icon.svg` e `css/identidade-alerta-precisao.css`. A Home e o editor ganharam a identidade escolhida. A lógica do editor e o formato JSON v4 não mudaram. Ver `qa/RELATORIO-UIUX-0.8.1.md`. O PWA e armazenamento offline aprimorado continuam pendentes.
+
+
+## UIUX-0.8.1.1 — Medições mais discretas
+
+Redução da intensidade das réguas, rótulos, linhas métricas e badge de dimensões sem retirar os intervalos de 1 m a 1 cm. A malha de 10 cm também foi suavizada, sem alterar as coordenadas dos objetos ou o JSON v4. Consulte `qa/RELATORIO-UIUX-0.8.1.1.md` e execute `node tests/uiux-0811-discreet-metrics.mjs`.

@@ -606,7 +606,7 @@ function draw() {
     if (right > left && bottom > top) {
       ctx.save(); ctx.beginPath(); ctx.rect(left, top, right - left, bottom - top); ctx.clip();
       const step = Math.max(5, state.cam.zoom * 0.1);
-      ctx.strokeStyle = "#78858b30"; ctx.lineWidth = 1;
+      ctx.strokeStyle = "#78858b18"; ctx.lineWidth = 0.8;
       const startX = Math.max(0, Math.ceil((left - tl.x) / step));
       const endX = Math.min(Math.floor(rw / step), Math.floor((right - tl.x) / step));
       const startY = Math.max(0, Math.ceil((top - tl.y) / step));

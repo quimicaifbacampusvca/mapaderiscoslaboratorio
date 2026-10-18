@@ -10,7 +10,7 @@ const state = {
   cam: { x: 6, y: 4, zoom: 70 }, overviewCam: { x: 6, y: 4, zoom: 50 },
   grid: true, snap: true, ruler: false, tool: "select",
   selected: null, selectedObjects: [], marquee: null, drag: null, overviewDrag: null,
-  pan: false, last: null, history: [], future: [], pendingHistory: false, guides: [], panelTab: "layers", role: null, roomCode: null, roomToken: null, user: null
+  pan: false, last: null, history: [], future: [], pendingHistory: false, guides: [], panelTab: "layers"
 };
 window.MAPA_RUNTIME = { get state() { return state; } };
 /**
@@ -150,322 +150,12 @@ function on(id, event, handler, options) {
   if (el) el.addEventListener(event, handler, options);
   return el;
 }
-const ROOM_SESSION_KEY = "mapa_riscos_room_session";
-const canEdit = () => state.role !== "student";
+// Acesso aberto ao editor: sem conta, sem papéis remotos e sem sincronização GAS.
+const canEdit = () => true;
+// Ganchos preservados para os pontos de autosave e histórico do editor.
+// Persistência remota depende de um modelo futuro de autorização independente de login.
+function scheduleRoomSync() {}
 
-/** Retorna se existe uma sessão local autenticada. */
-function isAuthenticated() { return Boolean(state.user?.id && localStorage.getItem("mapa_riscos_session_token")); }
-/** Atualiza a interface conforme o usuário autenticado e o modo da sala. */
-function applyAuthUI() {
-  const authenticated = isAuthenticated();
-  const homeIdentity = $("homeUserIdentity");
-  const identityText = authenticated ? `${state.user.nome || state.user.email} · ${state.user.papel}` : "Não autenticado";
-  if (homeIdentity) homeIdentity.textContent = identityText;
-  document.querySelectorAll("#createRoomBtn, #professorJoinForm input, #professorJoinForm button, #studentJoinForm input, #studentJoinForm button").forEach(el => { el.disabled = !authenticated || state.role === "student"; });
-  const createBtn = $("createRoomBtn"); if (createBtn) createBtn.disabled = !authenticated || state.user.papel !== "professor";
-}
-
-/** Mantém a UI de login/cadastro coerente com o perfil selecionado. */
-function syncAuthFormUI() {
-  const professor = loginUiRole === "professor";
-  const registering = loginUiMode === "register";
-  $("authTitle")?.replaceChildren(document.createTextNode(`${registering ? "Criar conta" : "Entrar"} como ${professor ? "professor" : "estudante"}`));
-  const subtitle = $("authSubtitle"); if (subtitle) subtitle.textContent = professor ? "Acesse sua conta para criar e gerenciar salas." : "Acesse sua conta para participar de uma sala.";
-  $("registerNameField")?.classList.toggle("hidden", !registering);
-  $("studentRoomField")?.classList.toggle("hidden", professor || registering);
-  $("authSubmitHint")?.replaceChildren(document.createTextNode(registering ? "Salvar minha conta" : "Usar minha conta"));
-  const submit = $("authSubmit"); if (submit) submit.querySelector("strong").textContent = registering ? "Criar conta" : "Entrar";
-}
-
-let loginUiRole = "professor";
-let loginUiMode = "login";
-
-/** Exibe ou oculta o carregamento global durante operações assíncronas. */
-function showGlobalLoader(show, message = "Carregando…") {
-  const overlay = $("globalLoader");
-  if (!overlay) return;
-  const label = $("globalLoaderText");
-  if (label) label.textContent = message;
-  overlay.classList.toggle("hidden", !show);
-  overlay.setAttribute("aria-hidden", String(!show));
-}
-
-/** Aplica feedback de validade em um campo de formulário. */
-function setFieldValidity(id, valid, message = "") {
-  const el = $(id);
-  if (!el) return valid;
-  el.classList.toggle("is-invalid", !valid);
-  el.setAttribute("aria-invalid", String(!valid));
-  let help = $(id + "Feedback");
-  if (message) {
-    if (!help) {
-      help = document.createElement("small");
-      help.id = id + "Feedback";
-      help.className = "field-feedback";
-      el.insertAdjacentElement("afterend", help);
-    }
-    help.textContent = message;
-  } else if (help) { help.remove(); }
-  return valid;
-}
-
-/** Valida os campos de autenticação em tempo real ou no envio do formulário. */
-function validateAuthForm(showMessage = false) {
-  const email = ($("authEmail")?.value || "").trim();
-  const senha = $("authPassword")?.value || "";
-  const nome = ($("authName")?.value || "").trim();
-  const code = ($("studentRoomCodeAuth")?.value || "").trim();
-  let ok = true;
-  ok = setFieldValidity("authEmail", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email), email || !showMessage ? "" : "Informe um email válido.") && ok;
-  ok = setFieldValidity("authPassword", senha.length >= 6, senha || !showMessage ? "" : "A senha deve ter pelo menos 6 caracteres.") && ok;
-  if (loginUiMode === "register") ok = setFieldValidity("authName", nome.length >= 2, nome || !showMessage ? "" : "Informe seu nome completo.") && ok;
-  else setFieldValidity("authName", true, "");
-  if (loginUiRole === "estudante" && loginUiMode === "login" && code) {
-    ok = setFieldValidity("studentRoomCodeAuth", /^[A-Z0-9]{6}$/.test(code), "Digite um código de 6 caracteres.") && ok;
-  } else setFieldValidity("studentRoomCodeAuth", true, "");
-  return ok;
-}
-
-/** Processa o login ou cadastro local conforme o modo atual. */
-async function submitAuthForm(e) {
-  e.preventDefault();
-  if (!validateAuthForm(true)) return;
-  setLoginError(""); setLoginLoading(true, loginUiMode === "register" ? "Criando conta…" : "Entrando…");
-  showGlobalLoader(true, loginUiMode === "register" ? "Criando conta…" : "Entrando…");
-  try {
-    const nome = $("authName")?.value || ""; const email = $("authEmail")?.value || ""; const senha = $("authPassword")?.value || "";
-    const user = loginUiMode === "register" ? await AuthAPI.registerUser(nome, email, senha, loginUiRole) : await AuthAPI.loginUser(email, senha, loginUiRole);
-    state.user = user; applyAuthUI();
-    console.log("Usuário autenticado:", state.user);
-    if (loginUiRole === "estudante" && $("studentRoomCodeAuth")?.value) {
-      await joinRoomFromLogin($("studentRoomCodeAuth").value, false);
-      return;
-    }
-    showHomeScreen(); showToast(`Acesso realizado como ${user.nome}`, "success");
-  } catch (err) { setLoginError(err.message || "Não foi possível concluir o acesso. Verifique os dados informados e tente novamente."); }
-  finally { setLoginLoading(false); showGlobalLoader(false); }
-}
-
-/** Carrega as salas locais vinculadas ao usuário autenticado. */
-async function loadUserRooms() {
-  if (!isAuthenticated()) return [];
-  const result = await apiRequest("/api/usuario/salas", { method: "POST", body: JSON.stringify({}) });
-  const rooms = Array.isArray(result.salas) ? result.salas : []; const section = $("userRoomsSection"), list = $("userRoomsList");
-  if (!section || !list) return rooms;
-  section.hidden = false;
-  list.innerHTML = rooms.length ? rooms.map(room => { const code = escapeHtml(room.codigo); return `<div class="room-list-item"><div><strong>Sala ${code}</strong><small>${room.papel === "professor" ? "Professor" : "Estudante"} · <span class="room-status-${room.status === "ativa" ? "active" : "inactive"}">${room.status === "ativa" ? "Ativa" : "Encerrada"}</span> · ${room.participantes || 0} participante(s)</small></div><button type="button" class="room-enter-btn" data-room-code="${code}" ${room.status === "ativa" ? "" : "disabled"}>Entrar</button></div>`; }).join("") : '<span class="recent-empty">Nenhuma sala vinculada a esta conta.</span>';
-  list.querySelectorAll(".room-enter-btn").forEach(btn => btn.addEventListener("click", () => enterListedRoom(btn.dataset.roomCode)));
-  return rooms;
-}
-
-/** Entra em uma sala escolhida na Home. */
-async function enterListedRoom(code) { if (!isAuthenticated()) return; setLoginLoading(true, "Entrando na sala…"); showGlobalLoader(true, "Entrando na sala…"); try { const data = await apiRequest("/api/sala/entrar", { method: "POST", body: JSON.stringify({codigo:code}) }); await enterRoomFromServer(data.sala, data.sala.papel); } catch (err) { showToast(err.message || "Não foi possível entrar na sala. Verifique o código e tente novamente.", "error"); } finally { setLoginLoading(false); showGlobalLoader(false); } }
-
-/** Encerra a sessão local. */
-async function logoutUser() { state.user = null; clearRoomSession(); AuthAPI.logoutUser().catch(() => {}); applySessionUI(); applyAuthUI(); showLoginScreen(); }
-
-/**
- * Mostra ou oculta o estado de carregamento da tela de login.
- */
-function setLoginLoading(show, message = "Verificando sala…") {
-  const el = $("loginLoading"); if (!el) return;
-  el.textContent = message; el.classList.toggle("hidden", !show);
-}
-/**
- * Atualiza a mensagem de erro exibida no formulário de acesso.
- */
-function setLoginError(message = "") {
-  const el = $("loginError"); if (!el) return;
-  el.textContent = message; el.classList.toggle("hidden", !message);
-}
-/**
- * Alterna a interface de login entre professor e estudante.
- */
-function setLoginRole(role) {
-  const professor = role === "professor";
-  $("loginRoleProfessor")?.classList.toggle("active", professor);
-  $("loginRoleStudent")?.classList.toggle("active", !professor);
-  $("loginRoleProfessor")?.setAttribute("aria-selected", String(professor));
-  $("loginRoleStudent")?.setAttribute("aria-selected", String(!professor));
-  $("loginProfessorPanel")?.classList.toggle("hidden", !professor);
-  $("loginStudentPanel")?.classList.toggle("hidden", professor);
-  setLoginError("");
-  requestAnimationFrame(() => (professor ? $("authEmail") : $("authEmail"))?.focus());
-}
-/**
- * Wrapper do cliente que encaminha requisições para o módulo de comunicação com o backend.
- */
-async function apiRequest(path, options = {}) {
-  if (window.RoomBackend?.request) return window.RoomBackend.request(path, options);
-  throw new Error("Backend GAS indisponível. Verifique js/config.js e a URL /exec.");
-}
-/**
- * Salva no armazenamento local os dados mínimos da sessão da sala.
- */
-function persistRoomSession() {
-  if (!state.roomCode || !state.roomToken || !state.role) return;
-  sessionStorage.setItem(ROOM_SESSION_KEY, JSON.stringify({codigo:state.roomCode,papel:state.role}));
-}
-/**
- * Remove a sessão persistida da sala do armazenamento local.
- */
-function clearRoomSession() {
-  state.role = null; state.roomCode = null; state.roomToken = null;
-  sessionStorage.removeItem(ROOM_SESSION_KEY);
-  if (roomSocket) clearInterval(roomSocket);
-  clearTimeout(roomSyncTimer);
-  roomSocket = null; previousRemoteProject = ""; roomSyncPending = false;
-  document.body.classList.remove("role-student", "has-room-session");
-  const badge = $("roomCodeBadge"); if (badge) badge.hidden = true;
-}
-/**
- * Atualiza a interface conforme o papel do usuário na sala e desabilita ações não permitidas.
- */
-function applySessionUI() {
-  document.body.classList.toggle("role-student", state.role === "student");
-  document.body.classList.toggle("has-room-session", Boolean(state.roomCode));
-  const badge = $("roomCodeBadge"), codeText = $("roomCodeText");
-  if (badge && codeText) { codeText.textContent = state.roomCode || "—"; badge.hidden = !state.roomCode; }
-  const endBtn = $("endRoomBtn"); if (endBtn) endBtn.hidden = state.role !== "professor" || !state.roomCode;
-  document.querySelectorAll("[data-professor-only]").forEach(el => { el.disabled = state.role !== "professor"; });
-}
-/**
- * Prepara o estado do projeto para ser enviado pela sincronização remota.
- */
-function sanitizeProjectForSync() {
-  return { version: 4, date: new Date().toISOString(), areas: state.areas, areaAtiva: state.areaAtiva };
-}
-let roomSyncTimer = null;
-let roomSyncInFlight = false;
-let roomSyncPending = false;
-let roomSocket = null;
-let previousRemoteProject = "";
-/**
- * Salva o projeto cifrado no backend e agenda o ciclo normal de sincronização.
- */
-async function syncRoomProject() {
-  if (state.role !== "professor" || !state.roomCode || !state.roomToken) return;
-  if (roomSyncInFlight) { roomSyncPending = true; return; }
-  roomSyncInFlight = true;
-  const code = state.roomCode;
-  try {
-    await apiRequest("/api/sala/salvar", { method: "POST", body: JSON.stringify({ codigo: code, projeto: sanitizeProjectForSync() }) });
-  } catch (err) {
-    console.warn("Não foi possível salvar a sala no GAS", err);
-    showToast("Falha ao sincronizar o projeto. Salve uma cópia JSON local.", "error");
-  } finally {
-    roomSyncInFlight = false;
-    if (roomSyncPending && state.roomCode === code && state.role === "professor") {
-      roomSyncPending = false;
-      scheduleRoomSync();
-    }
-  }
-}
-/**
- * Agenda uma nova sincronização evitando chamadas repetitivas a cada pequena alteração.
- */
-function scheduleRoomSync() {
-  if (state.role !== "professor" || !state.roomCode) return;
-  clearTimeout(roomSyncTimer); roomSyncTimer = setTimeout(syncRoomProject, 1600);
-}
-/**
- * Inicia o mecanismo de tempo real da sala quando a sessão está disponível.
- */
-function connectRoomSocket() {
-  if (roomSocket) clearInterval(roomSocket);
-  roomSocket = null;
-  if (state.role !== "student" || !state.roomCode) return;
-  // O GAS não dispõe de WebSockets: atualização de leitura por consulta periódica.
-  roomSocket = setInterval(async () => {
-    if (state.role !== "student" || !state.roomCode || document.hidden) return;
-    const codigo = state.roomCode;
-    try {
-      const result = await apiRequest("/api/sala/entrar", { method: "POST", body: JSON.stringify({ codigo }) });
-      if (state.roomCode !== codigo || state.role !== "student") return;
-      const project = result?.sala?.projeto;
-      if (!project) return;
-      const raw = typeof project === "string" ? project : JSON.stringify(project);
-      if (raw === previousRemoteProject) return;
-      const parsed = typeof project === "string" ? JSON.parse(project) : project;
-      if (!Array.isArray(parsed?.areas)) return;
-      previousRemoteProject = raw;
-      state.areas = normalizeModelAreas(parsed.areas);
-      state.areaAtiva = state.areas.find(a => a.id === parsed.areaAtiva)?.id || state.areas[0]?.id;
-      syncAreaConnections(); updateAreaUI(); requestDraw();
-    } catch (error) { console.warn("Não foi possível consultar atualizações da sala.", error); }
-  }, 10000);
-}
-
-/**
- * Aplica ao editor os dados retornados pelo servidor ao entrar ou retomar uma sala.
- */
-async function enterRoomFromServer(sala, role) {
-  state.role = role === "professor" ? "professor" : "student";
-  state.roomCode = String(sala?.codigo || "").toUpperCase();
-  state.roomToken = state.user?.id || sala?.token || "";
-  console.log("3. Sessão da sala preparada:", { role: state.role, roomCode: state.roomCode, user: state.user });
-  if (!state.roomCode) throw new Error("O servidor não retornou o código da sala.");
-  if (!state.roomToken) throw new Error("Não foi possível identificar o usuário autenticado para a sala.");
-  persistRoomSession(); applySessionUI();
-  if (sala.projeto) {
-    const data = typeof sala.projeto === "string" ? (() => { try { return JSON.parse(sala.projeto); } catch { return null; } })() : sala.projeto;
-    if (data?.areas) { state.areas = normalizeModelAreas(data.areas); state.areaAtiva = state.areas.find(a => a.id === data.areaAtiva)?.id || state.areas[0]?.id; syncAreaConnections(); updateAreaUI(); }
-  } else if (!state.areas.length) {
-    const a = createArea(); state.areas=[a]; state.areaAtiva=a.id;
-  }
-  previousRemoteProject = sala.projeto ? (typeof sala.projeto === "string" ? sala.projeto : JSON.stringify(sala.projeto)) : "";
-  enterEditor();
-  connectRoomSocket();
-  if (state.role === "student") showToast("Sala carregada em modo visualização", "info");
-}
-/**
- * Cria uma nova sala a partir da tela de login e entra como professor.
- */
-async function createRoomFromLogin() {
-  if (!isAuthenticated()) { setLoginError("Faça login antes de criar uma sala."); return; }
-  if (state.user.papel !== "professor") { setLoginError("Sua conta não está cadastrada como professor."); return; }
-  setLoginError(""); setLoginLoading(true, "Criando sala…"); showGlobalLoader(true, "Criando sala…");
-  try { const data = await apiRequest("/api/sala/criar", { method:"POST", body:JSON.stringify({}) }); if (!data?.sala?.codigo) throw new Error("Não foi possível criar a sala."); await enterRoomFromServer(data.sala, "professor"); showToast(`Sala criada. Código: ${data.sala.codigo}`, "success"); }
-  catch (err) { console.error("ERRO na criação da sala:", err); setLoginError(err.message || "Não foi possível criar a sala."); }
-  finally { setLoginLoading(false); showGlobalLoader(false); }
-}
-/**
- * Valida o código informado e entra na sala com o papel solicitado.
- */
-async function joinRoomFromLogin(code, professorAttempt=false) {
-  if (!isAuthenticated()) { setLoginError("Faça login antes de entrar na sala."); return; }
-  if (professorAttempt && state.user.papel !== "professor") { setLoginError("Apenas a conta de professor pode retomar uma sala como proprietária."); return; }
-  const normalized = String(code || "").trim().toUpperCase();
-  if (!/^[A-Z0-9]{6}$/.test(normalized)) { setLoginError("Digite um código de 6 caracteres."); return; }
-  setLoginError(""); setLoginLoading(true, "Verificando sala…"); showGlobalLoader(true, "Verificando sala…");
-  try {
-    const data = await apiRequest("/api/sala/entrar", { method:"POST", body:JSON.stringify({codigo:normalized}) });
-    await enterRoomFromServer(data.sala, data.sala.papel);
-    if (professorAttempt && data.sala.papel !== "professor") showToast("Sessão retomada como visualização. A chave do professor não está disponível neste navegador.", "info");
-  } catch (err) { setLoginError(err.message === "Código não encontrado ou sala encerrada." ? "Código não encontrado" : err.message); }
-  finally { setLoginLoading(false); }
-}
-/**
- * Exibe a tela de login e oculta as demais telas da aplicação.
- */
-function showLoginScreen() {
-  $("loginScreen")?.classList.remove("hidden"); $("homeScreen")?.classList.add("hidden"); $("app")?.classList.add("hidden");
-  loginUiRole = "professor"; loginUiMode = "login"; setLoginRole("professor"); syncAuthFormUI(); setLoginLoading(false); setLoginError(""); applyAuthUI();
-}
-/**
- * Tenta restaurar uma sessão de sala existente na inicialização do aplicativo.
- */
-async function bootstrapRoomSession() {
-  if (!isAuthenticated()) return false;
-  let session = null; try { session = JSON.parse(sessionStorage.getItem(ROOM_SESSION_KEY) || "null"); } catch {}
-  if (!session?.codigo) return false;
-  try {
-    const data = await apiRequest(`/api/sala/status/${encodeURIComponent(session.codigo)}`);
-    if (!data?.sala?.status) throw new Error("Sala indisponível");
-    const join = await apiRequest("/api/sala/entrar", { method:"POST", body:JSON.stringify({codigo:session.codigo}) });
-    await enterRoomFromServer(join.sala, join.sala.papel); return true;
-  } catch { sessionStorage.removeItem(ROOM_SESSION_KEY); return false; }
-}
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const snapVal = v => state.snap ? Math.round(v / 0.1) * 0.1 : v;
 const num = v => Number.parseFloat(v);
@@ -1760,6 +1450,8 @@ function updateAreaUI(){
 }
 // MODAL DE CONFIRMAÇÃO CUSTOMIZADO
 const confirmModal = $("confirmModal");
+// Modais globais também precisam funcionar sobre a tela inicial.
+if (confirmModal) document.body.appendChild(confirmModal);
 const confirmTitle = $("confirmTitle");
 const confirmMessage = $("confirmMessage");
 const closeConfirm = $("closeConfirm");
@@ -2632,12 +2324,11 @@ function showHomeScreen() {
   home.classList.remove("hidden");
   app.classList.add("hidden");
   updateHomeRecent();
-  loadUserRooms().catch(() => {});
   requestAnimationFrame(() => $("homeNewProject")?.focus());
 }
 
 /**
- * Oculta a Home/login e entra no editor, ajustando câmera e interface.
+ * Oculta a Home e entra no editor, ajustando câmera e interface.
  */
 function enterEditor() {
   const home = $("homeScreen");
@@ -2805,6 +2496,7 @@ function importModelFromHome() {
 
 // MODAL DE MODELOS
 const modelsModal = $("modelsModal");
+if (modelsModal) document.body.appendChild(modelsModal);
 const modelsGrid = $("modelsGrid");
 const closeModels = $("closeModels");
 const importModelBtn = $("importModel");
@@ -3220,17 +2912,6 @@ window.addEventListener("keydown", e => {
   }
 });
 
-/** Restaura a sessão local salva no navegador. */
-async function bootstrapLocalSession() {
-  if (!AuthAPI.isAuthenticated()) return false;
-  let user;
-  try { user = await AuthAPI.validateSession(); }
-  catch (err) { console.warn("Não foi possível validar a sessão anterior:", err.message); return false; }
-  if (!user) return false;
-  state.user = user; applyAuthUI();
-  return true;
-}
-
 // RESTAURAÇÃO DE AUTOSAVE NO CARREGAMENTO
 /**
  * Tenta restaurar automaticamente uma sessão salva anteriormente.
@@ -3247,108 +2928,18 @@ function tryRestoreAutoSave() {
   }
 }
 
-$("homeNewProject")?.addEventListener("click", () => { if (state.user?.papel !== "professor") return showToast("Ação disponível apenas para o professor", "info"); resetToNewProject(); });
-$("homeOpenProject")?.addEventListener("click", () => openProjectFileFromHome());
-$("homeUseModel")?.addEventListener("click", () => { if (state.user?.papel !== "professor") return showToast("Ação disponível apenas para o professor", "info"); openModelPickerFromHome(); });
-$("homeImportModel")?.addEventListener("click", () => { if (state.user?.papel !== "professor") return showToast("Ação disponível apenas para o professor", "info"); importModelFromHome(); });
-$("homeContinue")?.addEventListener("click", () => loadAutosaveIntoState());
-$("homeCreateRoomBtn")?.addEventListener("click", createRoomFromLogin);
+$("homeNewProject")?.addEventListener("click", resetToNewProject);
+$("homeOpenProject")?.addEventListener("click", openProjectFileFromHome);
+$("homeUseModel")?.addEventListener("click", openModelPickerFromHome);
+$("homeImportModel")?.addEventListener("click", importModelFromHome);
+$("homeContinue")?.addEventListener("click", loadAutosaveIntoState);
 
 window.addEventListener("resize", resizeCanvas);
-window.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener("DOMContentLoaded", () => {
   state.areas.forEach(a => a.objetos.forEach(normalizeObject));
-  syncAreaConnections(); updateAreaUI(); updateHomeRecent(); applySessionUI(); applyAuthUI();
-  const query = new URLSearchParams(location.search);
-  if (query.has("resetToken") && query.has("email")) {
-    showLoginScreen(); showPasswordPanel("reset"); return;
-  }
-  const authenticated = await bootstrapLocalSession();
-  if (authenticated) {
-    const restored = await bootstrapRoomSession();
-    if (!restored) showHomeScreen();
-  } else { showLoginScreen(); }
-});
-
-
-
-// LOGIN E SESSÕES DE SALA
-/** Exibe apenas o formulário de recuperação solicitado. */
-function showPasswordPanel(kind) {
-  const forgot = kind === "forgot", reset = kind === "reset";
-  $("authForm")?.classList.toggle("hidden", forgot || reset);
-  $("loginProfessorPanel")?.classList.toggle("hidden", forgot || reset || loginUiRole !== "professor");
-  $("loginStudentPanel")?.classList.toggle("hidden", forgot || reset || loginUiRole === "professor");
-  $("forgotPasswordPanel")?.classList.toggle("hidden", !forgot);
-  $("resetPasswordPanel")?.classList.toggle("hidden", !reset);
-  if (!forgot && !reset) syncAuthFormUI();
-}
-$("forgotPasswordLink")?.addEventListener("click", () => {
-  $("forgotEmail").value = $("authEmail")?.value || "";
-  $("forgotMessage").textContent = "";
-  showPasswordPanel("forgot");
-});
-$("backToLogin")?.addEventListener("click", () => showPasswordPanel("login"));
-$("resetBackLogin")?.addEventListener("click", () => {
-  history.replaceState({}, "", location.pathname);
-  showPasswordPanel("login");
-});
-$("forgotPasswordForm")?.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const feedback = $("forgotMessage"), submit = $("forgotSubmit");
-  const email = $("forgotEmail")?.value.trim() || "";
-  feedback.textContent = "";
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { feedback.textContent = "Informe um e-mail válido."; return; }
-  submit.disabled = true;
-  try {
-    const result = await AuthAPI.forgotPassword(email);
-    feedback.textContent = result.message || "Se a conta existir, enviaremos as instruções.";
-  } catch (error) { feedback.textContent = error.message || "Não foi possível solicitar o link."; }
-  finally { submit.disabled = false; }
-});
-$("resetPasswordForm")?.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const feedback = $("resetMessage"), submit = $("resetSubmit");
-  const senha = $("resetPassword")?.value || "", confirm = $("resetPasswordConfirm")?.value || "";
-  if (senha.length < 6 || senha !== confirm) { feedback.textContent = "Confira as senhas informadas (mínimo de 6 caracteres)."; return; }
-  const query = new URLSearchParams(location.search);
-  submit.disabled = true;
-  try {
-    const result = await AuthAPI.resetPassword(query.get("resetToken"), query.get("email"), senha);
-    feedback.textContent = result.message || "Senha atualizada.";
-    history.replaceState({}, "", location.pathname);
-    $("resetPassword").value = "";
-    $("resetPasswordConfirm").value = "";
-    showPasswordPanel("login");
-    setLoginError(""); showToast("Senha redefinida. Faça login novamente.", "success");
-  } catch (error) { feedback.textContent = error.message || "Não foi possível redefinir a senha."; }
-  finally { submit.disabled = false; }
-});
-$("loginRoleProfessor")?.addEventListener("click", () => { loginUiRole = "professor"; loginUiMode = "login"; setLoginRole("professor"); syncAuthFormUI(); });
-$("loginRoleStudent")?.addEventListener("click", () => { loginUiRole = "estudante"; loginUiMode = "login"; setLoginRole("student"); syncAuthFormUI(); });
-$("authForm")?.addEventListener("submit", submitAuthForm);
-["authName","authEmail","authPassword","studentRoomCodeAuth"].forEach(id => $(id)?.addEventListener("input", () => validateAuthForm(false)));
-$("toggleRegister")?.addEventListener("click", () => {
-  loginUiMode = loginUiMode === "register" ? "login" : "register";
-  if (loginUiMode === "register" && loginUiRole === "professor") {
-    loginUiRole = "estudante";
-    setLoginRole("student");
-    showToast("Cadastre-se como estudante. Um administrador poderá habilitar seu perfil de professor após validação.", "info");
-  }
-  syncAuthFormUI(); setLoginError("");
-});
-$("createRoomBtn")?.addEventListener("click", createRoomFromLogin);
-$("homeLogoutBtn")?.addEventListener("click", logoutUser);
-$("refreshUserRooms")?.addEventListener("click", () => loadUserRooms().catch(err => showToast(err.message, "error")));
-$("professorJoinForm")?.addEventListener("submit", e => { e.preventDefault(); joinRoomFromLogin($("professorRoomCode")?.value, true); });
-$("studentJoinForm")?.addEventListener("submit", e => { e.preventDefault(); joinRoomFromLogin($("studentRoomCode")?.value, false); });
-["professorRoomCode","studentRoomCode"].forEach(id => $(id)?.addEventListener("input", e => { e.target.value = e.target.value.replace(/[^a-z0-9]/gi, "").slice(0,6).toUpperCase(); setLoginError(""); }));
-$("roomCodeBadge")?.addEventListener("click", async () => { if (!state.roomCode) return; try { await navigator.clipboard?.writeText(state.roomCode); showToast("Código da sala copiado", "success"); } catch { showToast(`Código da sala: ${state.roomCode}`, "info"); } });
-$("endRoomBtn")?.addEventListener("click", () => {
-  if (state.role !== "professor" || !state.roomCode) return;
-  showConfirmModal(`Encerrar a sala "${state.roomCode}"? Novos acessos serão bloqueados.`, async () => {
-    try { await apiRequest("/api/sala/encerrar", { method:"POST", body:JSON.stringify({codigo:state.roomCode}) }); clearRoomSession(); showLoginScreen(); showToast("Sala encerrada", "success"); }
-    catch (err) { showToast(err.message, "error"); }
-  }, {title:"Encerrar sala",confirmLabel:"Encerrar",cancelLabel:"Cancelar"});
+  syncAreaConnections();
+  updateAreaUI();
+  showHomeScreen();
 });
 
 // FRENTE 25 — controles responsivos dos painéis laterais

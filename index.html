@@ -6,122 +6,7 @@
   <link rel="stylesheet" href="css/mapa.css">
 </head>
 <body>
-  <!-- Tela de autenticação: entrada como professor ou estudante. -->
-<section id="loginScreen" class="login-screen" aria-labelledby="loginTitle">
-    <div class="login-shell">
-      <div class="login-brand">
-        <div class="login-brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 32 32"><path d="M9 4h14M12 4v9l-6 10a4 4 0 0 0 3.5 5.9h13A4 4 0 0 0 26 23l-6-10V4M8 21h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div>
-          <span class="login-eyebrow">ACESSO AO MAPA</span>
-          <h1 id="loginTitle">Mapa de Riscos do Laboratório</h1>
-          <p>Entre como professor para gerenciar salas ou como estudante para participar de uma sala existente.</p>
-        </div>
-      </div>
-
-      <div class="login-role-tabs" role="tablist" aria-label="Perfil de acesso">
-        <button id="loginRoleProfessor" class="login-role-tab active" type="button" role="tab" aria-selected="true" aria-controls="loginProfessorPanel">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM8 9h8M8 13h5M8 17h3"/></svg>
-          <span>Sou Professor</span>
-        </button>
-        <button id="loginRoleStudent" class="login-role-tab" type="button" role="tab" aria-selected="false" aria-controls="loginStudentPanel">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M5 21c0-4 3-7 7-7s7 3 7 7M3 4h18"/></svg>
-          <span>Sou Estudante</span>
-        </button>
-      </div>
-
-      <form id="authForm" class="login-form auth-form" novalidate>
-        <div class="login-panel-head">
-          <h2 id="authTitle">Entrar como professor</h2>
-          <p id="authSubtitle">Acesse sua conta para criar e gerenciar salas.</p>
-        </div>
-        <div id="registerNameField" class="hidden">
-          <label for="authName">Nome</label>
-          <input id="authName" type="text" autocomplete="name" placeholder="Seu nome completo" aria-label="Nome completo">
-        </div>
-        <label for="authEmail">Email</label>
-        <input id="authEmail" type="email" autocomplete="email" placeholder="seu@email.com" aria-label="Email">
-        <label for="authPassword">Senha</label>
-        <input id="authPassword" type="password" autocomplete="current-password" minlength="6" placeholder="Mínimo de 6 caracteres" aria-label="Senha">
-        <div id="studentRoomField" class="hidden">
-          <label for="studentRoomCodeAuth">Código da sala</label>
-          <input id="studentRoomCodeAuth" class="login-code-input" type="text" inputmode="text" autocomplete="one-time-code" maxlength="6" placeholder="A7B2C9" aria-label="Código da sala para estudante">
-        </div>
-        <button id="authSubmit" class="login-primary-action" type="submit">
-          <span class="login-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          <span><strong>Entrar</strong><small id="authSubmitHint">Usar minha conta</small></span>
-        </button>
-        <button id="toggleRegister" class="login-secondary-action" type="button">Criar conta</button>
-      <button id="forgotPasswordLink" class="login-secondary-action login-forgot-link" type="button">Esqueci minha senha</button>
-      </form>
-
-      <div id="loginError" class="login-feedback hidden" role="alert" aria-live="assertive"></div>
-      <div id="loginLoading" class="login-loading hidden" aria-live="polite">Aguarde…</div>
-
-      <section id="loginProfessorPanel" class="login-panel auth-room-panel" role="tabpanel" aria-labelledby="loginRoleProfessor">
-        <div class="login-panel-head">
-          <h2>Salas do professor</h2>
-          <p>Depois do login, você pode criar uma sala nova ou retomar uma sala criada neste navegador.</p>
-        </div>
-        <button id="createRoomBtn" class="login-primary-action" type="button" disabled>
-          <span class="login-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14M4 4h16v16H4z"/></svg></span>
-          <span><strong>Criar nova sala</strong><small>Gerar um código único de 6 caracteres</small></span>
-        </button>
-        <form id="professorJoinForm" class="login-form room-form">
-          <label for="professorRoomCode">Código da sala para retomar</label>
-          <div class="login-input-row">
-            <input id="professorRoomCode" type="text" inputmode="text" autocomplete="one-time-code" maxlength="6" placeholder="A7B2C9" aria-label="Código da sala do professor">
-            <button type="submit">Entrar</button>
-          </div>
-        </form>
-      </section>
-
-      <section id="loginStudentPanel" class="login-panel auth-room-panel hidden" role="tabpanel" aria-labelledby="loginRoleStudent">
-        <div class="login-panel-head">
-          <h2>Acesso do estudante</h2>
-          <p>Informe o código da sala para entrar em modo somente leitura.</p>
-        </div>
-      </section>
-
-
-      <!-- Painel de recuperação de senha: envia link de redefinição por e-mail. -->
-      <section id="forgotPasswordPanel" class="login-panel hidden" aria-labelledby="forgotPasswordTitle">
-        <div class="login-panel-head">
-          <h2 id="forgotPasswordTitle">Recuperar senha</h2>
-          <p>Informe o e-mail cadastrado para receber um link de redefinição.</p>
-        </div>
-        <form id="forgotPasswordForm" class="login-form" novalidate>
-          <label for="forgotEmail">E-mail cadastrado</label>
-          <input id="forgotEmail" type="email" autocomplete="email" placeholder="seu@email.com" aria-label="E-mail cadastrado para recuperação">
-          <button id="forgotSubmit" class="login-primary-action" type="submit"><span class="login-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h18v12H3zM3 7l9 7 9-7"></path></svg></span><span><strong>Enviar link</strong><small>Você receberá instruções por e-mail</small></span></button>
-        </form>
-        <p id="forgotMessage" class="feedback" role="status" aria-live="polite"></p>
-        <button id="backToLogin" class="login-secondary-action" type="button">Voltar ao login</button>
-      </section>
-
-      <!-- Painel de redefinição: exibido quando resetToken e email vêm na URL. -->
-      <section id="resetPasswordPanel" class="login-panel hidden" aria-labelledby="resetPasswordTitle">
-        <div class="login-panel-head">
-          <h2 id="resetPasswordTitle">Definir nova senha</h2>
-          <p>Crie uma nova senha com pelo menos 6 caracteres.</p>
-        </div>
-        <form id="resetPasswordForm" class="login-form" novalidate>
-          <label for="resetPassword">Nova senha</label>
-          <input id="resetPassword" type="password" minlength="6" autocomplete="new-password" placeholder="Mínimo de 6 caracteres" aria-label="Nova senha">
-          <label for="resetPasswordConfirm">Confirmar senha</label>
-          <input id="resetPasswordConfirm" type="password" minlength="6" autocomplete="new-password" placeholder="Digite novamente" aria-label="Confirmar nova senha">
-          <button id="resetSubmit" class="login-primary-action" type="submit"><span class="login-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span><span><strong>Redefinir senha</strong><small>Atualizar acesso da conta</small></span></button>
-        </form>
-        <p id="resetMessage" class="feedback" role="status" aria-live="polite"></p>
-        <button id="resetBackLogin" class="login-secondary-action" type="button">Voltar ao login</button>
-      </section>
-
-      <div class="login-note">Contas e salas são administradas pelo servidor Google Apps Script.</div>
-    </div>
-  </section>
-
-  <!-- Hub inicial: escolha de novo projeto, projeto salvo, modelo ou importação. -->
+  <!-- Página inicial sem autenticação: novo projeto, autosave, modelos e importação. -->
 <section id="homeScreen" class="home-screen" aria-labelledby="homeTitle">
     <div class="home-content">
       <div class="home-brand">
@@ -135,10 +20,7 @@
         </div>
       </div>
 
-      <div class="home-account-bar">
-        <div id="homeUserIdentity" class="home-user-identity" aria-live="polite">Não autenticado</div>
-        <button id="homeLogoutBtn" type="button" class="home-account-action">Sair</button>
-      </div>
+      <p class="home-storage-note" role="note">Sem conta e sem senha. Seus trabalhos ficam neste navegador; para guardar uma cópia ou compartilhar, exporte o projeto em JSON.</p>
 
       <div class="home-recent home-recent-top" id="recentProjects" hidden>
         <div class="home-recent-head">
@@ -151,15 +33,6 @@
         <div id="recentList" class="recent-list"></div>
       </div>
 
-      <!-- Salas vinculadas à conta local autenticada. -->
-      <section id="userRoomsSection" class="home-recent user-rooms-section" hidden aria-labelledby="userRoomsTitle">
-        <div class="home-recent-head">
-          <div><h2 id="userRoomsTitle">Minhas salas</h2><p>Salas criadas ou das quais você participa.</p></div>
-          <div class="home-recent-actions"><button id="homeCreateRoomBtn" class="home-continue" type="button">Nova sala</button><button id="refreshUserRooms" class="home-continue" type="button">Atualizar</button></div>
-        </div>
-        <div id="userRoomsList" class="recent-list"></div>
-      </section>
-
       <h2 class="home-start-title">Como você quer começar?</h2>
 
 
@@ -167,7 +40,7 @@
         <button id="homeNewProject" class="home-card home-card-primary" type="button">
           <span class="home-icon" aria-hidden="true"><svg viewbox="0 0 24 24"><path d="M12 5v14M5 12h14"></path><rect x="3" y="3" width="18" height="18" rx="3"></rect></svg></span>
           <strong>Novo Projeto</strong>
-          <small>Criar um laboratório vazio e começar do zero.</small>
+          <small>Começar imediatamente com uma planta de laboratório vazia.</small>
         </button>
         <button id="homeUseModel" class="home-card home-card-secondary" type="button">
           <span class="home-icon" aria-hidden="true"><svg viewbox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 16l3-4 2 2 2-3 3 5"></path></svg></span>
@@ -177,7 +50,7 @@
         <button id="homeOpenProject" class="home-card home-card-secondary" type="button">
           <span class="home-icon" aria-hidden="true"><svg viewbox="0 0 24 24"><path d="M3 7h6l2 2h10v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="M3 7V5a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2"></path></svg></span>
           <strong>Abrir Projeto</strong>
-          <small>Carregar um projeto JSON salvo anteriormente.</small>
+          <small>Recuperar um mapa salvo em arquivo JSON.</small>
         </button>
         <button id="homeImportModel" class="home-card home-card-secondary" type="button">
           <span class="home-icon" aria-hidden="true"><svg viewbox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4"></path><path d="M5 19h14"></path><rect x="3" y="3" width="18" height="18" rx="3"></rect></svg></span>
@@ -192,8 +65,6 @@
 <div class="app hidden" id="app">
     <!-- Barra superior: navegação, área ativa, stepper e ações globais. -->
 <header class="topbar" role="banner">
-      <button id="roomCodeBadge" class="room-code-badge" type="button" title="Código da sala" aria-label="Código da sala">Sala <strong id="roomCodeText">—</strong></button>
-      <button id="endRoomBtn" type="button" class="topbar-end-room" title="Encerrar sala" aria-label="Encerrar sala">Encerrar</button>
       <button id="logoutBtn" type="button" class="topbar-text-btn" title="Sair da conta" aria-label="Sair da conta">Sair</button>
       <button id="homeBtn" type="button" title="Voltar à tela inicial" aria-label="Voltar à tela inicial" class="topbar-icon-btn"><svg viewbox="0 0 24 24" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5M5 9v11h14V9M9 20v-6h6v6"></path></svg></button><div class="brand">
         <div class="brand-mark" aria-hidden="true">
@@ -582,8 +453,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Configuração global e URL do backend. -->
   <!-- Carregamento global para operações assíncronas. -->
   <div id="globalLoader" class="global-loader hidden" aria-hidden="true" role="status" aria-live="polite">
     <div class="global-loader-card">
@@ -591,20 +460,12 @@
       <span id="globalLoaderText">Carregando…</span>
     </div>
   </div>
-
-  <script defer src="js/config.js"></script>
   <!-- Constantes, tipos, riscos, EPI e modelos. -->
   <script defer src="js/types.js"></script>
   <!-- Funções de geometria, colisão, contenção e clearance. -->
   <script defer src="js/geometry.js"></script>
   <!-- Regras de validação do mapa e dos objetos. -->
   <script defer src="js/validation.js"></script>
-  <!-- Utilitários criptográficos para persistência/sincronização de projetos. -->
-  <script defer src="js/crypto.js"></script>
-  <!-- Cliente do Web App Google Apps Script (API de autenticação e salas). -->
-  <script defer src="js/room-gas.js"></script>
-  <!-- Camada de autenticação por e-mail e senha integrada ao backend GAS. -->
-  <script defer src="js/auth.js"></script>
   <!-- Orquestração do editor, UI, desenho e eventos. -->
   <script defer src="js/mapa.js"></script>
 </body>

@@ -1,99 +1,3 @@
-
-/* .login-screen: regras visuais e de comportamento deste componente. */
-.login-screen{min-height:100dvh;width:100%;display:flex;align-items:center;justify-content:center;padding:28px 16px;background:radial-gradient(circle at 50% 0%,rgba(157,196,223,.08),transparent 42%),#0a0f13;color:var(--text);overflow:auto}
-
-/* .login-shell: regras visuais e de comportamento deste componente. */
-.login-shell{width:min(560px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 24px 70px rgba(0,0,0,.42);padding:28px}
-
-/* .login-brand: regras visuais e de comportamento deste componente. */
-.login-brand{display:flex;gap:14px;align-items:flex-start;margin-bottom:22px}
-/* .login-brand-mark: regras visuais e de comportamento deste componente. */
-.login-brand-mark{width:48px;height:48px;display:grid;place-items:center;flex:0 0 48px;border:1px solid rgba(157,196,223,.3);border-radius:12px;color:var(--accent);background:rgba(157,196,223,.08)}
-/* .login-brand-mark svg: regras visuais e de comportamento deste componente. */
-.login-brand-mark svg{width:28px;height:28px}
-/* .login-eyebrow: regras visuais e de comportamento deste componente. */
-.login-eyebrow{font-size:10px;letter-spacing:.1em;color:var(--accent);font-weight:700}
-/* .login-brand h1: regras visuais e de comportamento deste componente. */
-.login-brand h1{margin:4px 0 5px;font-size:24px;line-height:1.2}
-/* .login-brand p: regras visuais e de comportamento deste componente. */
-.login-brand p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}
-/* .login-role-tabs: regras visuais e de comportamento deste componente. */
-.login-role-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-/* .login-role-tab: regras visuais e de comportamento deste componente. */
-.login-role-tab{display:flex;align-items:center;justify-content:center;gap:8px;min-height:42px;background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:9px}
-/* .login-role-tab svg: regras visuais e de comportamento deste componente. */
-.login-role-tab svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-/* .login-role-tab.active: regras visuais e de comportamento deste componente. */
-.login-role-tab.active{color:var(--accent);border-color:var(--accent);background:rgba(157,196,223,.07)}
-/* .login-feedback: regras visuais e de comportamento deste componente. */
-.login-feedback{margin:0 0 10px;padding:9px 10px;border:1px solid #7c3a3a;background:#2a1717;color:#fca5a5;border-radius:8px;font-size:11px}
-/* .login-feedback.hidden,.login-loading.hidden: regras visuais e de comportamento deste componente. */
-.login-feedback.hidden,.login-loading.hidden{display:none}
-/* .login-loading: regras visuais e de comportamento deste componente. */
-.login-loading{margin:0 0 10px;padding:9px 10px;border:1px solid var(--line);background:rgba(255,255,255,.02);border-radius:8px;color:var(--accent);font-size:11px}
-/* .login-panel: regras visuais e de comportamento deste componente. */
-.login-panel{padding:16px;border:1px solid var(--line);background:rgba(255,255,255,.015);border-radius:11px}
-/* .login-panel.hidden: regras visuais e de comportamento deste componente. */
-.login-panel.hidden{display:none}
-/* .login-panel-head h2: regras visuais e de comportamento deste componente. */
-.login-panel-head h2{margin:0 0 4px;font-size:15px}
-/* .login-panel-head p: regras visuais e de comportamento deste componente. */
-.login-panel-head p{margin:0 0 15px;color:var(--muted);font-size:11px;line-height:1.5}
-/* .login-primary-action: regras visuais e de comportamento deste componente. */
-.login-primary-action{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:13px;border-radius:9px;border:1px solid var(--accent);background:rgba(157,196,223,.08);color:var(--text)}
-/* .login-primary-action:hover: regras visuais e de comportamento deste componente. */
-.login-primary-action:hover{background:rgba(157,196,223,.14);transform:translateY(-1px)}
-/* .login-primary-action:active: regras visuais e de comportamento deste componente. */
-.login-primary-action:active{transform:scale(.985)}
-/* .login-action-icon: regras visuais e de comportamento deste componente. */
-.login-action-icon{width:34px;height:34px;display:grid;place-items:center;flex:0 0 34px;border-radius:8px;background:rgba(157,196,223,.09);color:var(--accent)}
-/* .login-action-icon svg: regras visuais e de comportamento deste componente. */
-.login-action-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-/* .login-primary-action strong,.login-primary-action small: regras visuais e de comportamento deste componente. */
-.login-primary-action strong,.login-primary-action small{display:block}
-/* .login-primary-action strong: regras visuais e de comportamento deste componente. */
-.login-primary-action strong{font-size:12px}
-/* .login-primary-action small: regras visuais e de comportamento deste componente. */
-.login-primary-action small{margin-top:2px;color:var(--muted);font-size:10px}
-/* .login-divider: regras visuais e de comportamento deste componente. */
-.login-divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--muted);font-size:10px}
-/* .login-divider:before,.login-divider:after: regras visuais e de comportamento deste componente. */
-.login-divider:before,.login-divider:after{content:"";height:1px;background:var(--line);flex:1}
-/* .login-form label: regras visuais e de comportamento deste componente. */
-.login-form label{display:block;margin-bottom:6px;font-size:11px;color:var(--text);font-weight:600}
-/* .login-form small: regras visuais e de comportamento deste componente. */
-.login-form small{display:block;color:var(--muted);font-size:10px;line-height:1.45;margin-top:7px}
-/* .login-input-row: regras visuais e de comportamento deste componente. */
-.login-input-row{display:grid;grid-template-columns:1fr auto;gap:8px}
-/* .login-form input: regras visuais e de comportamento deste componente. */
-.login-form input{width:100%;min-height:40px;border:1px solid var(--line);border-radius:8px;background:#0e1419;color:var(--text);padding:8px 10px;font:600 15px/1.1 ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase;letter-spacing:.12em}
-/* .login-input-row button: regras visuais e de comportamento deste componente. */
-.login-input-row button{min-width:90px}
-/* .login-code-input: regras visuais e de comportamento deste componente. */
-.login-code-input{text-align:center;margin-bottom:10px}
-/* .login-note: regras visuais e de comportamento deste componente. */
-.login-note{margin-top:14px;color:var(--muted);font-size:10px;text-align:center}
-/* .room-code-badge: regras visuais e de comportamento deste componente. */
-.room-code-badge{display:none!important}
-/* .topbar-end-room: regras visuais e de comportamento deste componente. */
-.topbar-end-room{display:none!important}
-
-/* body.role-student .palette button,body.role-student #newArea,body.role-student #deleteArea,body.role-student #renameArea,body.role-student #areaType,body.role-student #applyRoom,body.role-student #roomW,body.role-student #roomH,body.role-student #applyProps,body.role-student #rotate,body.role-student #ctxDelete,body.role-student #ctxDuplicate,body.role-student #ctxRotate,body.role-student #ctxGroup,body.role-student #ctxUngroup,body.role-student #ctxLock,body.role-student #ctxHide,body.role-student #undo,body.role-student #redo,body.role-student #save,body.role-student #load,body.role-student #exportSvg: regras visuais e de comportamento deste componente. */
-body.role-student .palette button,body.role-student #newArea,body.role-student #deleteArea,body.role-student #renameArea,body.role-student #areaType,body.role-student #applyRoom,body.role-student #roomW,body.role-student #roomH,body.role-student #applyProps,body.role-student #rotate,body.role-student #ctxDelete,body.role-student #ctxDuplicate,body.role-student #ctxRotate,body.role-student #ctxGroup,body.role-student #ctxUngroup,body.role-student #ctxLock,body.role-student #ctxHide,body.role-student #undo,body.role-student #redo,body.role-student #save,body.role-student #load,body.role-student #exportSvg{pointer-events:none;opacity:.45}
-/* .student-mode-badge: regras visuais e de comportamento deste componente. */
-.student-mode-badge{display:inline-flex;align-items:center;padding:4px 8px;border:1px solid var(--line);border-radius:8px;color:var(--accent);font-size:10px;background:rgba(157,196,223,.06)}
-/* @media(max-width:620px): regras visuais e de comportamento deste componente. */
-@media(max-width:620px){.login-shell{padding:20px;border-radius:12px}
-/* .login-brand h1: regras visuais e de comportamento deste componente. */
-.login-brand h1{font-size:20px}
-/* .login-role-tabs: regras visuais e de comportamento deste componente. */
-.login-role-tabs{grid-template-columns:1fr}
-/* .login-input-row: regras visuais e de comportamento deste componente. */
-.login-input-row{grid-template-columns:1fr}
-/* .login-input-row button: regras visuais e de comportamento deste componente. */
-.login-input-row button{width:100%}}
-
-
 /* :root: regras visuais e de comportamento deste componente. */
 :root {
   --bg: #0d1216;
@@ -2133,40 +2037,6 @@ header.topbar { height:50px; padding:0 12px; gap:10px; }
   .panel-section-head { min-height: 40px; }
 }
 
-/* .login-screen.hidden: regras visuais e de comportamento deste componente. */
-.login-screen.hidden{display:none!important}
-
-/* .has-room-session .room-code-badge: regras visuais e de comportamento deste componente. */
-.has-room-session .room-code-badge{display:inline-flex!important;align-items:center;gap:6px;min-height:30px;padding:4px 9px;border:1px solid var(--line);border-radius:8px;background:rgba(157,196,223,.05);color:var(--accent);font-size:10px;cursor:pointer}
-
-/* .has-room-session .room-code-badge strong: regras visuais e de comportamento deste componente. */
-.has-room-session .room-code-badge strong{font:700 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em}
-
-/* .has-room-session .topbar-end-room:not([hidden]): regras visuais e de comportamento deste componente. */
-.has-room-session .topbar-end-room:not([hidden]){display:inline-flex!important}
-
-/* body.role-student .topbar-end-room: regras visuais e de comportamento deste componente. */
-body.role-student .topbar-end-room{display:none!important}
-/* @media(max-width:900px): regras visuais e de comportamento deste componente. */
-@media(max-width:900px){.has-room-session .room-code-badge{font-size:9px;padding:4px 7px}
-/* .has-room-session .room-code-badge strong: regras visuais e de comportamento deste componente. */
-.has-room-session .room-code-badge strong{font-size:10px}}
-
-/* Autenticação local e gerenciamento de salas demonstrativo. */
-
-
-/* Controles adicionais do formulário local de autenticação. */
-.auth-form { gap: 8px; }
-.auth-form input { text-transform: none; letter-spacing: normal; font-family: inherit; }
-.login-secondary-action { width: 100%; min-height: 38px; margin-top: 8px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; }
-.login-secondary-action:hover { border-color: var(--accent); color: var(--text); }
-.auth-room-panel { margin-top: 12px; }
-body.role-student .auth-room-panel#loginProfessorPanel { display: none; }
-
-/* Ações agrupadas da seção de salas na Home. */
-.home-recent-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
-@media (max-width:620px) { .home-recent-actions { width:100%; justify-content:stretch; } .home-recent-actions .home-continue { flex:1; } }
-
 /* FRENTE 41 — acessibilidade, contraste, feedback e responsividade. */
 :root {
   --muted: #c2d2dc;
@@ -2261,3 +2131,15 @@ summary:focus-visible {
 .login-forgot-link:hover{background:rgba(31,211,232,.06);border-color:rgba(31,211,232,.22)}
 .feedback{min-height:18px;margin:10px 0;color:var(--muted);font-size:11px;line-height:1.45}
 #forgotPasswordPanel,#resetPasswordPanel{margin-top:12px}
+
+/* Fluxo inicial sem login */
+.home-storage-note { margin:0 0 22px; padding:12px 14px; border:1px solid rgba(157,196,223,.26); border-radius:10px; color:var(--muted); background:rgba(157,196,223,.045); font-size:13px; line-height:1.55; }
+@media(max-width:540px) { .home-actions { grid-template-columns:minmax(0,1fr); } .home-card, .home-card-primary, .home-card-secondary { min-height:110px; } .home-screen { padding-bottom:40px; } }
+/* Modais compartilhados precisam ficar acima da Home, que usa z-index: 500. */
+#modelsModal, #confirmModal { z-index: 650; }
+/* Preserva contraste suficiente no card principal quando teclado/toque aplica foco. */
+.home-card-primary:hover, .home-card-primary:focus-visible { color:var(--text); }
+.home-card-primary:hover .home-icon, .home-card-primary:focus-visible .home-icon { color:var(--accent); border-color:var(--line); }
+.home-card-primary:hover small, .home-card-primary:focus-visible small { color:var(--muted); }
+#modelsModal { z-index: 650; }
+#confirmModal { z-index: 700; }

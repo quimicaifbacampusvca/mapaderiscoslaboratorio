@@ -200,11 +200,19 @@ function updateGuides(activeObj) {
 function showToast(msg, type = "info") {
   const container = $("toastContainer");
   if (!container) return;
+  // Evita anúncios repetidos à tecnologia assistiva enquanto um aviso já está presente.
+  const normalizedMessage = String(msg);
+  const normalizedType = ["success", "error", "info"].includes(type) ? type : "info";
+  if (Array.from(container.children).some(el => el.dataset.toastText === normalizedMessage && el.dataset.toastType === normalizedType)) return;
+  type = normalizedType;
   // Evita uma coluna ilimitada de avisos, mantendo os mais recentes.
   while (container.children.length >= 3) container.firstElementChild.remove();
   const toast = document.createElement("div");
   toast.className = `toast toast-${type}`;
   toast.setAttribute("role", type === "error" ? "alert" : "status");
+  toast.setAttribute("aria-atomic", "true");
+  toast.dataset.toastText = normalizedMessage;
+  toast.dataset.toastType = type;
   const icon = document.createElement("span");
   icon.className = "toast-icon";
   icon.setAttribute("aria-hidden", "true");
@@ -215,7 +223,7 @@ function showToast(msg, type = "info") {
       : '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg>';
   icon.innerHTML = svg;
   const message = document.createElement("span");
-  message.textContent = String(msg);
+  message.textContent = normalizedMessage;
   toast.append(icon, message);
   container.appendChild(toast);
   setTimeout(() => {
@@ -1479,6 +1487,7 @@ function switchPanelTab(tab){
   document.querySelectorAll(".panel-tab").forEach(btn=>{
     const active=btn.dataset.panelTab===state.panelTab;
     btn.setAttribute("aria-selected",active?"true":"false");
+    btn.tabIndex = active ? 0 : -1;
   });
   document.querySelectorAll(".panel-tab-content").forEach(panel=>{ panel.hidden=panel.dataset.panelContent!==state.panelTab; });
 }
@@ -2291,21 +2300,27 @@ on("ruler", "click", () => {
 on("selectMode", "click", () => {
   state.tool = "select";
   $("selectMode")?.classList.add("active");
+  $("selectMode")?.setAttribute("aria-pressed", "true");
   $("panMode")?.classList.remove("active");
+  $("panMode")?.setAttribute("aria-pressed", "false");
 });
 on("panMode", "click", () => {
   state.tool = "pan";
   $("panMode")?.classList.add("active");
+  $("panMode")?.setAttribute("aria-pressed", "true");
   $("selectMode")?.classList.remove("active");
+  $("selectMode")?.setAttribute("aria-pressed", "false");
 });
 on("grid", "click", () => {
   state.grid = !state.grid;
   $("grid")?.classList.toggle("active", state.grid);
+  $("grid")?.setAttribute("aria-pressed", String(state.grid));
   requestDraw();
 });
 on("snap", "click", () => {
   state.snap = !state.snap;
   $("snap")?.classList.toggle("active", state.snap);
+  $("snap")?.setAttribute("aria-pressed", String(state.snap));
   showToast(`Snap ${state.snap ? "ativado" : "desativado"}`, "info");
 });
 on("zoomIn", "click", () => {
@@ -3028,7 +3043,25 @@ on("exportSvg", "click", () => {
 
 // NAVEGAÇÃO DA INTERFACE
 $("homeBtn")?.addEventListener("click", () => showHomeScreen());
-document.querySelectorAll(".panel-tab").forEach(btn=>btn.addEventListener("click",()=>switchPanelTab(btn.dataset.panelTab)));
+document.querySelectorAll(".panel-tab").forEach(btn => {
+  btn.addEventListener("click", () => switchPanelTab(btn.dataset.panelTab));
+  btn.addEventListener("keydown", e => {
+    if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(e.key)) return;
+    e.preventDefault();
+    const tabs = Array.from(document.querySelectorAll(".panel-tab"));
+    const current = tabs.indexOf(btn);
+    const next = e.key === "Home" ? 0 : e.key === "End" ? tabs.length - 1
+      : (current + (e.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+    const target = tabs[next];
+    // A aba Propriedades requer seleção; mantemos o foco acessível na aba sem abrir um painel vazio.
+    if (target.dataset.panelTab === "properties" && !state.selectedObjects.length) {
+      showToast("Selecione um elemento para abrir Propriedades", "info");
+      return;
+    }
+    switchPanelTab(target.dataset.panelTab);
+    target.focus();
+  });
+});
 
 // GERENCIAMENTO DE ÁREAS
 $("areaSelect")?.addEventListener("change", e => switchArea(e.target.value));
@@ -3065,42 +3098,63 @@ if (shortcutsModal) {
 
 // CONTROLES E ATALHOS DE TECLADO
 window.addEventListener("keydown", e => {
-  // Atalhos globais não podem manipular o mapa atrás de um diálogo ativo.
-  if (topAppModal()) return;
+  // Atalhos globais não alteram um desenho quando a Home ou um diálogo estão abertos.
+  if ($("app")?.classList.contains("hidden") || topAppModal()) return;
   const active = document.activeElement;
-  const isInput = ["INPUT", "TEXTAREA", "SELECT"].includes(active.tagName);
+  const isInput = Boolean(active?.closest?.('input, textarea, select, [contenteditable="true"], [role="textbox"]'));
   const isCtrl = e.ctrlKey || e.metaKey;
+  const key = e.key.toLowerCase();
 
-  if (isCtrl && e.key.toLowerCase() === "l") {
+  // Não ocupar Ctrl+L (barra de endereços) nem Ctrl+P (imprimir) do navegador.
+  if (!isInput && e.altKey && e.shiftKey && !isCtrl && ["l", "p", "d"].includes(key)) {
     e.preventDefault();
-    switchPanelTab("layers");
-    const tree = $("objectsTree");
-    const firstItem = tree.querySelector(".tree-item");
-    if (firstItem) firstItem.focus();
-    else tree.focus();
-    showToast("Foco na lista de camadas", "info");
-    return;
-  }
-
-  if (isCtrl && e.key.toLowerCase() === "p") {
-    e.preventDefault();
-    switchPanelTab("properties");
-    if (state.selectedObjects.length === 0 && state.objects.length > 0) {
-      selectWithGroupSupport(state.objects[0], false);
-      updateUI(); requestDraw();
+    if ((key === "l" || key === "p") && window.matchMedia("(max-width: 1100px)").matches) {
+      if (key === "p" && !state.selectedObjects.length && state.objects.length) {
+        selectWithGroupSupport(state.objects[0], false);
+        updateUI(); requestDraw();
+      }
+      switchPanelTab(key === "l" ? "layers" : "properties");
+      document.dispatchEvent(new CustomEvent("mapa:focus-mobile-panel", { detail: { target: key } }));
+      return;
     }
-    const xInput = $("x");
-    if (xInput && !xInput.disabled) {
-      xInput.focus();
-      xInput.select();
+    if (key === "l") {
+      switchPanelTab("layers");
+      const tree = $("objectsTree");
+      const firstItem = tree?.querySelector(".tree-item");
+      (firstItem || tree)?.focus();
+      showToast("Foco na lista de camadas", "info");
+    } else if (key === "d") {
+      if (active === canvas || active?.classList?.contains("canvas-area")) $("ctxDuplicate")?.click();
+      return;
     } else {
-      $("props")?.focus();
+      if (!state.selectedObjects.length && state.objects.length) {
+        selectWithGroupSupport(state.objects[0], false);
+        updateUI(); requestDraw();
+      }
+      switchPanelTab("properties");
+      const target = state.selectedObjects.length ? $("x") : $("panelTab-layers");
+      target?.focus();
+      if (target?.id === "x") target.select?.();
+      showToast(state.selectedObjects.length ? "Foco nas propriedades" : "Selecione um elemento para editar propriedades", "info");
     }
-    showToast("Foco nas propriedades", "info");
     return;
   }
 
-  if (e.key === "f" || e.key === "F") {
+  if (isInput) return;
+  // Edição geométrica somente quando o Canvas (ou seu contêiner) está focado.
+  // Outros botões, listas e menus mantêm o comportamento nativo do teclado.
+  const canvasFocused = active === canvas || active?.classList?.contains("canvas-area");
+  if (!canvasFocused && !(isCtrl && !e.altKey && ["z", "y"].includes(key))) return;
+  if (e.altKey) return;
+  // Preserva busca, impressão, favoritos e demais atalhos do navegador.
+  if (isCtrl && !["z", "y"].includes(key)) return;
+  if (canvasFocused && e.key === "?") {
+    e.preventDefault();
+    $("btnShortcuts")?.click();
+    return;
+  }
+
+  if (!isCtrl && (e.key === "f" || e.key === "F")) {
     if (!isInput) { e.preventDefault(); fitRoom(); return; }
   }
 
@@ -3111,7 +3165,6 @@ window.addEventListener("keydown", e => {
 
   if (isCtrl && e.key.toLowerCase() === "z") { e.preventDefault(); undo(); }
   else if (isCtrl && e.key.toLowerCase() === "y") { e.preventDefault(); redo(); }
-  else if (isCtrl && e.key.toLowerCase() === "d") { e.preventDefault(); $("ctxDuplicate").click(); }
   else if (e.key.toLowerCase() === "g" && !e.shiftKey) { e.preventDefault(); groupObjects(); }
   else if (e.key.toLowerCase() === "g" && e.shiftKey) { e.preventDefault(); ungroupObjects(); }
   else if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); $("ctxDelete").click(); }
@@ -3266,6 +3319,17 @@ window.addEventListener("DOMContentLoaded", () => {
   closeProps?.addEventListener("click", () => closePanels());
   backdrop.addEventListener("click", () => closePanels());
   document.addEventListener("mapa:close-mobile-panels", () => closePanels({ restoreFocus: false }));
+  document.addEventListener("mapa:focus-mobile-panel", event => {
+    if (!isMobile() || $("app")?.classList.contains("hidden")) return;
+    openPanel("right", toggleProps);
+    window.setTimeout(() => {
+      if (!rightPanel.classList.contains("mobile-open")) return;
+      const target = event.detail?.target === "l"
+        ? ($("objectsTree")?.querySelector(".tree-item") || $("objectsTree"))
+        : ($("x")?.disabled ? $("panelTab-layers") : $("x"));
+      target?.focus({ preventScroll: true });
+    }, 75);
+  });
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape" || !isMobile() || backdrop.hidden || topAppModal()) return;
     event.preventDefault();

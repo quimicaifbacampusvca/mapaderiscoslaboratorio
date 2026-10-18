@@ -20,7 +20,6 @@
         </div>
       </div>
 
-      <p class="home-storage-note" role="note">Sem login. O projeto atual é salvo automaticamente neste navegador; use <strong>Baixar JSON</strong> para guardar ou compartilhar um arquivo.</p>
       <p id="homeStorageWarning" class="home-storage-warning" role="alert" hidden></p>
 
       <div class="home-recent home-recent-top" id="recentProjects" hidden>
@@ -121,7 +120,7 @@
           <svg viewbox="0 0 24 24"><path d="M21 7v6h-6M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"></path></svg>
           <span class="btn-label">Refazer</span>
         </button>
-        </div><div class="top-action-group top-action-file"><button id="btnShortcuts" title="Atalhos de Teclado (?)" aria-label="Abrir guia de atalhos de teclado">
+        </div><div class="top-action-group top-action-file"><button id="btnShortcuts" aria-keyshortcuts="?" title="Atalhos de Teclado (?)" aria-label="Abrir guia de atalhos de teclado">
           <svg viewbox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 15h.01M12 7a3 3 0 0 1 3 3c0 2-3 3-3 3"></path></svg>
           <span class="btn-label">Ajuda</span>
         </button>
@@ -225,28 +224,28 @@
           <span>2. Pressione Alt + Arrastar ou Ctrl + D para duplicar.</span>
           <span>3. Agrupe elementos selecionados pressionando a tecla G.</span>
           <span>4. Use Setas (Shift = rápido), R para girar e + / - para escalar.</span>
-          <span>5. Navegue por Tab, focar camadas (Ctrl+L) e propriedades (Ctrl+P).</span>
+          <span>5. Navegue por Tab, focar camadas (Alt+Shift+L) e propriedades (Alt+Shift+P).</span>
         </div>
       </div></details></aside><!-- ÁREA CENTRAL: CANVAS -->
       <section class="canvas-area" tabindex="0" aria-label="Área de Trabalho Principal do Editor">
         <div class="canvas-toolbar" role="toolbar" aria-label="Ferramentas do Canvas">
           <div class="tool-group">
-            <button class="mode active" id="selectMode" title="Selecionar elementos" aria-label="Ativar Modo Seleção">
+            <button class="mode active" id="selectMode" title="Selecionar elementos" aria-label="Ativar Modo Seleção" aria-pressed="true">
               <svg viewbox="0 0 24 24"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path></svg>
               <span>Selecionar</span>
             </button>
-            <button class="mode" id="panMode" title="Mover área do mapa" aria-label="Ativar Modo Panorâmico">
+            <button class="mode" id="panMode" title="Mover área do mapa" aria-label="Ativar Modo Panorâmico" aria-pressed="false">
               <svg viewbox="0 0 24 24"><path d="M5 9l-3 3 3 3M19 9l3 3-3 3M9 5l3-3 3 3M9 19l3 3 3-3M12 12h0"></path></svg>
               <span>Mover</span>
             </button>
           </div>
 
           <div class="tool-group">
-            <button id="grid" title="Alternar grade de referência" aria-label="Alternar exibição da grade">
+            <button id="grid" title="Alternar grade de referência" aria-label="Alternar exibição da grade" aria-pressed="true">
               <svg viewbox="0 0 24 24"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18"></path></svg>
               <span>Grade</span>
             </button>
-            <button id="snap" title="Alinhamento magnético (Snap 10 cm)" aria-label="Alternar Snap Magnético de 10cm">
+            <button id="snap" title="Alinhamento magnético (Snap 10 cm)" aria-label="Alternar Snap Magnético de 10cm" aria-pressed="true">
               <svg viewbox="0 0 24 24"><path d="M6 3v6a6 6 0 0 0 12 0V3M4 3h4M16 3h4M12 15v6M9 18h6"></path></svg>
               <span>Snap</span>
             </button>
@@ -272,7 +271,7 @@
 <div id="contextualToolbar" class="contextual-toolbar hidden" role="toolbar" aria-label="Ações para Seleção Atual">
           <button id="ctxHide" title="Ocultar / Mostrar visibilidade" aria-label="Alternar Visibilidade dos elementos selecionados"><svg viewbox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> Visibilidade</button>
           <button id="ctxLock" title="Bloquear / Desbloquear movimentação" aria-label="Alternar Bloqueio dos elementos selecionados"><svg viewbox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Bloqueio</button>
-          <button id="ctxDuplicate" title="Duplicar (Ctrl+D)" aria-label="Duplicar elementos selecionados"><svg viewbox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg> Duplicar</button>
+          <button id="ctxDuplicate" title="Duplicar (Alt+Shift+D)" aria-label="Duplicar elementos selecionados"><svg viewbox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg> Duplicar</button>
           <button id="ctxRotate" title="Girar 90°" aria-label="Girar elementos selecionados em noventa graus"><svg viewbox="0 0 24 24"><path d="M7.11 8.53L5.7 7.11C4.8 8.27 4.24 9.61 4.07 11h2.02c.14-.87.52-1.67 1.02-2.47zM6.09 13H4.07c.17 1.39.73 2.73 1.6c.14.87.52 1.67 1.02 2.47l-1.41 1.41C4.37 15.61 3.73 13.91 3.56 12h2.02c.17 1.39.73 2.73 1.6 3.87zM12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8z"></path></svg> Girar</button>
           <button id="ctxGroup" title="Agrupar selecionados (G)" aria-label="Agrupar elementos selecionados"><svg viewbox="0 0 24 24"><path d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z"></path></svg> Agrupar</button>
           <button id="ctxUngroup" class="hidden" title="Desagrupar (Shift+G)" aria-label="Desagrupar grupo selecionado"><svg viewbox="0 0 24 24"><path d="M4 4h4v4H4zm12 0h4v4h-4zM4 16h4v4H4zm12 0h4v4h-4z"></path></svg> Desagrupar</button>
@@ -282,19 +281,19 @@
         <!-- Canvas principal onde a planta é desenhada e editada. -->
 <canvas id="canvas" tabindex="0" role="application" aria-label="Área de trabalho interativa do Mapa de Riscos"></canvas>
 
-        <div class="canvas-help">Dica: Setas movem elementos. R gira. + / - redimensiona. Ctrl+L para camadas, Ctrl+P para propriedades.</div>
+        <div class="canvas-help">Dica: Setas movem elementos. R gira. + / - redimensiona. Alt+Shift+L para camadas, Alt+Shift+P para propriedades.</div>
       </section>
 
       <!-- PAINEL DIREITO -->
       <!-- Painel direito: camadas, propriedades e relatório. -->
 <aside class="right-panel" id="rightPanel" tabindex="0" aria-label="Painel lateral de edição"><div class="mobile-panel-header"><strong>Painel</strong><button type="button" class="mobile-panel-close" id="closePropsPanel" aria-label="Fechar painel lateral">×</button></div><!-- Abas do painel direito. -->
-<div class="panel-tabs" role="tablist" aria-label="Painel lateral"><button id="panelTab-layers" class="panel-tab" type="button" role="tab" aria-selected="true" data-panel-tab="layers"><span>Camadas</span><span id="layersBadge" class="tab-badge">0</span></button><button id="panelTab-properties" class="panel-tab" type="button" role="tab" aria-selected="false" data-panel-tab="properties"><span>Propriedades</span></button><button id="panelTab-report" class="panel-tab" type="button" role="tab" aria-selected="false" data-panel-tab="report"><span>Relatório</span><span id="reportBadge" class="tab-badge">0/10</span></button></div><!-- Área de alertas de validação independente da aba. -->
-<div id="validationAlert" class="validation-box validation-box-global hidden" aria-live="polite"></div><div class="panel-tab-content" id="panelContent-layers" data-panel-content="layers" role="tabpanel"><section style="margin-top: 16px;">
+<div class="panel-tabs" role="tablist" aria-label="Painel lateral"><button id="panelTab-layers" class="panel-tab" type="button" role="tab" aria-controls="panelContent-layers" tabindex="0" aria-selected="true" data-panel-tab="layers"><span>Camadas</span><span id="layersBadge" class="tab-badge">0</span></button><button id="panelTab-properties" class="panel-tab" type="button" role="tab" aria-controls="panelContent-properties" tabindex="-1" aria-selected="false" data-panel-tab="properties"><span>Propriedades</span></button><button id="panelTab-report" class="panel-tab" type="button" role="tab" aria-controls="panelContent-report" tabindex="-1" aria-selected="false" data-panel-tab="report"><span>Relatório</span><span id="reportBadge" class="tab-badge">0/10</span></button></div><!-- Área de alertas de validação independente da aba. -->
+<div id="validationAlert" class="validation-box validation-box-global hidden" aria-live="polite"></div><div class="panel-tab-content" id="panelContent-layers" data-panel-content="layers" role="tabpanel" aria-labelledby="panelTab-layers" tabindex="0"><section style="margin-top: 16px;">
           <div class="tree-header">
             <h3>Camadas e Objetos</h3>
             <span class="badge" id="totalObjectsBadge" aria-live="polite">0 itens</span>
           </div>
-          <div class="help-text">Use setas para navegar, Enter para selecionar, Shift+Enter para seleção múltipla. (Ctrl+L)</div>
+          <div class="help-text">Use setas para navegar, Enter para selecionar, Shift+Enter para seleção múltipla. (Alt+Shift+L)</div>
           <div id="objectsTree" class="objects-tree" role="listbox" aria-label="Lista de Camadas e Objetos" tabindex="0"></div>
         </section>
 
@@ -303,7 +302,7 @@
           <div id="riskList" class="risk-list" aria-live="polite"></div>
         </section>
 
-        </div><div class="panel-tab-content" id="panelContent-properties" data-panel-content="properties" role="tabpanel" hidden="hidden"><section class="selection-head">
+        </div><div class="panel-tab-content" id="panelContent-properties" data-panel-content="properties" role="tabpanel" aria-labelledby="panelTab-properties" tabindex="0" hidden="hidden"><section class="selection-head">
           <div class="tree-header">
             <h3 id="title">Nenhum elemento</h3>
           </div>
@@ -352,7 +351,7 @@
           <div class="help-text">Nenhum elemento selecionado para edição direta.</div>
         </div>
 
-        </div><div class="panel-tab-content" id="panelContent-report" data-panel-content="report" role="tabpanel" hidden="hidden"><section class="map-check" id="complianceSection">
+        </div><div class="panel-tab-content" id="panelContent-report" data-panel-content="report" role="tabpanel" aria-labelledby="panelTab-report" tabindex="0" hidden="hidden"><section class="map-check" id="complianceSection">
           <div class="tree-header">
             <div class="section-title" style="margin:0;">Conformidade Técnica</div>
             <span class="badge" id="compliance-badge" aria-live="polite">0/10</span>
@@ -374,7 +373,7 @@
       </div></aside><div id="mobilePanelBackdrop" class="mobile-panel-backdrop" hidden></div></main>
 
     <!-- CONTAINER DE TOASTS -->
-    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+    <div id="toastContainer" class="toast-container" aria-live="off" aria-label="Notificações da aplicação"></div>
 
     <!-- RELATÓRIO GLOBAL DE CONFORMIDADE -->
     <div id="complianceReportModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="complianceReportTitle">
@@ -441,15 +440,15 @@
         <div class="modal-body">
           <ul class="shortcuts-list">
             <li><span>Desfazer / Refazer</span><kbd>Ctrl + Z / Ctrl + Y</kbd></li>
-            <li><span>Focar Lista de Camadas</span><kbd>Ctrl + L</kbd></li>
-            <li><span>Focar Painel de Propriedades</span><kbd>Ctrl + P</kbd></li>
+            <li><span>Focar Lista de Camadas</span><kbd>Alt + Shift + L</kbd></li>
+            <li><span>Focar Painel de Propriedades</span><kbd>Alt + Shift + P</kbd></li>
             <li><span>Navegar entre Painéis</span><kbd>Tab / Shift + Tab</kbd></li>
             <li><span>Navegar na Lista de Camadas</span><kbd>Setas Cima / Baixo</kbd></li>
             <li><span>Selecionar Objeto da Lista</span><kbd>Enter / Shift + Enter</kbd></li>
             <li><span>Mover Elemento no Canvas</span><kbd>Setas (Shift = 0.5m)</kbd></li>
             <li><span>Girar Elemento Selecionado</span><kbd>R (Shift = 90°)</kbd></li>
             <li><span>Redimensionar Elemento</span><kbd>+ / -</kbd></li>
-            <li><span>Duplicar Elemento</span><kbd>Ctrl + D / Alt + Arrastar</kbd></li>
+            <li><span>Duplicar Elemento</span><kbd>Alt + Shift + D / Alt + Arrastar</kbd></li>
             <li><span>Agrupar / Desagrupar</span><kbd>G / Shift + G</kbd></li>
             <li><span>Excluir Selecionado</span><kbd>Delete / Backspace</kbd></li>
             <li><span>Enquadrar Sala na Tela</span><kbd>F</kbd></li>

@@ -2133,7 +2133,6 @@ summary:focus-visible {
 #forgotPasswordPanel,#resetPasswordPanel{margin-top:12px}
 
 /* Fluxo inicial sem login */
-.home-storage-note { margin:0 0 22px; padding:12px 14px; border:1px solid rgba(157,196,223,.26); border-radius:10px; color:var(--muted); background:rgba(157,196,223,.045); font-size:13px; line-height:1.55; }
 @media(max-width:540px) { .home-actions { grid-template-columns:minmax(0,1fr); } .home-card, .home-card-primary, .home-card-secondary { min-height:110px; } .home-screen { padding-bottom:40px; } }
 /* Modais compartilhados precisam ficar acima da Home, que usa z-index: 500. */
 #modelsModal, #confirmModal { z-index: 650; }
@@ -2349,4 +2348,26 @@ input[aria-invalid="true"], select[aria-invalid="true"] { border-color:#ef7777; 
   /* Ações de arquivo preservam seu nome acessível, mas não extrapolam a barra. */
   .topbar-action-cluster .top-action-file button span { display:none; }
   .topbar-action-cluster .top-action-file button { min-width:36px; }
+}
+
+/* UIUX-0.6.0 — foco, estados perceptíveis e movimento reduzido. */
+.panel-tab:focus-visible, .mobile-only-btn:focus-visible,
+.topbar button:focus-visible, .canvas-toolbar button:focus-visible,
+.tree-item:focus-visible, .tree-action-btn:focus-visible,
+.home-actions button:focus-visible, .home-recent button:focus-visible,
+.panel-section summary:focus-visible {
+  outline:3px solid var(--accent); outline-offset:2px;
+}
+.panel-tab[aria-selected="true"] { border-bottom-color:var(--accent); }
+.canvas-toolbar button[aria-pressed="true"] { box-shadow:inset 0 -2px 0 var(--accent); }
+.toast[role="alert"] { border-left-width:4px; }
+@media (prefers-reduced-motion:reduce) {
+  .home-card, .home-icon, .step, .panel-section-chevron,
+  .panel-tab, .canvas-toolbar button, .mobile-only-btn,
+  .mobile-panel-backdrop, .left-panel, .right-panel,
+  .toast, .toast-leaving, .modal-card, .modal-backdrop {
+    animation:none !important;
+    transition:none !important;
+    scroll-behavior:auto !important;
+  }
 }

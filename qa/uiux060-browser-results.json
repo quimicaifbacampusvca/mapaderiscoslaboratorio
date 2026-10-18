@@ -1,0 +1,432 @@
+[
+  {
+    "name": "320 removed banner",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 new project visible",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 editor opens",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 toolbar aria initial",
+    "ok": true,
+    "detail": "[{'id': 'selectMode', 'pressed': 'true'}, {'id': 'panMode', 'pressed': 'false'}, {'id': 'grid', 'pressed': 'true'}, {'id': 'snap', 'pressed': 'true'}, {'id': 'ruler', 'pressed': 'false'}]"
+  },
+  {
+    "name": "320 toggles announce",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 tool switch aria",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 toast dedupe",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 toast aria",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 control focus protected",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 browser ctrl+l free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 browser ctrl+p free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 browser ctrl+d free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 browser ctrl+f free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 canvas keyboard move",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 layers accelerator",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 props accelerator",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "320 no JS errors",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "390 removed banner",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 new project visible",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 editor opens",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 toolbar aria initial",
+    "ok": true,
+    "detail": "[{'id': 'selectMode', 'pressed': 'true'}, {'id': 'panMode', 'pressed': 'false'}, {'id': 'grid', 'pressed': 'true'}, {'id': 'snap', 'pressed': 'true'}, {'id': 'ruler', 'pressed': 'false'}]"
+  },
+  {
+    "name": "390 toggles announce",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 tool switch aria",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 toast dedupe",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 toast aria",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 control focus protected",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 browser ctrl+l free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 browser ctrl+p free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 browser ctrl+d free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 browser ctrl+f free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 canvas keyboard move",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 layers accelerator",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 props accelerator",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "390 no JS errors",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "768 removed banner",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 new project visible",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 editor opens",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 toolbar aria initial",
+    "ok": true,
+    "detail": "[{'id': 'selectMode', 'pressed': 'true'}, {'id': 'panMode', 'pressed': 'false'}, {'id': 'grid', 'pressed': 'true'}, {'id': 'snap', 'pressed': 'true'}, {'id': 'ruler', 'pressed': 'false'}]"
+  },
+  {
+    "name": "768 toggles announce",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 tool switch aria",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 toast dedupe",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 toast aria",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 control focus protected",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 browser ctrl+l free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 browser ctrl+p free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 browser ctrl+d free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 browser ctrl+f free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 canvas keyboard move",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 layers accelerator",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 props accelerator",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "768 no JS errors",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "1100 removed banner",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 new project visible",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 editor opens",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 toolbar aria initial",
+    "ok": true,
+    "detail": "[{'id': 'selectMode', 'pressed': 'true'}, {'id': 'panMode', 'pressed': 'false'}, {'id': 'grid', 'pressed': 'true'}, {'id': 'snap', 'pressed': 'true'}, {'id': 'ruler', 'pressed': 'false'}]"
+  },
+  {
+    "name": "1100 toggles announce",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 tool switch aria",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 toast dedupe",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 toast aria",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 control focus protected",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 browser ctrl+l free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 browser ctrl+p free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 browser ctrl+d free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 browser ctrl+f free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 canvas keyboard move",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 layers accelerator",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 props accelerator",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1100 no JS errors",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "1440 removed banner",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 new project visible",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 editor opens",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 toolbar aria initial",
+    "ok": true,
+    "detail": "[{'id': 'selectMode', 'pressed': 'true'}, {'id': 'panMode', 'pressed': 'false'}, {'id': 'grid', 'pressed': 'true'}, {'id': 'snap', 'pressed': 'true'}, {'id': 'ruler', 'pressed': 'false'}]"
+  },
+  {
+    "name": "1440 toggles announce",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 tool switch aria",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 toast dedupe",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 toast aria",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 control focus protected",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 browser ctrl+l free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 browser ctrl+p free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 browser ctrl+d free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 browser ctrl+f free",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 canvas keyboard move",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 layers accelerator",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 props accelerator",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 roving tab focus",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "1440 no JS errors",
+    "ok": true,
+    "detail": "[]"
+  }
+]

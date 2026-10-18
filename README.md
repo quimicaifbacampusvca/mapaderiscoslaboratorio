@@ -52,3 +52,9 @@ Ver `qa/RELATORIO-UIUX-0.4.0.md` e executar `node tests/uiux-040-dialogs.mjs`. P
 Nas larguras de **320 a 1100 px**, a barra superior mantém todas as ações de projeto acessíveis e os painéis de Ferramentas e Propriedades funcionam como drawers com botões explícitos de fechar, backdrop e retorno de foco. Em tablet estreito, isso libera espaço para o Canvas sem refazer a estrutura do editor. Em 320–540 px, a barra de ferramentas se distribui em duas linhas, mantendo seleção, movimentação, grade, snap, cotas e zoom inteiramente visíveis. As alturas dos drawers acompanham a altura real da barra superior.
 
 Não houve alteração do motor Canvas, do formato JSON, do autosave nem do backend. Testes: `node tests/uiux-050-responsive.mjs` e `python qa/uiux050-browser.py`. Os testes do navegador foram executados no Chromium em modo isolado; Firefox, WebKit/Safari e implantação HTTP/GitHub Pages requerem homologação externa.
+
+## UIUX-0.6.0 — Acessibilidade e feedback
+
+O aviso introdutório sobre login e salvamento foi retirado da Home. A navegação do editor respeita atalhos essenciais do navegador: **Alt+Shift+L/P** direcionam para camadas e propriedades, e **Alt+Shift+D** duplica a seleção quando o Canvas está focado. O teclado não modifica o desenho quando o usuário está interagindo com botões ou formulários. Abas, alternâncias e notificações anunciam seus estados de forma mais consistente, com redução de animações conforme a preferência do sistema.
+
+O **formato JSON v4 não mudou**. Para os testes e ressalvas, consulte `qa/RELATORIO-UIUX-0.6.0.md`. A reformulação visual e as estratégias PWA/offline estão em discussão futura na `UIUX-0.8.x`, sem implementação nesta rodada.

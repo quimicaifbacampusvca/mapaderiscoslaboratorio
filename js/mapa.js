@@ -860,49 +860,28 @@ function drawWindow(w, h) {
  * Desenha uma bancada retangular com corpo e superfície de trabalho.
  */
 function drawBench(w, h) {
-  if (w < 20) { ctx.fillStyle = "#64748b"; ctx.fillRect(0, 0, w, h); return; }
-  drawRectWithBorder(w, h, "#64748b", "#475569", 1.5, 2);
-  ctx.fillStyle = "#94a3b8"; ctx.fillRect(0, 0, w, Math.max(4, h * 0.2));
-  ctx.strokeStyle = "#cbd5e1"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, Math.max(5, h * 0.28)); ctx.lineTo(w, Math.max(5, h * 0.28)); ctx.stroke();
+  LabGlyphs.draw(ctx, "bench", w, h);
 }
 
 /**
  * Desenha uma bancada em L respeitando os dois braços da superfície.
  */
 function drawBenchL(w, h) {
-  if (w < 20) { ctx.fillStyle = "#64748b"; ctx.fillRect(0, 0, w, h); return; }
-  const t = Math.max(6, Math.min(w, h) * 0.24);
-  ctx.fillStyle = "#64748b"; ctx.strokeStyle = "#475569"; ctx.lineWidth = 1.5;
-  ctx.fillRect(0, 0, w, t); ctx.strokeRect(0, 0, w, t);
-  ctx.fillRect(0, 0, t, h); ctx.strokeRect(0, 0, t, h);
-  ctx.fillStyle = "#94a3b8"; ctx.fillRect(0, 0, w, Math.max(4, t * 0.45)); ctx.fillRect(0, 0, Math.max(4, t * 0.45), h);
+  LabGlyphs.draw(ctx, "benchL", w, h);
 }
 
 /**
  * Desenha uma pia com bacia interna e torneira.
  */
 function drawSink(w, h) {
-  if (w < 20) { ctx.fillStyle = "#94a3b8"; ctx.fillRect(0, 0, w, h); return; }
-  drawRectWithBorder(w, h, "#94a3b8", "#64748b", 1.5, 3);
-  ctx.fillStyle = "#cbd5e1"; ctx.strokeStyle = "#64748b"; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.roundRect(w * 0.15, h * 0.22, w * 0.7, h * 0.52, Math.min(5, w * 0.08)); ctx.fill(); ctx.stroke();
-  ctx.strokeStyle = "#475569"; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.arc(w * 0.67, h * 0.17, Math.max(4, Math.min(w, h) * 0.09), Math.PI, Math.PI * 1.8); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(w * 0.67, h * 0.17); ctx.lineTo(w * 0.67, h * 0.26); ctx.stroke();
+  LabGlyphs.draw(ctx, "sink", w, h);
 }
 
 /**
  * Desenha uma capela com indicação visual do fluxo de exaustão.
  */
 function drawHood(w, h) {
-  if (w < 20) { ctx.fillStyle = "#fbbf24"; ctx.fillRect(0, 0, w, h); return; }
-  drawRectWithBorder(w, h, "#fbbf24", "#d97706", 1.5, 2);
-  ctx.fillStyle = "#7c2d12"; ctx.fillRect(0, h * 0.72, w, h * 0.28);
-  ctx.strokeStyle = "#7c2d12"; ctx.fillStyle = "#7c2d12"; ctx.lineWidth = 1.5;
-  [0.25, 0.5, 0.75].forEach(x => {
-    ctx.beginPath(); ctx.moveTo(w * x, h * 0.66); ctx.lineTo(w * x, h * 0.24); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(w * x, h * 0.24); ctx.lineTo(w * x - 4, h * 0.31); ctx.moveTo(w * x, h * 0.24); ctx.lineTo(w * x + 4, h * 0.31); ctx.stroke();
-  });
+  LabGlyphs.draw(ctx, "hood", w, h);
 }
 
 /**
@@ -982,12 +961,7 @@ function drawEyewash(w, h) {
  * Desenha um extintor com corpo, bico e mangueira.
  */
 function drawExtinguisher(w, h) {
-  if (w < 20) { ctx.fillStyle = "#ef4444"; ctx.fillRect(0, 0, w, h); return; }
-  drawRectWithBorder(w*0.58, h*0.75, "#ef4444", "#b91c1c", 1.4, Math.min(4,w*0.1));
-  ctx.fillStyle="#b91c1c"; ctx.fillRect(w*0.28,h*0.09,w*0.22,h*0.1);
-  ctx.strokeStyle="#b91c1c"; ctx.lineWidth=Math.max(1.5,Math.min(w,h)*0.04);
-  ctx.beginPath(); ctx.moveTo(w*0.48,h*0.14); ctx.quadraticCurveTo(w*0.82,h*0.02,w*0.84,h*0.28); ctx.stroke();
-  ctx.fillStyle="#fff"; ctx.font=`bold ${Math.max(8,Math.min(16,h*0.2))}px sans-serif`; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("F",w*0.57,h*0.47);
+  LabGlyphs.draw(ctx, "extinguisher", w, h);
 }
 
 /**
@@ -1030,6 +1004,7 @@ function drawWarningIcon(w, h) {
  * Desenha um risco com a cor e o símbolo correspondente ao tipo.
  */
 function drawRisk(type, w, h) {
+  if (type === "chemical") { LabGlyphs.draw(ctx, "chemical", w, h); return; }
   if (w < 20) { ctx.fillStyle = RISK_COLORS[type] || "#aebbc2"; ctx.fillRect(0, 0, w, h); return; }
   const img = riskImages[type];
   if (img && img.complete && img.naturalHeight !== 0) {
@@ -2873,6 +2848,7 @@ function svgEscape(value) {
  * Retorna o template SVG de um tipo de risco.
  */
 function svgRisk(type, w, h) {
+  if (type === "chemical") return LabGlyphs.svg("chemical", w, h);
   const c = RISK_COLORS[type] || "#aebbc2";
   const label = svgEscape((TYPES[type]?.[0] || type).replace(/^Risco /i, "").slice(0, 2).toUpperCase());
   const r = Math.min(w, h) * 0.38;
@@ -2895,17 +2871,17 @@ function svgTemplateForType(type, w, h) {
     case "wall": return ArchitecturalGlyphs.svgWall(w, h);
     case "door": return svgDoor({x:0,y:0,w,h,rot:0}, w, h);
     case "window": return stroke("rgba(56,189,248,0.3)", "#38bdf8") + `<rect x="4" y="4" width="${Math.max(0,w-8)}" height="${Math.max(0,h-8)}" fill="none" stroke="#38bdf8"/><line x1="${w/2}" y1="4" x2="${w/2}" y2="${h-4}" stroke="#38bdf8"/>`;
-    case "bench": return stroke("#64748b", "#475569") + `<rect x="0" y="0" width="${w}" height="${Math.max(4,h*.2)}" fill="#94a3b8"/><line x1="0" y1="${Math.max(5,h*.28)}" x2="${w}" y2="${Math.max(5,h*.28)}" stroke="#cbd5e1"/>`;
-    case "benchL": { const t=Math.max(6,Math.min(w,h)*.24); return `<rect x="0" y="0" width="${w}" height="${t}" fill="#64748b" stroke="#475569"/><rect x="0" y="0" width="${t}" height="${h}" fill="#64748b" stroke="#475569"/><rect x="0" y="0" width="${w}" height="${Math.max(4,t*.45)}" fill="#94a3b8"/><rect x="0" y="0" width="${Math.max(4,t*.45)}" height="${h}" fill="#94a3b8"/>`; }
-    case "sink": return stroke("#94a3b8", "#64748b") + `<rect x="${w*.15}" y="${h*.22}" width="${w*.7}" height="${h*.52}" rx="4" fill="#cbd5e1" stroke="#64748b"/><path d="M${w*.67} ${h*.17} a5 5 0 0 1 5 0 v${h*.09}" fill="none" stroke="#475569" stroke-width="2"/>`;
-    case "hood": return stroke("#fbbf24", "#d97706") + `<rect y="${h*.72}" width="${w}" height="${h*.28}" fill="#7c2d12"/>${[.25,.5,.75].map(x=>`<path d="M${w*x} ${h*.66} V${h*.24} m0 0 l-4 7 m4-7 l4 7" fill="none" stroke="#7c2d12" stroke-width="2"/>`).join('')}`;
+    case "bench": return LabGlyphs.svg("bench", w, h);
+    case "benchL": return LabGlyphs.svg("benchL", w, h);
+    case "sink": return LabGlyphs.svg("sink", w, h);
+    case "hood": return LabGlyphs.svg("hood", w, h);
     case "cabinet": return stroke("#8b5e3c", "#3e2723") + `<line x1="${w/2}" y1="0" x2="${w/2}" y2="${h}" stroke="#3e2723" stroke-width="2"/><circle cx="${w*.43}" cy="${h/2}" r="2" fill="#3e2723"/><circle cx="${w*.57}" cy="${h/2}" r="2" fill="#3e2723"/>`;
     case "shelf": { const rows=4, rh=h/rows; let z=stroke("#d4a574", "#78350f"); for(let i=1;i<rows;i++) z+=`<line x1="0" y1="${i*rh}" x2="${w}" y2="${i*rh}" stroke="#78350f" stroke-width="2"/>`; const cs=['#7c3aed','#0ea5e9','#16a34a','#f59e0b']; for(let r=0;r<rows;r++) for(let b=0;b<3;b++) z+=`<rect x="${4+b*Math.max(8,w*.11)}" y="${r*rh+2}" width="${Math.max(5,w*.07)}" height="${Math.max(5,rh-4)}" fill="${cs[(r+b)%cs.length]}"/>`; return z; }
     case "equipment": return stroke("#6b7280", "#374151") + `<rect x="${w*.12}" y="${h*.16}" width="${w*.76}" height="${h*.36}" fill="#1f2937"/>${[[.28,'#22c55e'],[.5,'#f59e0b'],[.72,'#ef4444']].map(([x,c])=>`<circle cx="${w*x}" cy="${h*.74}" r="${Math.max(2,Math.min(w,h)*.05)}" fill="${c}"/>`).join('')}<line x1="${w*.18}" y1="${h*.63}" x2="${w*.82}" y2="${h*.63}" stroke="#111827" stroke-width="2"/>`;
     case "zone": return `<rect x="0" y="0" width="${w}" height="${h}" fill="rgba(56,189,248,0.15)" stroke="#38bdf8" stroke-width="1" stroke-dasharray="5 4"/><path d="M${w*.15} ${h/2} H${w*.82} l-8 -4 m8 4 l-8 4" fill="none" stroke="#38bdf8"/>`;
     case "shower": return `<path d="M${w/2} ${h*.05} V${h*.33} H${w*.76}" fill="none" stroke="#0284c7" stroke-width="2"/><circle cx="${w*.76}" cy="${h*.33}" r="${Math.min(w,h)*.18}" fill="#0ea5e9"/>`;
     case "eyewash": return `<path d="M${w*.2} ${h*.72} L${w*.5} ${h*.5} L${w*.8} ${h*.72}" fill="none" stroke="#0284c7" stroke-width="2"/><circle cx="${w*.35}" cy="${h*.42}" r="${Math.max(3,Math.min(w,h)*.1)}" fill="#0ea5e9"/><circle cx="${w*.65}" cy="${h*.42}" r="${Math.max(3,Math.min(w,h)*.1)}" fill="#0ea5e9"/><path d="M${w*.35} ${h*.18} L${w*.5} ${h*.35} M${w*.65} ${h*.18} L${w*.5} ${h*.35}" stroke="#38bdf8" stroke-width="2"/>`;
-    case "extinguisher": return `<rect x="${w*.21}" y="${h*.18}" width="${w*.58}" height="${h*.65}" rx="4" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/><rect x="${w*.28}" y="${h*.09}" width="${w*.22}" height="${h*.1}" fill="#b91c1c"/><path d="M${w*.48} ${h*.14} Q${w*.82} ${h*.02} ${w*.84} ${h*.28}" fill="none" stroke="#b91c1c" stroke-width="2"/><text x="${w*.5}" y="${h*.52}" font-family="sans-serif" font-size="${Math.max(8,h*.2)}" font-weight="700" fill="#fff" text-anchor="middle">F</text>`;
+    case "extinguisher": return LabGlyphs.svg("extinguisher", w, h);
     case "exit": return stroke("#22c55e", "#14532d") + `<path d="M${w*.18} ${h/2} H${w*.68} m0 0 l-12 -8 m12 8 l-12 8" fill="none" stroke="#14532d" stroke-width="2"/><text x="${w*.32}" y="${h/2+4}" font-family="sans-serif" font-size="${Math.max(7,h*.38)}" font-weight="700" fill="#14532d" text-anchor="middle">SAÍDA</text>`;
     case "chemical": case "biological": case "physical": case "fire": case "electrical": case "ergonomic": case "radiation": case "slip": return svgRisk(type,w,h);
     default: return stroke("#475569", "#cbd5e1");

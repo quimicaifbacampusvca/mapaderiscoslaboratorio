@@ -126,3 +126,8 @@ O editor apresenta paredes com hachura ortogonal discreta e portas com folha, do
 Esta etapa altera **somente o desenho dos tipos `wall` e `door`**: dimensões físicas, posição, rotação, seleção, snap, colisões, undo/redo, formato JSON v4, IndexedDB e autosave permanecem compatíveis. O manifesto PWA continua identificado por `/mapaderiscoslaboratorio/`; o novo módulo entrou no cache versionado. Outras peças ainda aguardam integração.
 
 QA: `node tests/uiux-092-architecture.mjs`; ver `qa/RELATORIO-UIUX-0.9.2-ETAPA-1.md`. Firefox/WebKit, GitHub Pages e instalação PWA real permanecem pendentes de homologação externa.
+
+
+## UIUX-0.9.2 — Etapa 2: seis elementos laboratoriais
+
+Novos desenhos de bancada, bancada L, pia, capela, extintor e risco químico, com plano vetorial compartilhado entre Canvas e SVG exportado e miniaturas correspondentes. Preservados JSON v4, geometria, seleção, PWA e IndexedDB. Detalhes em `qa/RELATORIO-UIUX-0.9.2-ETAPA-2.md`.

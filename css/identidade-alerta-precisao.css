@@ -426,3 +426,7 @@ header.topbar .brand strong {font-family:"Exo 2","Segoe UI",Arial,sans-serif;fon
 .home-restore-previous{flex:0 0 118px;padding:4px 6px;font-size:9px}
 }
 
+
+/* UIUX-0.9.2 / etapa 2: miniaturas com a mesma geometria vetorial do Canvas. */
+.palette button .icon img { display:block; width:24px; height:24px; object-fit:contain; flex:none; }
+@media (forced-colors: active) { .palette button .icon img { background:Canvas; border:1px solid CanvasText; border-radius:3px; } }

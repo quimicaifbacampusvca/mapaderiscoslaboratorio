@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {dirname,resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const R=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const css=readFileSync(resolve(R,'css/temas-contraste.css'),'utf8');
+const sw=readFileSync(resolve(R,'sw.js'),'utf8');
+const required=['.modal-card,.modal-body','.modal-header,.models-footer','.model-card,.report-stat,.report-row,.model-thumb','.btn-secondary,.btn-close','.modal-card .btn-danger','.modal-card :is(button,.model-card,a):focus-visible','--mrl-ui-card','--mrl-ui-ink','--mrl-ui-muted','--mrl-ui-control'];
+for(const s of required)assert.ok(css.includes(s),'Tema incompleto: '+s);
+assert.match(sw,/uiux-0\.9\.3\.3-dialog-theme-v1/);
+assert.doesNotMatch(css,/localStorage\s*\(|indexedDB\s*\(/);
+console.log('UIUX-0.9.3.3 — paridade cromática de diálogos: OK');

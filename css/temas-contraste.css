@@ -37,3 +37,52 @@ html[data-mrl-theme="light"] .proto-showcase-head > span,
 html[data-mrl-theme="light"] .proto-showcase-live {
   color:var(--mrl-ui-ink)!important;
 }
+
+/* UIUX-0.9.3.3 — Paridade cromática dos diálogos e de seus conteúdos dinâmicos.
+   Estes estilos não afetam o Canvas, os símbolos de risco ou os arquivos JSON. */
+html[data-mrl-theme] :is(.modal-card,.modal-body) {
+  background:var(--mrl-ui-card)!important;
+  background-image:none!important;
+  color:var(--mrl-ui-ink)!important;
+  border-color:var(--mrl-ui-line)!important;
+}
+html[data-mrl-theme] :is(.modal-header,.models-footer) {
+  background:var(--mrl-ui-surface)!important;
+  background-image:none!important;
+  color:var(--mrl-ui-ink)!important;
+  border-color:var(--mrl-ui-line)!important;
+}
+html[data-mrl-theme] .modal-card :is(h1,h2,h3,h4,p,strong,label,span,small,em,legend,output) {
+  color:var(--mrl-ui-ink)!important;
+}
+html[data-mrl-theme] .modal-card :is(.models-intro,.report-row small,.report-stat small,.model-card small) {
+  color:var(--mrl-ui-muted)!important;
+}
+html[data-mrl-theme] .modal-card :is(.model-card,.report-stat,.report-row,.model-thumb) {
+  background:var(--mrl-ui-surface)!important;
+  background-image:none!important;
+  color:var(--mrl-ui-ink)!important;
+  border-color:var(--mrl-ui-line)!important;
+}
+html[data-mrl-theme] .modal-card :is(.btn-secondary,.btn-close,.models-footer button:not(.primary)) {
+  background:var(--mrl-ui-control)!important;
+  color:var(--mrl-ui-control-ink)!important;
+  border-color:var(--mrl-ui-line)!important;
+}
+html[data-mrl-theme] .modal-card :is(.primary,button.primary) {
+  background:var(--mrl-ui-accent)!important;
+  color:var(--mrl-ui-bg)!important;
+  border-color:var(--mrl-ui-accent)!important;
+}
+html[data-mrl-theme] .modal-card .btn-danger {
+  background:#88262e!important;
+  color:#fff!important;
+  border-color:#bd626b!important;
+}
+html[data-mrl-contrast="on"] .modal-card :is(.btn-secondary,.btn-close,.btn-danger,.primary,.model-card) {
+  border-width:2px!important;
+}
+html[data-mrl-theme] .modal-card :is(button,.model-card,a):focus-visible {
+  outline:3px solid var(--mrl-ui-focus)!important;
+  outline-offset:2px!important;
+}

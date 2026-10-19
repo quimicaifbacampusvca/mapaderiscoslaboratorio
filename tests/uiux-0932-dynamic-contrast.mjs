@@ -12,7 +12,7 @@ for(const sel of ['#recentList .recent-chip','#totalObjectsBadge','.input-unit >
 for(const token of ['--mrl-ui-control-ink','--mrl-ui-ink','--mrl-ui-line','--mrl-ui-muted','--mrl-ui-surface']){
   assert.ok(css.includes(token),'Falta variável de tema: '+token);
 }
-assert.match(sw,/uiux-0\.9\.3\.2-visibility-v1/);
+assert.match(sw,/uiux-0\.9\.3\.3-dialog-theme-v1/);
 assert.match(sw,/\.\/css\/temas-contraste\.css/);
 assert.doesNotMatch(css,/\b(?:indexedDB|localStorage|drawImage)\s*\(/);
 for(const path of ['js/mapa.js','js/types.js','js/project-library.js']) assert.ok(read(path).length>1000);

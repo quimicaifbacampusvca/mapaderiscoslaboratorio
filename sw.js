@@ -1,7 +1,7 @@
 /* UIUX-0.8.2 — Offline app shell, cache versionado e atualização explícita. */
 'use strict';
 const CACHE_PREFIX = 'mapa-riscos-shell-';
-const CACHE_NAME = CACHE_PREFIX + 'uiux-0.9.3.2-visibility-v1';
+const CACHE_NAME = CACHE_PREFIX + 'uiux-0.9.3.3-dialog-theme-v1';
 // Apenas o shell local: nunca armazenar projetos, JSON do usuário ou APIs remotas.
 const SHELL_PATHS = [
   './', './index.html', './manifest.webmanifest',

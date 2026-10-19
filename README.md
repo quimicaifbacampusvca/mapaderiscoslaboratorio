@@ -151,3 +151,8 @@ Configurações passa a usar um diálogo modal com foco administrado. Sua seçã
 ## UIUX-0.9.3.1 — Paridade de cores e contraste
 
 Foi realizada auditoria de tema claro/escuro, alto contraste, leitura simples e cinco simulações de visão de cores. A apresentação dos cartões, camadas, painéis e formulários passa a usar tokens pareados de superfície/texto sem recolorir o Canvas ou os pictogramas de risco. `css/temas-contraste.css` deve ser carregado após `css/acessibilidade.css`. Novo cache PWA versionado. Ver `qa/RELATORIO-UIUX-0.9.3.1.md`.
+
+
+## UIUX-0.9.3.3 — Paridade cromática de diálogos
+
+Os diálogos de modelos, preservação de projeto e relatório agora adotam as superfícies do tema claro/escuro, inclusive alto contraste e leitura simples. A atualização inclui teste explícito de paridade visual e cache PWA versionado. Ver `qa/RELATORIO-UIUX-0.9.3.3.md`. Nenhum dado do laboratório é alterado.

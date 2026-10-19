@@ -1,0 +1,76 @@
+/* UIUX-0.9.3 — Contrato visual SIAB adaptado ao editor do MRL. O Canvas nunca recebe zoom ou filtro. */
+:root { --mrl-font-scale: 1; }
+.settings-panel:is(dialog) { margin:0; color-scheme:dark; }
+.settings-panel:not([open]) { display:none !important; }
+.settings-panel::backdrop { background:rgba(2,12,18,.74); backdrop-filter:blur(3px); }
+.mrl-a11y-definitions { position:absolute; }
+.mrl-a11y-heading { display:flex; align-items:center; justify-content:space-between; padding:9px 11px; border-radius:8px; border:1px solid #456779; background:#1c3644; color:#e5eef7; font-size:14px; font-weight:700; cursor:pointer; list-style:none; }
+.mrl-a11y-heading::-webkit-details-marker {display:none;}
+.mrl-a11y-heading span { transition:transform .15s ease; }
+#mrlA11yDetails[open] .mrl-a11y-heading span {transform:rotate(180deg);}
+.mrl-a11y-body { display:grid; gap:12px; padding:12px 0 4px; }
+.settings-panel .mrl-a11y-note {font-size:12px;line-height:1.5;margin:4px 0 8px;color:#b8d0de;}
+.mrl-a11y-group {min-width:0;margin:0;padding:8px 10px 10px;border:1px solid #3d5a6b;border-radius:9px;background:#132834;}
+.mrl-a11y-group legend {padding:0 5px;color:#9ed3ed;font-size:12px;font-weight:700;}
+.mrl-a11y-row {display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:40px;padding:7px 0;border-bottom:1px solid #304c5b;font-size:12px;color:#e5eef7;}
+.mrl-a11y-row:last-of-type {border-bottom:0;}
+.mrl-a11y-row small {display:block;margin-top:3px;color:#a9c5d5;font-size:10px;font-weight:400;}
+.mrl-a11y-row input[role="switch"] {appearance:none;-webkit-appearance:none;flex:0 0 44px;width:44px;height:25px;margin:0;border-radius:20px;border:1px solid #728b9a;background:#334b58;position:relative;cursor:pointer;}
+.mrl-a11y-row input[role="switch"]::before {content:"";position:absolute;top:3px;left:3px;width:17px;height:17px;background:#e5eef7;border-radius:100%;transition:transform .15s ease;}
+.mrl-a11y-row input[role="switch"]:checked {background:#23678e;border-color:#8ed7ff;}
+.mrl-a11y-row input[role="switch"]:checked::before {transform:translateX(19px);}
+.mrl-font-step {display:flex;align-items:center;gap:5px;flex:0 0 auto;}
+.mrl-font-step button {width:35px;min-width:35px;height:35px;padding:0;border:1px solid #7498ab;border-radius:7px;background:#1c3a4b;color:#e5eef7;font-weight:700;}
+.mrl-font-step output {min-width:48px;text-align:center;font-size:12px;font-variant-numeric:tabular-nums;}
+.mrl-a11y-select-row {flex-direction:column;align-items:stretch;}
+#mrlA11yCvd {width:100%;min-height:40px;padding:7px 10px;border-radius:7px;border:1px solid #789bad;background:#10232e;color:#f2fbff;font:inherit;}
+.mrl-a11y-reset, #mrlEnableVlibras {width:100%;min-height:42px;padding:9px 10px;border:1px solid #63889a;border-radius:8px;background:#1d3b4c;color:#e9f7fd;text-align:center;cursor:pointer;font-size:12px;}
+.mrl-a11y-reset:hover,#mrlEnableVlibras:hover {background:#285368;}
+.mrl-a11y-body :is(button,select,input,summary):focus-visible,.mrl-a11y-heading:focus-visible {outline:3px solid #ffb423;outline-offset:2px;}
+.settings-panel {width:min(410px,calc(100vw - 24px));}
+/* Texto de 80% a 200%: escala tipográfica, sem CSS zoom que alteraria a geometria do Canvas. */
+html[data-mrl-theme] .settings-panel :is(p,span,button,input,select,label,output,small,summary) {font-size:calc(12px * var(--mrl-font-scale)) !important;line-height:1.45;}
+html[data-mrl-theme] .settings-panel h2 {font-size:calc(16px * var(--mrl-font-scale)) !important;}
+html[data-mrl-theme] .settings-panel .mrl-a11y-group legend {font-size:calc(12px * var(--mrl-font-scale));}
+html[data-mrl-theme] :is(.left-panel,.right-panel) :is(button,input,select,label,p,small,.section-title,.panel-section-title,.tree-item,.eyebrow,.panel-tab,.palette button) {font-size:calc(12px * var(--mrl-font-scale)) !important;line-height:1.4;}
+html[data-mrl-theme] :is(.left-panel,.right-panel) :is(h1,h2,h3) {font-size:calc(18px * var(--mrl-font-scale)) !important;line-height:1.28;}
+html[data-mrl-theme] :is(.topbar,.home-content,.library-panel) :is(button,span,small,p,select,label) {font-size:calc(12px * var(--mrl-font-scale)) !important;line-height:1.4;}
+html[data-mrl-theme] .home-content h1 {font-size:clamp(24px,calc(34px * var(--mrl-font-scale)),68px) !important;}
+html[data-mrl-theme] .settings-panel :is(input,select,button) {min-height:36px;}
+html[data-mrl-spacing="on"] :is(.left-panel,.right-panel,.home-content,header.topbar,.settings-panel,.library-panel) {letter-spacing:.065em;}
+html[data-mrl-reading="on"] :is(.left-panel,.right-panel,.settings-panel,.home-content) {font-weight:500;line-height:1.55;}
+html[data-mrl-reading="on"] :is(.left-panel,.right-panel,.settings-panel) p {color:#f4f9fc !important;}
+html[data-mrl-motion="reduced"] *,html[data-mrl-motion="reduced"] *::before,html[data-mrl-motion="reduced"] *::after {animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}
+html[data-mrl-intro="off"] .home-screen :is(.home-brand-mark,.proto-visual,.home-preview) {animation:none!important;}
+/* Contraste alto: preserva códigos semânticos dos riscos no Canvas e nos SVGs. */
+html[data-mrl-contrast="on"] :is(.left-panel,.right-panel,.settings-panel,header.topbar,.home-screen,.library-panel) {background:#090e13!important;color:#fff!important;border-color:#f4f6f8!important;}
+html[data-mrl-contrast="on"] :is(.left-panel,.right-panel,.settings-panel,header.topbar,.home-screen,.library-panel) :is(button,input,select,details,summary,.panel-section,.home-card,.library-item) {border-color:#f4f6f8!important;}
+html[data-mrl-contrast="on"] :is(.left-panel,.right-panel,.settings-panel,.home-screen) :is(p,label,small,span,strong,h1,h2,h3) {color:#fff!important;}
+html[data-mrl-contrast="on"] :is(.left-panel,.right-panel,.settings-panel,header.topbar,.home-screen) :is(button,input,select) {background:#111d28!important;color:#fff!important;}
+html[data-mrl-contrast="on"] :is(button,select,input,summary,a):focus-visible {outline:3px solid #ffe66d!important;outline-offset:3px!important;}
+/* Tema claro: somente painéis e controles. Não inverter o Canvas: suas cores carregam informação técnica. */
+html[data-mrl-theme="light"] {color-scheme:light;}
+html[data-mrl-theme="light"] :is(.left-panel,.right-panel,.settings-panel,header.topbar,.home-screen,.library-panel) {background:#eaf2f7!important;color:#122b3b!important;border-color:#7996a8!important;}
+html[data-mrl-theme="light"] :is(.left-panel,.right-panel,.settings-panel,header.topbar,.home-screen,.library-panel) :is(button,input,select,.panel-section,.panel-section-head,.home-card,.library-item,.mrl-a11y-group,summary) {background:#f7fbfe!important;color:#173549!important;border-color:#8cabbc!important;}
+html[data-mrl-theme="light"] :is(.left-panel,.right-panel,.settings-panel,.home-screen,.library-panel) :is(h1,h2,h3,p,label,span,strong,small,legend) {color:#173549!important;}
+html[data-mrl-theme="light"] .settings-panel::backdrop {background:rgba(8,24,34,.60);}
+html[data-mrl-theme="light"] .mrl-a11y-row {border-color:#b1c5d0;}
+html[data-mrl-theme="light"] .mrl-a11y-row input[role="switch"]:checked {background:#17638c!important;}
+html[data-mrl-theme="light"] :is(.topbar,.home-screen,.settings-panel) :is(button,a,input,summary,select):focus-visible {outline-color:#8b3c00!important;}
+.mrl-cvd-overlay[hidden] {display:none!important;}
+.mrl-cvd-overlay {pointer-events:none;position:fixed;inset:0;z-index:9999;}
+html[data-mrl-cvd="protanopia"] .mrl-cvd-overlay {backdrop-filter:url(#mrl-protanopia);-webkit-backdrop-filter:url(#mrl-protanopia);}
+html[data-mrl-cvd="deuteranopia"] .mrl-cvd-overlay {backdrop-filter:url(#mrl-deuteranopia);-webkit-backdrop-filter:url(#mrl-deuteranopia);}
+html[data-mrl-cvd="tritanopia"] .mrl-cvd-overlay {backdrop-filter:url(#mrl-tritanopia);-webkit-backdrop-filter:url(#mrl-tritanopia);}
+html[data-mrl-cvd="acromatopsia"] .mrl-cvd-overlay {backdrop-filter:grayscale(1);-webkit-backdrop-filter:grayscale(1);}
+@media(max-width:540px) {.settings-panel{inset:auto 12px 12px!important; width:calc(100vw - 24px);max-height:calc(100dvh - 24px);padding:13px;}.mrl-a11y-row{gap:6px;}.mrl-a11y-body{gap:9px;}}
+@media(forced-colors:active){.mrl-a11y-row input[role="switch"] {appearance:auto;-webkit-appearance:auto;}.settings-panel,.mrl-a11y-group{forced-color-adjust:auto;}}
+@media(prefers-reduced-motion:reduce){.mrl-a11y-heading span,.mrl-a11y-row input[role="switch"]::before{transition:none!important;}}
+/* Contrato local de alinhamento: o CSS genérico do editor define label em coluna. */
+.settings-panel label.mrl-a11y-row {display:flex;flex-direction:row;align-items:center;justify-content:space-between;text-align:left;}
+.settings-panel label.mrl-a11y-select-row {flex-direction:column;align-items:stretch;}
+.settings-panel .mrl-a11y-row input[role="switch"] {height:25px;min-height:25px!important;max-height:25px;flex:0 0 44px;}
+.settings-panel .mrl-font-step output {color:inherit!important;font-size:calc(12px * var(--mrl-font-scale))!important;line-height:1.45;opacity:1;}
+html[data-mrl-theme="light"] .settings-panel .mrl-font-step output {color:#173549!important;}
+.settings-panel:is(dialog) {left:auto!important;right:max(12px,env(safe-area-inset-right))!important;top:max(56px,env(safe-area-inset-top))!important;}
+@media(max-width:540px){.settings-panel:is(dialog){left:12px!important;right:12px!important;top:auto!important;bottom:12px!important;}}

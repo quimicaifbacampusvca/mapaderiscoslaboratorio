@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {dirname,resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const read=p=>readFileSync(resolve(root,p),'utf8');
+const html=read('index.html'),css=read('css/acessibilidade.css'),access=read('js/accessibility.js'),settings=read('js/settings-menu.js'),sw=read('sw.js');
+for(const id of ['mrlA11yDetails','mrlA11yDark','mrlA11yContrast','mrlFontMinus','mrlFontPlus','mrlFontOutput','mrlA11ySpacing','mrlA11yMotion','mrlA11yIntro','mrlA11yReading','mrlA11yCvd','mrlA11yReset','mrlEnableVlibras','mrlVlibrasStatus'])assert.ok(html.includes('id="'+id+'"'),'controle obrigatório '+id);
+assert.match(html,/<dialog id="settingsPanel"/);
+assert.match(settings,/\.showModal\(/);
+assert.match(settings,/\.close\(/);
+assert.match(settings,/preventScroll/);
+assert.match(access,/mrl_accessibility_preferences_v1/);
+assert.match(access,/font >= 80 && raw.font <= 200 && raw.font % 10 === 0/);
+assert.match(access,/navigator\.onLine === false/);
+assert.match(access,/https:\/\/vlibras\.gov\.br\/app\/vlibras-plugin\.js/);
+for(const cvd of ['protanopia','deuteranopia','tritanopia','acromatopsia']){ assert.match(html,new RegExp('value="'+cvd+'"'));assert.match(css,new RegExp('data-mrl-cvd="'+cvd+'"')); }
+assert.match(css,/--mrl-font-scale/);
+assert.match(css,/data-mrl-motion="reduced"/);
+assert.doesNotMatch(access,/state\.room|\.cam\.zoom|indexedDB|MAPA_RUNTIME/);
+assert.match(sw,/\.\/css\/acessibilidade\.css/);
+assert.match(sw,/\.\/js\/accessibility\.js/);
+assert.match(sw,/uiux-0\.9\.3-accessibility-v1/);
+assert.ok(html.indexOf('src="js/accessibility.js"') < html.indexOf('src="js/settings-menu.js"'));
+console.log('UIUX-0.9.3 — contrato estático de acessibilidade: OK');

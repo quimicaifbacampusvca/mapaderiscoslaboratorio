@@ -141,3 +141,8 @@ A barra superior utiliza grupos de ações sem quebra interna, botões com ícon
 ## UIUX-0.9.2.4 — Normalização dos seletores e inventário de acessibilidade
 
 Os três seletores (`areaSelect`, `areaType` e `doorConnection`) usam uma camada de opções estilizada, mantendo os valores e eventos do `select` original. A camada aceita ponteiro, setas, Home/End, Enter/Espaço, Escape, Tab e digitação inicial; as opções dinâmicas permanecem sincronizadas. Arquivos: `js/styled-selects.js` e `css/controls-consistency.css`. O controle de rotação, o seletor de arquivos e o foco de painéis expansíveis receberam refinamento visual. O cache PWA foi atualizado. Consulte `qa/RELATORIO-UIUX-0.9.2.4.md` e `qa/CONTRATO-ACESSIBILIDADE-SIAB-PARA-MRL.md` para a próxima série. Não altera JSON v4 nem IndexedDB.
+
+
+## UIUX-0.9.3 — Acessibilidade (base SIAB 1.0.0)
+
+Configurações passa a usar um diálogo modal com foco administrado. Sua seção Acessibilidade oferece tema claro/escuro, alto contraste, tamanho de texto em passos de 10% (80–200%), espaçamento, movimento reduzido, abertura, leitura simples, simulações visuais de cores e restauração de padrões. VLibras é opcional e requer internet. As preferências ficam numa chave própria e não alteram geometria nem exportações. Ver `qa/RELATORIO-UIUX-0.9.3.md`.

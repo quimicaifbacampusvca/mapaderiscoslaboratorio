@@ -9,10 +9,10 @@ for(const id of ['homeSettingsBtn','editorSettingsBtn','settingsPanel','settings
 assert.match(html,/id="settingsPanel"[^>]*aria-labelledby="settingsTitle"/);
 assert.ok(html.indexOf('id="settingsPanel"')<html.indexOf('id="pwaInstall"'));
 assert.ok(html.indexOf('js/pwa.js')<html.indexOf('js/settings-menu.js'));
-assert.match(menu,/event.key==='Escape'/);
+assert.match(menu,/\.showModal\(\)/); // Escape gerenciado pelo elemento dialog
 assert.match(menu,/aria-expanded/);
 assert.match(css,/\.settings-panel \.pwa-controls\{position:static;/);
 assert.match(css,/\.topbar-action-cluster button svg\{width:18px;/);
-assert.match(sw,/uiux-0\.9\.2-header-settings-v1/);
+assert.match(sw,/uiux-0\.9\.3-accessibility-v1/);
 assert.ok(sw.includes('./js/settings-menu.js'));
 console.log('UIUX-0.9.2.3 — Configurações, responsividade e PWA: OK');

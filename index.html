@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="css/mapa.css">
   <link rel="stylesheet" href="css/identidade-alerta-precisao.css">
   <link rel="stylesheet" href="css/controls-consistency.css">
+  <link rel="stylesheet" href="css/acessibilidade.css">
   <meta name="theme-color" content="#0F141A">
   <meta name="description" content="Editor 2D de plantas e mapas de riscos para laboratórios, com medidas reais, símbolos de risco e exportação JSON.">
   <link rel="icon" type="image/svg+xml" href="assets/svg/mrl-app-icon.svg">
@@ -528,7 +529,7 @@
     </section>
   </div>
   <!-- Instalação PWA e atualizações dentro do menu Configurações. -->
-  <section id="settingsPanel" class="settings-panel" role="dialog" aria-modal="false" aria-labelledby="settingsTitle" tabindex="-1" hidden>
+  <dialog id="settingsPanel" class="settings-panel" aria-labelledby="settingsTitle" tabindex="-1" hidden>
     <div class="settings-panel-head"><h2 id="settingsTitle">Configurações</h2><button type="button" id="settingsClose" aria-label="Fechar configurações">×</button></div>
     <div class="settings-panel-section"><strong>Aplicativo</strong><p>Instalação e atualização local do Mapa de Riscos.</p>
     <div id="pwaControls" class="pwa-controls" hidden>
@@ -537,8 +538,43 @@
     <button type="button" id="pwaUpdate" hidden>Atualização disponível · Atualizar</button>
     </div>
     <p>Se a opção de instalação não estiver disponível, procure “Instalar aplicativo” no menu do navegador.</p></div>
+    <div class="settings-panel-section mrl-a11y-section">
+      <details id="mrlA11yDetails">
+        <summary id="mrlA11ySummary" class="mrl-a11y-heading">Acessibilidade <span aria-hidden="true">▾</span></summary>
+        <div id="mrlA11yBody" class="mrl-a11y-body">
+          <p class="mrl-a11y-note">Ajuste a apresentação sem modificar as medidas, símbolos ou dados do mapa.</p>
+          <fieldset class="mrl-a11y-group"><legend>Aparência</legend>
+            <label class="mrl-a11y-row"><span>Modo escuro</span><input type="checkbox" id="mrlA11yDark" role="switch" checked></label>
+            <label class="mrl-a11y-row"><span>Alto contraste</span><input type="checkbox" id="mrlA11yContrast" role="switch"></label>
+            <div class="mrl-a11y-row"><span id="mrlFontLabel">Tamanho do texto</span><div class="mrl-font-step" role="group" aria-labelledby="mrlFontLabel"><button type="button" id="mrlFontMinus" aria-label="Diminuir tamanho do texto">A−</button><output id="mrlFontOutput" aria-live="polite">100%</output><button type="button" id="mrlFontPlus" aria-label="Aumentar tamanho do texto">A+</button></div></div>
+            <label class="mrl-a11y-row"><span>Espaçamento de letras</span><input type="checkbox" id="mrlA11ySpacing" role="switch"></label>
+            <label class="mrl-a11y-row"><span>Reduzir animações</span><input type="checkbox" id="mrlA11yMotion" role="switch"></label>
+            <label class="mrl-a11y-row"><span>Animação de abertura <small>Ao entrar no aplicativo</small></span><input type="checkbox" id="mrlA11yIntro" role="switch" checked></label>
+            <label class="mrl-a11y-row"><span>Leitura simples <small>Texto destacado e visual simplificado</small></span><input type="checkbox" id="mrlA11yReading" role="switch"></label>
+          </fieldset>
+          <fieldset class="mrl-a11y-group"><legend>Visão de cores</legend>
+            <label class="mrl-a11y-row mrl-a11y-select-row" for="mrlA11yCvd"><span>Simular daltonismo</span><select id="mrlA11yCvd"><option value="none">Nenhum</option><option value="protanopia">Protanopia</option><option value="deuteranopia">Deuteranopia</option><option value="tritanopia">Tritanopia</option><option value="acromatopsia">Acromatopsia</option></select></label>
+            <p class="mrl-a11y-note">Simulação aproximada, não correção. Cada categoria de risco continua identificada por texto e símbolo.</p>
+          </fieldset>
+          <fieldset class="mrl-a11y-group"><legend>Outros recursos</legend>
+            <button type="button" id="mrlEnableVlibras">Ativar tradutor VLibras (requer internet)</button>
+            <p class="mrl-a11y-note" id="mrlVlibrasStatus" role="status" aria-live="polite">Recurso externo opcional. Não é necessário para usar o editor offline.</p>
+          </fieldset>
+          <button type="button" id="mrlA11yReset" class="mrl-a11y-reset">Restaurar padrões de acessibilidade</button>
+          <p id="mrlA11yStorageStatus" class="mrl-a11y-note" role="status" aria-live="polite" hidden></p>
+        </div>
+      </details>
+    </div>
     <div class="settings-panel-section"><strong>Projetos</strong><p>Os mapas ficam neste navegador; exporte JSON para fazer backup ou transferir seus arquivos.</p></div>
-  </section>
+  </dialog>
+  <svg class="mrl-cvd-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" width="0" height="0">
+    <defs>
+      <filter id="mrl-protanopia"><feColorMatrix type="matrix" values="0.567 0.433 0 0 0 0.558 0.442 0 0 0 0 0.242 0.758 0 0 0 0 0 1 0"/></filter>
+      <filter id="mrl-deuteranopia"><feColorMatrix type="matrix" values="0.625 0.375 0 0 0 0.700 0.300 0 0 0 0 0.300 0.700 0 0 0 0 0 1 0"/></filter>
+      <filter id="mrl-tritanopia"><feColorMatrix type="matrix" values="0.950 0.050 0 0 0 0 0.433 0.567 0 0 0 0.475 0.525 0 0 0 0 0 1 0"/></filter>
+    </defs>
+  </svg>
+  <div id="mrlCvdOverlay" class="mrl-cvd-overlay" aria-hidden="true" inert hidden></div>
   <!-- Constantes, tipos, riscos, EPI e modelos. -->
   <script defer src="js/types.js"></script>
   <!-- Funções de geometria, colisão, contenção e clearance. -->
@@ -555,6 +591,7 @@
   <script defer src="js/project-library.js"></script>
   <script defer src="js/library-ui.js"></script>
   <script defer src="js/pwa.js"></script>
+  <script defer src="js/accessibility.js"></script>
   <script defer src="js/settings-menu.js"></script>
   <script defer src="js/styled-selects.js"></script>
 </body>

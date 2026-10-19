@@ -1,28 +1,34 @@
-/* UIUX-0.9.2 — Configurações acessíveis na Home e no editor. */
+/* UIUX-0.9.3 — Configurações como diálogo modal, incluindo Acessibilidade. */
 (() => {
   'use strict';
-  const panel=document.getElementById('settingsPanel');
-  const closeButton=document.getElementById('settingsClose');
-  const triggers=[document.getElementById('homeSettingsBtn'),document.getElementById('editorSettingsBtn')].filter(Boolean);
-  if(!panel||!closeButton||!triggers.length)return;
-  let activeTrigger=null;
-  function close(restoreFocus=true){
-    if(panel.hidden)return;
-    panel.hidden=true;
-    triggers.forEach(button=>button.setAttribute('aria-expanded','false'));
-    if(restoreFocus&&activeTrigger&&!activeTrigger.closest('.hidden'))activeTrigger.focus({preventScroll:true});
-    activeTrigger=null;
+  const panel = document.getElementById('settingsPanel');
+  const closeButton = document.getElementById('settingsClose');
+  const triggers = [document.getElementById('homeSettingsBtn'), document.getElementById('editorSettingsBtn')].filter(Boolean);
+  if (!panel || !closeButton || !triggers.length) return;
+  let activeTrigger = null;
+  function updateExpanded(isOpen) {
+    triggers.forEach(button => button.setAttribute('aria-expanded', String(isOpen && button === activeTrigger)));
   }
-  function open(trigger){
-    if(!panel.hidden&&activeTrigger===trigger)return close();
-    activeTrigger=trigger;panel.hidden=false;
-    triggers.forEach(button=>button.setAttribute('aria-expanded',String(button===trigger)));
+  function close() { if (panel.open) panel.close(); }
+  function open(trigger) {
+    if (panel.open) { close(); return; }
+    activeTrigger = trigger;
+    panel.hidden = false;
+    panel.showModal(); // foco limitado ao diálogo, fundo inerte e Escape nativo
+    updateExpanded(true);
     closeButton.focus({preventScroll:true});
   }
-  triggers.forEach(button=>button.addEventListener('click',()=>open(button)));
-  closeButton.addEventListener('click',()=>close());
-  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!panel.hidden){event.preventDefault();close();}});
-  document.addEventListener('pointerdown',event=>{
-    if(!panel.hidden&&!panel.contains(event.target)&&!triggers.some(button=>button.contains(event.target)))close(false);
+  triggers.forEach(button => button.addEventListener('click', () => open(button)));
+  closeButton.addEventListener('click', close);
+  panel.addEventListener('close', () => {
+    panel.hidden = true;
+    updateExpanded(false);
+    if (activeTrigger && activeTrigger.isConnected && !activeTrigger.closest('.hidden')) activeTrigger.focus({preventScroll:true});
+    activeTrigger = null;
+  });
+  panel.addEventListener('click', event => {
+    if (event.target !== panel) return;
+    const rect = panel.getBoundingClientRect();
+    if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) close();
   });
 })();

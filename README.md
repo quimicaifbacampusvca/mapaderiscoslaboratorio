@@ -100,3 +100,12 @@ Testes: `node tests/uiux-083-library.mjs` e `python qa/uiux083-browser.py` (modo
 O pacote `Mapa-de-Riscos-Portatil-Offline-UIUX-0.8.4.zip` contém o shell estático local com checksums e iniciadores para uso em computadores escolares, sem chamada ao backend. Windows: `portable/iniciar.cmd` (Python 3 instalado, ou fallback PowerShell); Linux/macOS: `sh portable/iniciar.sh` com Python 3. Endereço padrão **`http://127.0.0.1:8765/`**, sempre fixo para preservar o acesso à biblioteca local entre sessões do mesmo navegador. Para transferência do GitHub Pages ou entre computadores, **exporte e importe arquivos JSON**; dados em diferentes origens não sincronizam automaticamente. A versão portátil ainda requer homologação real de Windows, Firefox, WebKit e PWA instalado.
 
 Os scripts de geração e verificação ficam em `tools/montar-portatil.py` e `tools/validar-portatil.py`. Instruções completas: `LEIA-ME-OFFLINE.md`; relatório técnico: `qa/RELATORIO-UIUX-0.8.4.md`.
+
+
+## UIUX-0.9.0 — Estabilização de dados e entrega offline
+
+O IndexedDB agora recebe as tentativas de salvamento, inclusive quando o autosave no `localStorage` falha por quota ou bloqueio. O botão **Revisão** tenta salvar no IndexedDB independentemente da disponibilidade do `localStorage`; o programa ainda avisa da falha do autosave principal e recomenda o backup JSON. A substituição de projetos mantém sua política de proteção contra perda de dados, e o **JSON v4 permanece inalterado**.
+
+O cache do PWA foi atualizado para `uiux-0.9.0-v1` para que os navegadores recebam os dois scripts corrigidos. A edição portátil 0.9.0 mantém a origem fixa `http://127.0.0.1:8765/` para acesso contínuo à biblioteca no mesmo computador/navegador.
+
+Para reproduzir a QA: `node tests/uiux-090-storage-fallback.mjs` e `python qa/uiux090-browser.py` (Chromium com IndexedDB simulado). Testes de browser reais no GitHub Pages, Firefox e WebKit, além da persistência nativa do IndexedDB e PWA instalado, **ainda são pendências da homologação 1.0.0**. Ver `qa/RELATORIO-UIUX-0.9.0.md`.

@@ -150,10 +150,12 @@ async function showRevisions(id,row){
 async function saveCurrent({revision=false}={}){
   try{
     await ready;
-    if(!runtime.persist())return;
+    const draftSaved = runtime.persist();
     const payload=runtime.snapshot();
+    // Não depender de localStorage para salvar no IndexedDB quando a quota estiver esgotada.
     await saveCaptured(currentId,payload,titleFor(payload),{revision});
-    inform(revision?'Revisão guardada na biblioteca.':'Projeto guardado na biblioteca.','success');
+    const action=revision?'Revisão guardada na biblioteca.':'Projeto guardado na biblioteca.';
+    inform(draftSaved?action:`${action} Autosave do navegador indisponível: baixe também o JSON como backup.`,draftSaved?'success':'info');
     if(!$('libraryModal').classList.contains('hidden'))await refresh();
   }catch(e){console.warn(e);inform('Não foi possível guardar no IndexedDB. Baixe seu JSON antes de sair.','error');}
 }

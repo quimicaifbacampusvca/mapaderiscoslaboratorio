@@ -72,7 +72,7 @@ assert.ok(db.has('mapa-riscos-shell-versao-anterior'));
 failFor=null;
 await lifetime('install');
 assert.ok(assetRequests.length>=25,'Todos os arquivos locais precisam ser pré-cacheados');
-assert.ok([...db.entries()].find(([name]) => name.includes('uiux-0.8.3-v1'))[1].has(home+'manifest.webmanifest'));
+assert.ok([...db.entries()].find(([name]) => name.includes('uiux-0.9.0-v1'))[1].has(home+'manifest.webmanifest'));
 await lifetime('activate');
 assert.equal(claimCalls,1);
 for(const url of paths){const result=await request(url);assert.equal(result?.from,'cache',url);}

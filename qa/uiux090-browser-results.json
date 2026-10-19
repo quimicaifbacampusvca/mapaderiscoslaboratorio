@@ -1,0 +1,112 @@
+{
+  "mode": "Chromium / página isolada / IndexedDB simulado; não prova persistência nativa nem PWA real",
+  "passed": 21,
+  "total": 21,
+  "checks": [
+    {
+      "check": "1440 editor",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 initial IDB persisted",
+      "passed": true,
+      "detail": "14"
+    },
+    {
+      "check": "1440 local storage failure explicit",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "1440 IndexedDB fallback manual",
+      "passed": true,
+      "detail": "18"
+    },
+    {
+      "check": "1440 revision despite quota",
+      "passed": true,
+      "detail": "1"
+    },
+    {
+      "check": "1440 IndexedDB fallback timer",
+      "passed": true,
+      "detail": "19"
+    },
+    {
+      "check": "1440 browser errors",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "390 editor",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 initial IDB persisted",
+      "passed": true,
+      "detail": "14"
+    },
+    {
+      "check": "390 local storage failure explicit",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "390 IndexedDB fallback manual",
+      "passed": true,
+      "detail": "18"
+    },
+    {
+      "check": "390 revision despite quota",
+      "passed": true,
+      "detail": "1"
+    },
+    {
+      "check": "390 IndexedDB fallback timer",
+      "passed": true,
+      "detail": "19"
+    },
+    {
+      "check": "390 browser errors",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "check": "320 editor",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 initial IDB persisted",
+      "passed": true,
+      "detail": "14"
+    },
+    {
+      "check": "320 local storage failure explicit",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "320 IndexedDB fallback manual",
+      "passed": true,
+      "detail": "18"
+    },
+    {
+      "check": "320 revision despite quota",
+      "passed": true,
+      "detail": "1"
+    },
+    {
+      "check": "320 IndexedDB fallback timer",
+      "passed": true,
+      "detail": "19"
+    },
+    {
+      "check": "320 browser errors",
+      "passed": true,
+      "detail": "[]"
+    }
+  ]
+}

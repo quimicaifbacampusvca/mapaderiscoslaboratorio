@@ -285,23 +285,28 @@ function writeLocalDraft(key, raw) {
 function persistDraftNow() {
   clearTimeout(autoSaveTimer);
   autoSaveTimer = null;
-  const saved = writeLocalDraft(AUTOSAVE_KEY, JSON.stringify(projectSnapshot()));
-  if (saved) { autoSaveErrorShown = false; scheduleRoomSync(); window.dispatchEvent(new CustomEvent("mapa:autosaved", {detail:{payload:projectSnapshot()}})); }
+  const snapshot = projectSnapshot();
+  const saved = writeLocalDraft(AUTOSAVE_KEY, JSON.stringify(snapshot));
+  if (saved) { autoSaveErrorShown = false; scheduleRoomSync(); }
+  // IndexedDB é um destino independente; não descartar o snapshot caso localStorage falhe.
+  window.dispatchEvent(new CustomEvent("mapa:autosaved", {detail:{payload:snapshot, localSaved:saved}}));
   return saved;
 }
 function scheduleAutoSave() {
   clearTimeout(autoSaveTimer);
   autoSaveTimer = setTimeout(() => {
     autoSaveTimer = null;
+    const snapshot = projectSnapshot();
     const saved = (() => {
-      try { localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(projectSnapshot())); return true; }
+      try { localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(snapshot)); return true; }
       catch (error) { console.warn("Falha no autosave", error); return false; }
     })();
     if (!saved && !autoSaveErrorShown) {
       autoSaveErrorShown = true;
       showToast("Autosave indisponível neste navegador. Baixe o arquivo JSON antes de sair.", "error");
     }
-    if (saved) { autoSaveErrorShown = false; scheduleRoomSync(); window.dispatchEvent(new CustomEvent("mapa:autosaved", {detail:{payload:projectSnapshot()}})); }
+    if (saved) { autoSaveErrorShown = false; scheduleRoomSync(); }
+    window.dispatchEvent(new CustomEvent("mapa:autosaved", {detail:{payload:snapshot, localSaved:saved}}));
   }, 800);
 }
 

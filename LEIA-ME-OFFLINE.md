@@ -1,4 +1,4 @@
-# Mapa de Riscos do Laboratório — edição portátil offline (UIUX-0.8.4)
+# Mapa de Riscos do Laboratório — edição portátil offline (UIUX-0.9.0)
 
 Esta distribuição contém os arquivos de execução locais da aplicação, sem necessidade de conexão com Google Apps Script, Google Sheets, CDN ou outros serviços para construir mapas, trabalhar com a biblioteca e exportar JSON.
 

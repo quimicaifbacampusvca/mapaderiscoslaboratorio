@@ -14,7 +14,7 @@ import urllib.request
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
-PACKAGE = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT.parent / 'Mapa-de-Riscos-Portatil-Offline-UIUX-0.8.4.zip'
+PACKAGE = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT.parent / 'Mapa-de-Riscos-Portatil-Offline-UIUX-0.9.0.zip'
 assert PACKAGE.is_file(), PACKAGE
 assert zipfile.is_zipfile(PACKAGE)
 with tempfile.TemporaryDirectory(prefix='uiux084-') as folder:

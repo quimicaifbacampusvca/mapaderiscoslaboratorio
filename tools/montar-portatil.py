@@ -11,7 +11,7 @@ import sys
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
-DEST = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT.parent / 'Mapa-de-Riscos-Portatil-Offline-UIUX-0.8.4.zip'
+DEST = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT.parent / 'Mapa-de-Riscos-Portatil-Offline-UIUX-0.9.0.zip'
 SW = (ROOT / 'sw.js').read_text(encoding='utf-8')
 match = re.search(r'const SHELL_PATHS\s*=\s*\[([^\]]+)\]', SW, flags=re.S)
 if not match:

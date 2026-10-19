@@ -798,27 +798,19 @@ function drawRectWithBorder(w, h, fill, stroke = "#1e293b", lineWidth = 1.5, rad
  * Desenha uma parede com textura visual de alvenaria.
  */
 function drawWall(w, h) {
-  drawRectWithBorder(w, h, "#e2e8f0", "#64748b", 1.5);
-  ctx.save();
-  ctx.strokeStyle = "#94a3b8";
-  ctx.lineWidth = 1;
-  const step = Math.max(6, Math.min(14, h / 4));
-  for (let y = step; y < h; y += step) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-  }
-  ctx.restore();
+  ArchitecturalGlyphs.drawWall(ctx, w, h);
 }
 
 /**
  * Calcula centro, raio, direção e ângulos usados para representar a abertura externa de uma porta.
  */
-function getDoorArcData(o, w, h) {
+function getDoorArcData(o, w, h, roomDimensions = state.room) {
   // A orientação é definida no espaço do objeto: portas largas são horizontais,
   // portas altas são verticais. A posição no mundo determina qual lado é externo.
   const cx = o.x + o.w / 2;
   const cy = o.y + o.h / 2;
-  const roomCenterX = state.room.w / 2;
-  const roomCenterY = state.room.h / 2;
+  const roomCenterX = roomDimensions.w / 2;
+  const roomCenterY = roomDimensions.h / 2;
 
   const horizontal = o.w >= o.h;
   const direction = horizontal
@@ -851,65 +843,9 @@ function getDoorArcMidAngle(startAngle, endAngle, anticlockwise = false) {
  * Desenha a porta, o arco de abertura externa e a seta indicadora.
  */
 function drawDoor(o, w, h) {
-  if (w < 20) {
-    ctx.fillStyle = "#1e3a5f";
-    ctx.fillRect(0, 0, w, h);
-    return;
-  }
-
-  drawRectWithBorder(w, h, "#1e3a5f", "#0f2740", 1.5);
-
-  // A posição determina qual é o lado externo da sala.
-  // A geometria é calculada no sistema local e a rotação do objeto é aplicada
-  // pelo contexto do Canvas, mantendo o arco e a seta solidários à porta.
-  // Calcula toda a geometria antes de qualquer acesso aos seus campos.
-  // Isso evita interromper o desenho quando a porta é renderizada.
-  const arcData = getDoorArcData(o, w, h);
-
-  ctx.save();
-  ctx.strokeStyle = "#64748b";
-  ctx.lineWidth = 1.5;
-  ctx.setLineDash([5, 4]);
-
-  // O raio corresponde ao comprimento da folha e o centro fica na dobradiça.
-  const radius = arcData.radius;
-  const arrowSize = Math.max(6, Math.min(10, radius * 0.09));
-
-  const drawArrow = (x, y, angle) => {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(angle);
-    ctx.fillStyle = "#64748b";
-    ctx.beginPath();
-    ctx.moveTo(arrowSize, 0);
-    ctx.lineTo(-arrowSize * 0.8, -arrowSize * 0.65);
-    ctx.lineTo(-arrowSize * 0.8, arrowSize * 0.65);
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
-  };
-
-  // 50–60% do raio: exatamente no ponto médio angular do arco.
-  const midAngle = getDoorArcMidAngle(arcData.start, arcData.end, arcData.anticlockwise);
-  const arrowRadius = radius * 0.58;
-  const ax = arcData.centerX + Math.cos(midAngle) * arrowRadius;
-  const ay = arcData.centerY + Math.sin(midAngle) * arrowRadius;
-  drawArrow(ax, ay, midAngle);
-
-  ctx.beginPath();
-  ctx.arc(
-    arcData.centerX,
-    arcData.centerY,
-    radius,
-    arcData.start,
-    arcData.end,
-    arcData.anticlockwise
-  );
-  ctx.stroke();
-
-  ctx.setLineDash([]);
-  ctx.restore();
+  ArchitecturalGlyphs.drawDoor(ctx, getDoorArcData(o, w, h), w, h);
 }
+
 /**
  * Desenha uma janela com moldura dupla e representação translúcida do vidro.
  */
@@ -2946,46 +2882,17 @@ function svgRisk(type, w, h) {
 /**
  * Gera o desenho SVG da porta com arco e seta coerentes com o Canvas.
  */
-function svgDoor(o, w, h) {
-  const base = `<rect x="0" y="0" width="${w}" height="${h}" fill="#1e3a5f" stroke="#0f2740" stroke-width="2"/>`;
-  const arcData = getDoorArcData(o, w, h);
-  const radius = arcData.radius;
-  const aw = Math.max(6, Math.min(10, radius * 0.09));
-  const midAngle = getDoorArcMidAngle(arcData.start, arcData.end, arcData.anticlockwise);
-  const arrowRadius = radius * 0.58;
-  const x = arcData.centerX + Math.cos(midAngle) * arrowRadius;
-  const y = arcData.centerY + Math.sin(midAngle) * arrowRadius;
-
-  const arrowTipX = x + Math.cos(midAngle) * aw;
-  const arrowTipY = y + Math.sin(midAngle) * aw;
-  const backAngle = midAngle + Math.PI;
-  const leftX = x + Math.cos(backAngle - 0.65) * aw * 0.8;
-  const leftY = y + Math.sin(backAngle - 0.65) * aw * 0.8;
-  const rightX = x + Math.cos(backAngle + 0.65) * aw * 0.8;
-  const rightY = y + Math.sin(backAngle + 0.65) * aw * 0.8;
-  const arrow = `<path d="M ${arrowTipX} ${arrowTipY} L ${leftX} ${leftY} L ${rightX} ${rightY} Z" fill="#64748b"/>`;
-
-  const x1 = arcData.centerX + Math.cos(arcData.start) * radius;
-  const y1 = arcData.centerY + Math.sin(arcData.start) * radius;
-  const x2 = arcData.centerX + Math.cos(arcData.end) * radius;
-  const y2 = arcData.centerY + Math.sin(arcData.end) * radius;
-  const sweep = arcData.anticlockwise ? 0 : 1;
-  const path = `<path d="M ${x1} ${y1} A ${radius} ${radius} 0 0 ${sweep} ${x2} ${y2}" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5 4"/>`;
-
-  return base + path + arrow;
+function svgDoor(o, w, h, roomDimensions = state.room) {
+  return ArchitecturalGlyphs.svgDoor(getDoorArcData(o, w, h, roomDimensions), w, h);
 }
+
 /**
  * Seleciona o template SVG adequado para o tipo de objeto.
  */
 function svgTemplateForType(type, w, h) {
   const stroke = (fill, border="#1e293b") => `<rect x="0" y="0" width="${w}" height="${h}" fill="${fill}" stroke="${border}" stroke-width="2"/>`;
   switch (type) {
-    case "wall": {
-      let x = stroke("#e2e8f0", "#64748b");
-      const step = Math.max(6, h/4);
-      for (let y=step; y<h; y+=step) x += `<line x1="0" y1="${y}" x2="${w}" y2="${y}" stroke="#94a3b8" stroke-width="1"/>`;
-      return x;
-    }
+    case "wall": return ArchitecturalGlyphs.svgWall(w, h);
     case "door": return svgDoor({x:0,y:0,w,h,rot:0}, w, h);
     case "window": return stroke("rgba(56,189,248,0.3)", "#38bdf8") + `<rect x="4" y="4" width="${Math.max(0,w-8)}" height="${Math.max(0,h-8)}" fill="none" stroke="#38bdf8"/><line x1="${w/2}" y1="4" x2="${w/2}" y2="${h-4}" stroke="#38bdf8"/>`;
     case "bench": return stroke("#64748b", "#475569") + `<rect x="0" y="0" width="${w}" height="${Math.max(4,h*.2)}" fill="#94a3b8"/><line x1="0" y1="${Math.max(5,h*.28)}" x2="${w}" y2="${Math.max(5,h*.28)}" stroke="#cbd5e1"/>`;
@@ -3018,14 +2925,22 @@ function exportSvgFile(exportAll) {
   const areas = exportAll ? state.areas : [activeArea()];
   let minX=0,minY=0,maxX=0,maxY=0;
   if(exportAll){ minX=Math.min(...areas.map(a=>a.posicaoGlobal.x)); minY=Math.min(...areas.map(a=>a.posicaoGlobal.y)); maxX=Math.max(...areas.map(a=>a.posicaoGlobal.x+a.dimensoes.w)); maxY=Math.max(...areas.map(a=>a.posicaoGlobal.y+a.dimensoes.h)); } else { maxX=areas[0].dimensoes.w; maxY=areas[0].dimensoes.h; }
-  const scale=100, pad=exportAll?80:0, rw=(maxX-minX)*scale+pad*2, rh=(maxY-minY)*scale+pad*2;
+  // Arcos de abertura externos não podem ser cortados pelo limite do SVG.
+  // Somente a moldura do arquivo cresce; as dimensões reais dos ambientes não mudam.
+  const scale = 100;
+  const longestDoor = Math.max(0, ...areas.flatMap(a => a.objetos
+    .filter(o => o.type === "door" && !o.hidden)
+    .map(o => Math.max(o.w, o.h) * scale)));
+  const pad = longestDoor > 0 ? Math.ceil(longestDoor + 18) : (exportAll ? 80 : 0);
+  const rw = (maxX - minX) * scale + pad * 2;
+  const rh = (maxY - minY) * scale + pad * 2;
   let svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${rw} ${rh}" width="${rw}" height="${rh}">`;
   svg+=`<rect width="100%" height="100%" fill="#ffffff"/>`;
   areas.forEach(area=>{
     const ox=(exportAll?area.posicaoGlobal.x-minX:0)*scale+pad, oy=(exportAll?area.posicaoGlobal.y-minY:0)*scale+pad, aw=area.dimensoes.w*scale, ah=area.dimensoes.h*scale;
     svg+=`<g transform="translate(${ox} ${oy})"><rect width="${aw}" height="${ah}" fill="#c6ccd0" stroke="#334155" stroke-width="3"/>`;
     svg+=`<text x="10" y="22" font-family="sans-serif" font-size="14" font-weight="700" fill="#0f172a">${svgEscape(area.nome)}</text>`;
-    area.objetos.forEach(o=>{ if(o.hidden)return; const x=o.x*scale,y=o.y*scale,w=o.w*scale,h=o.h*scale,rot=o.rot||0; const body=o.type==="door"?svgDoor(o,w,h):svgTemplateForType(o.type,w,h); const val=isObjectValidInArea(o,area); svg+=`<g transform="translate(${x} ${y}) rotate(${rot} ${w/2} ${h/2})">${body}`; if(!val.valid)svg+=`<rect x="-2" y="-2" width="${w+4}" height="${h+4}" fill="none" stroke="#ef4444" stroke-width="3"/>`; svg+=`</g>`; });
+    area.objetos.forEach(o=>{ if(o.hidden)return; const x=o.x*scale,y=o.y*scale,w=o.w*scale,h=o.h*scale,rot=o.rot||0; const body=o.type==="door"?svgDoor(o,w,h,area.dimensoes):svgTemplateForType(o.type,w,h); const val=isObjectValidInArea(o,area); svg+=`<g transform="translate(${x} ${y}) rotate(${rot} ${w/2} ${h/2})">${body}`; if(!val.valid)svg+=`<rect x="-2" y="-2" width="${w+4}" height="${h+4}" fill="none" stroke="#ef4444" stroke-width="3"/>`; svg+=`</g>`; });
     svg+=`</g>`;
   });
   if(exportAll){ areas.forEach(area=>area.objetos.filter(o=>o.type==="door"&&o.connectionAreaId).forEach(o=>{const target=areas.find(a=>a.id===o.connectionAreaId);if(!target)return;const x1=(area.posicaoGlobal.x+o.x+o.w/2-minX)*scale+pad,y1=(area.posicaoGlobal.y+o.y+o.h/2-minY)*scale+pad,x2=(target.posicaoGlobal.x+target.dimensoes.w/2-minX)*scale+pad,y2=(target.posicaoGlobal.y+target.dimensoes.h/2-minY)*scale+pad;svg+=`<path d="M${x1} ${y1} L${x2} ${y2}" stroke="#38bdf8" stroke-width="3" stroke-dasharray="10 7" fill="none" marker-end="url(#arrow)"/>`; })); }

@@ -118,3 +118,11 @@ A interface inicial passou a se adaptar à altura da janela. No celular, as quat
 ## UIUX-0.9.1.2 — Identidade isolada do PWA no desktop
 
 Manifesto com `id: /mapaderiscoslaboratorio/`, marca MRL específica, `start_url` e `scope` restritos à aplicação; cache offline versionado. O servidor portátil agora serve a aplicação em `http://127.0.0.1:8765/mapaderiscoslaboratorio/`, sem expor o PWA na raiz do servidor. A porta 8765 e a origem dos projetos existentes foram preservadas; não limpar dados do site. A instalação com o identificador antigo `./` pode continuar listada no sistema e deve ser removida apenas após backup, sem exclusão dos dados do navegador. A instalação real em Edge/Chrome no computador do usuário ainda requer verificação.
+
+## UIUX-0.9.2 — Biblioteca gráfica: etapa 1 (Parede e Porta)
+
+O editor apresenta paredes com hachura ortogonal discreta e portas com folha, dobradiça e arco de abertura. O mesmo desenho técnico é gerado no Canvas e na exportação SVG pelo módulo local `js/architectural-glyphs.js`. Os arcos de portas externas recebem margem no arquivo SVG para que não sejam cortados. As miniaturas Parede e Porta no painel Estrutura acompanham a nova representação.
+
+Esta etapa altera **somente o desenho dos tipos `wall` e `door`**: dimensões físicas, posição, rotação, seleção, snap, colisões, undo/redo, formato JSON v4, IndexedDB e autosave permanecem compatíveis. O manifesto PWA continua identificado por `/mapaderiscoslaboratorio/`; o novo módulo entrou no cache versionado. Outras peças ainda aguardam integração.
+
+QA: `node tests/uiux-092-architecture.mjs`; ver `qa/RELATORIO-UIUX-0.9.2-ETAPA-1.md`. Firefox/WebKit, GitHub Pages e instalação PWA real permanecem pendentes de homologação externa.

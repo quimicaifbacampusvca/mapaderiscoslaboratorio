@@ -19,6 +19,6 @@ for(const origin of ['https://example.github.io','http://127.0.0.1:8765']){
 assert.match(python,/APP_PATH = '\/mapaderiscoslaboratorio\/'/);
 assert.match(python,/def translate_path\(self, path\)/);
 assert.match(ps,/\$appPath = '\/mapaderiscoslaboratorio\/'/);
-assert.match(sw,/uiux-0\.9\.3\.1-theme-contrast-v1/);
+assert.match(sw,/uiux-0\.9\.3\.2-visibility-v1/);
 assert.doesNotMatch(sw,/localStorage|indexedDB/);
 console.log('UIUX-0.9.1.2 — identidade PWA e escopos isolados: OK');

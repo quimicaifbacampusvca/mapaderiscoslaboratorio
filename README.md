@@ -109,3 +109,8 @@ O IndexedDB agora recebe as tentativas de salvamento, inclusive quando o autosav
 O cache do PWA foi atualizado para `uiux-0.9.0-v1` para que os navegadores recebam os dois scripts corrigidos. A edição portátil 0.9.0 mantém a origem fixa `http://127.0.0.1:8765/` para acesso contínuo à biblioteca no mesmo computador/navegador.
 
 Para reproduzir a QA: `node tests/uiux-090-storage-fallback.mjs` e `python qa/uiux090-browser.py` (Chromium com IndexedDB simulado). Testes de browser reais no GitHub Pages, Firefox e WebKit, além da persistência nativa do IndexedDB e PWA instalado, **ainda são pendências da homologação 1.0.0**. Ver `qa/RELATORIO-UIUX-0.9.0.md`.
+
+
+## UIUX-0.9.1.1 — Home sem rolagem nas dimensões usuais
+
+A interface inicial passou a se adaptar à altura da janela. No celular, as quatro ações usam grade 2 × 2, com acesso à biblioteca sempre visível e ilustração decorativa omitida em tela compacta. Estados com rascunho e cópia recuperável são condensados sem retirar seus botões. A rolagem permanece disponível se o tamanho da fonte aumentar ou houver avisos extraordinários.

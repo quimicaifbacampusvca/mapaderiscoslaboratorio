@@ -136,3 +136,8 @@ Novos desenhos de bancada, bancada L, pia, capela, extintor e risco químico, co
 ## UIUX-0.9.2.3 — Cabeçalho e configurações do PWA
 
 A barra superior utiliza grupos de ações sem quebra interna, botões com ícones alinhados e truncamento dos textos secundários em resoluções reduzidas. A interface apresenta o botão de **Configurações** na Home e no editor, contendo a instalação e atualização PWA, que deixam de aparecer em uma faixa fixa sobre o mapa. Fechamento por Escape, clique externo e botão Fechar. Cache offline: `uiux-0.9.2-header-settings-v1`. Projeto, JSON v4, armazenamento e ferramentas mantidos. Os 15 desenhos restantes da UIUX-0.9.2 serão implementados separadamente.
+
+
+## UIUX-0.9.2.4 — Normalização dos seletores e inventário de acessibilidade
+
+Os três seletores (`areaSelect`, `areaType` e `doorConnection`) usam uma camada de opções estilizada, mantendo os valores e eventos do `select` original. A camada aceita ponteiro, setas, Home/End, Enter/Espaço, Escape, Tab e digitação inicial; as opções dinâmicas permanecem sincronizadas. Arquivos: `js/styled-selects.js` e `css/controls-consistency.css`. O controle de rotação, o seletor de arquivos e o foco de painéis expansíveis receberam refinamento visual. O cache PWA foi atualizado. Consulte `qa/RELATORIO-UIUX-0.9.2.4.md` e `qa/CONTRATO-ACESSIBILIDADE-SIAB-PARA-MRL.md` para a próxima série. Não altera JSON v4 nem IndexedDB.

@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {dirname,resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const read=path=>readFileSync(resolve(root,path),'utf8');
+const html=read('index.html'),css=read('css/identidade-alerta-precisao.css'),menu=read('js/settings-menu.js'),sw=read('sw.js');
+for(const id of ['homeSettingsBtn','editorSettingsBtn','settingsPanel','settingsClose','pwaControls','pwaInstall','pwaUpdate']) assert.ok(html.includes('id="'+id+'"'),id);
+assert.match(html,/id="settingsPanel"[^>]*aria-labelledby="settingsTitle"/);
+assert.ok(html.indexOf('id="settingsPanel"')<html.indexOf('id="pwaInstall"'));
+assert.ok(html.indexOf('js/pwa.js')<html.indexOf('js/settings-menu.js'));
+assert.match(menu,/event.key==='Escape'/);
+assert.match(menu,/aria-expanded/);
+assert.match(css,/\.settings-panel \.pwa-controls\{position:static;/);
+assert.match(css,/\.topbar-action-cluster button svg\{width:18px;/);
+assert.match(sw,/uiux-0\.9\.2-header-settings-v1/);
+assert.ok(sw.includes('./js/settings-menu.js'));
+console.log('UIUX-0.9.2.3 — Configurações, responsividade e PWA: OK');

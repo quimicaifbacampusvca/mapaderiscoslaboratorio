@@ -131,3 +131,8 @@ QA: `node tests/uiux-092-architecture.mjs`; ver `qa/RELATORIO-UIUX-0.9.2-ETAPA-1
 ## UIUX-0.9.2 — Etapa 2: seis elementos laboratoriais
 
 Novos desenhos de bancada, bancada L, pia, capela, extintor e risco químico, com plano vetorial compartilhado entre Canvas e SVG exportado e miniaturas correspondentes. Preservados JSON v4, geometria, seleção, PWA e IndexedDB. Detalhes em `qa/RELATORIO-UIUX-0.9.2-ETAPA-2.md`.
+
+
+## UIUX-0.9.2.3 — Cabeçalho e configurações do PWA
+
+A barra superior utiliza grupos de ações sem quebra interna, botões com ícones alinhados e truncamento dos textos secundários em resoluções reduzidas. A interface apresenta o botão de **Configurações** na Home e no editor, contendo a instalação e atualização PWA, que deixam de aparecer em uma faixa fixa sobre o mapa. Fechamento por Escape, clique externo e botão Fechar. Cache offline: `uiux-0.9.2-header-settings-v1`. Projeto, JSON v4, armazenamento e ferramentas mantidos. Os 15 desenhos restantes da UIUX-0.9.2 serão implementados separadamente.

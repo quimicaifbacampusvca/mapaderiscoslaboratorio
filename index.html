@@ -19,7 +19,7 @@
     <div class="home-content">
       <div class="proto-topline" aria-label="Protótipo visual, não versão de produção">
         <span class="proto-topline-kicker"><span class="proto-pulse"></span> MAPA DE RISCOS / INSTRUMENTAÇÃO DIGITAL</span>
-        <span class="proto-topline-right">PLANEJAR · IDENTIFICAR · PREVENIR</span>
+        <span class="proto-topline-right">PLANEJAR · IDENTIFICAR · PREVENIR</span><button id="homeSettingsBtn" class="settings-trigger home-settings-trigger" type="button" aria-label="Abrir configurações" aria-controls="settingsPanel" aria-expanded="false" title="Configurações"><svg viewbox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></button>
       </div>
       <div class="home-brand">
       <div class="proto-brand-copy">
@@ -186,6 +186,7 @@
           <svg viewbox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
           <span>Abrir</span>
         </button>
+        <button id="editorSettingsBtn" class="settings-trigger" type="button" aria-label="Abrir configurações" aria-controls="settingsPanel" aria-expanded="false" title="Configurações"><svg viewbox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></button>
       </div></div></header>
 
     <!-- Área de trabalho: painéis laterais e canvas central. -->
@@ -525,12 +526,18 @@
       <footer><button id="librarySaveCurrent" type="button">Guardar projeto atual</button><button id="libraryCloseFooter" type="button">Fechar</button></footer>
     </section>
   </div>
-  <!-- PWA: ações apresentadas apenas quando realmente disponíveis. -->
-  <div id="pwaControls" class="pwa-controls" hidden>
+  <!-- Instalação PWA e atualizações dentro do menu Configurações. -->
+  <section id="settingsPanel" class="settings-panel" role="dialog" aria-modal="false" aria-labelledby="settingsTitle" tabindex="-1" hidden>
+    <div class="settings-panel-head"><h2 id="settingsTitle">Configurações</h2><button type="button" id="settingsClose" aria-label="Fechar configurações">×</button></div>
+    <div class="settings-panel-section"><strong>Aplicativo</strong><p>Instalação e atualização local do Mapa de Riscos.</p>
+    <div id="pwaControls" class="pwa-controls" hidden>
     <span id="pwaOfflineStatus" role="status" hidden>Sem conexão · Editor disponível</span>
     <button type="button" id="pwaInstall" hidden>Instalar aplicativo</button>
     <button type="button" id="pwaUpdate" hidden>Atualização disponível · Atualizar</button>
-  </div>
+    </div>
+    <p>Se a opção de instalação não estiver disponível, procure “Instalar aplicativo” no menu do navegador.</p></div>
+    <div class="settings-panel-section"><strong>Projetos</strong><p>Os mapas ficam neste navegador; exporte JSON para fazer backup ou transferir seus arquivos.</p></div>
+  </section>
   <!-- Constantes, tipos, riscos, EPI e modelos. -->
   <script defer src="js/types.js"></script>
   <!-- Funções de geometria, colisão, contenção e clearance. -->
@@ -547,5 +554,6 @@
   <script defer src="js/project-library.js"></script>
   <script defer src="js/library-ui.js"></script>
   <script defer src="js/pwa.js"></script>
+  <script defer src="js/settings-menu.js"></script>
 </body>
 </html>

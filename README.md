@@ -114,3 +114,7 @@ Para reproduzir a QA: `node tests/uiux-090-storage-fallback.mjs` e `python qa/ui
 ## UIUX-0.9.1.1 — Home sem rolagem nas dimensões usuais
 
 A interface inicial passou a se adaptar à altura da janela. No celular, as quatro ações usam grade 2 × 2, com acesso à biblioteca sempre visível e ilustração decorativa omitida em tela compacta. Estados com rascunho e cópia recuperável são condensados sem retirar seus botões. A rolagem permanece disponível se o tamanho da fonte aumentar ou houver avisos extraordinários.
+
+## UIUX-0.9.1.2 — Identidade isolada do PWA no desktop
+
+Manifesto com `id: /mapaderiscoslaboratorio/`, marca MRL específica, `start_url` e `scope` restritos à aplicação; cache offline versionado. O servidor portátil agora serve a aplicação em `http://127.0.0.1:8765/mapaderiscoslaboratorio/`, sem expor o PWA na raiz do servidor. A porta 8765 e a origem dos projetos existentes foram preservadas; não limpar dados do site. A instalação com o identificador antigo `./` pode continuar listada no sistema e deve ser removida apenas após backup, sem exclusão dos dados do navegador. A instalação real em Edge/Chrome no computador do usuário ainda requer verificação.

@@ -16,6 +16,8 @@ for(const p of ['portable/servidor.py','portable/servidor-windows.ps1','portable
   assert.ok(existsSync(resolve(root,p)),p);
 }
 assert.match(read('portable/servidor.py'),/127\.0\.0\.1/);
+assert.match(read('portable/servidor.py'),/APP_PATH = '\/mapaderiscoslaboratorio\/'/);
+assert.match(read('portable/servidor-windows.ps1'),/\$appPath = '\/mapaderiscoslaboratorio\/'/);
 assert.match(read('portable/servidor-windows.ps1'),/Loopback/);
 assert.match(read('LEIA-ME-OFFLINE.md'),/GitHub Pages e a edi[cç][aã]o port[aá]til n[aã]o compartilham automaticamente/);
 assert.ok(!/(?:https?:)?\/\/(?:cdn\.|fonts\.googleapis|unpkg|jsdelivr)/i.test(html+read('css/mapa.css')+read('css/identidade-alerta-precisao.css')));

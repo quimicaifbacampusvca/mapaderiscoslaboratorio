@@ -43,5 +43,5 @@ assert.equal(recorded[1].detail.localSaved,false);
 assert.ok(ui.includes('const draftSaved = runtime.persist();'));
 assert.ok(ui.includes('await saveCaptured(currentId,payload,titleFor(payload),{revision});'));
 assert.ok(!ui.includes('if(!runtime.persist())return;'), 'Guardar revisão não pode depender da quota do autosave');
-assert.match(sw,/CACHE_PREFIX \+ 'uiux-0\.9\.0-v1'/,'A correção deve entrar num cache novo do PWA');
+assert.match(sw,/CACHE_PREFIX \+ 'uiux-0\.9\.1\.2-pwa-identity-v1'/,'A correção deve entrar num cache novo do PWA');
 console.log('UIUX-0.9.0 — fallback independente para IndexedDB e aviso de quota: OK');

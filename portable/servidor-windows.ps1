@@ -4,6 +4,7 @@ param([int]$Port = 8765)
 $ErrorActionPreference = 'Stop'
 $root = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $listener = New-Object System.Net.Sockets.TcpListener([System.Net.IPAddress]::Loopback, $Port)
+$appPath = '/mapaderiscoslaboratorio/'
 $allowed = @('.html', '.css', '.js', '.json', '.webmanifest', '.svg', '.png')
 $ct = @{
  '.html'='text/html; charset=utf-8'; '.css'='text/css; charset=utf-8'
@@ -13,7 +14,7 @@ $ct = @{
 }
 try {
  $listener.Start()
- $url = "http://127.0.0.1:$Port/"
+ $url = "http://127.0.0.1:$Port$appPath"
  Write-Host "Mapa de Riscos: $url" -ForegroundColor Cyan
  Write-Host 'O servidor aceita somente conexoes deste computador; use Ctrl+C para encerrar.'
  try { Start-Process $url } catch { Write-Host 'Abra o endereco informado no navegador.' }
@@ -33,7 +34,9 @@ try {
    $status='404 Not Found'; $body=[System.Text.Encoding]::UTF8.GetBytes('Arquivo nao encontrado'); $type='text/plain; charset=utf-8'
    if ($parts.Length -ge 2 -and ($parts[0] -eq 'GET' -or $parts[0] -eq 'HEAD')) {
     try {
-     $uriPath = ([Uri]::UnescapeDataString(($parts[1] -split '\?')[0])).Replace('\','/')
+     $uriPath = ([Uri]::UnescapeDataString(($parts[1] -split '\?')[0]))
+     if (-not $uriPath.StartsWith($appPath,[System.StringComparison]::Ordinal) -or $uriPath.Contains('\')) { throw 'Caminho fora do aplicativo' }
+     $uriPath = '/' + $uriPath.Substring($appPath.Length)
      $segments = $uriPath.Trim('/').Split('/')
      $valid = -not ($segments | Where-Object { $_ -eq '..' -or $_ -eq '.' -or $_.StartsWith('.') })
      if ($uriPath -eq '/') { $uriPath='/index.html' }

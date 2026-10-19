@@ -31,6 +31,7 @@ with tempfile.TemporaryDirectory(prefix='uiux084-') as folder:
         assert hashlib.sha256((target / rel).read_bytes()).hexdigest() == sha, rel
     manifest = json.loads((target / 'manifest.webmanifest').read_text(encoding='utf-8'))
     assert manifest['display'] == 'standalone'
+    assert manifest['id'] == '/mapaderiscoslaboratorio/'
     assert (target / manifest['start_url']).is_dir()
     for icon in manifest['icons']:
         assert (target / icon['src']).is_file()
@@ -40,10 +41,11 @@ with tempfile.TemporaryDirectory(prefix='uiux084-') as folder:
     server = subprocess.Popen([sys.executable, str(target / 'portable/servidor.py'), '--no-browser', '--port', str(port)],
                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     base = f'http://127.0.0.1:{port}'
+    app = base + '/mapaderiscoslaboratorio'
     try:
         for n in range(50):
             try:
-                with urllib.request.urlopen(base + '/', timeout=2) as r:
+                with urllib.request.urlopen(app + '/', timeout=2) as r:
                     assert r.status == 200
                     assert b'Mapa de Riscos' in r.read()
                     assert 'text/html' in r.headers['Content-Type']
@@ -60,22 +62,27 @@ with tempfile.TemporaryDirectory(prefix='uiux084-') as folder:
             name = row.split('  ', 1)[1]
             if not (name.startswith(('js/', 'css/', 'assets/')) or name in ('manifest.webmanifest', 'sw.js', 'index.html')):
                 continue
-            with urllib.request.urlopen(base + '/' + name, timeout=5) as r:
+            with urllib.request.urlopen(app + '/' + name, timeout=5) as r:
                 assert r.status == 200, name
                 assert r.read() == (target/name).read_bytes(), name
                 served.append(name)
         assert len(served) >= 25, len(served)
-        for bad in ['/portable/servidor.py','/LEIA-ME-OFFLINE.md','/../../etc/passwd','/assets/','/api/salvar','/project.json']:
+        for bad in ['/', '/index.html', '/sw.js', '/manifest.webmanifest',
+                    '/portable/servidor.py','/LEIA-ME-OFFLINE.md',
+                    '/mapaderiscoslaboratorio/../../etc/passwd',
+                    '/mapaderiscoslaboratorio/assets/',
+                    '/mapaderiscoslaboratorio/api/salvar',
+                    '/mapaderiscoslaboratorio/project.json']:
             try:
                 urllib.request.urlopen(base + bad, timeout=4)
                 raise AssertionError('Recurso não deveria ser exposto: '+bad)
             except urllib.error.HTTPError as e:
                 assert e.code in (403, 404), (bad, e.code)
-        req = urllib.request.Request(base+'/js/mapa.js',method='HEAD')
+        req = urllib.request.Request(app+'/js/mapa.js',method='HEAD')
         with urllib.request.urlopen(req,timeout=4) as r:
             assert r.status==200
             assert int(r.headers['Content-Length']) == (target/'js/mapa.js').stat().st_size
-        print(f'PORTABLE_TEST_OK checksums={len(hashes)} served_assets={len(served)} safety_checks=6 local_port={port}')
+        print(f'PORTABLE_TEST_OK checksums={len(hashes)} served_assets={len(served)} safety_checks=10 local_port={port}')
     finally:
         server.terminate()
         try: server.communicate(timeout=6)

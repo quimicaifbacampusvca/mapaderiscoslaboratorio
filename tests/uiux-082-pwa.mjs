@@ -7,8 +7,15 @@ import {runInNewContext} from 'node:vm';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const scope='https://example.github.io/mapaderiscoslaboratorio/';
 const manifest=JSON.parse(readFileSync(resolve(root,'manifest.webmanifest'),'utf8'));
+assert.equal(manifest.id,'/mapaderiscoslaboratorio/');
 assert.equal(manifest.start_url,'./');
 assert.equal(manifest.scope,'./');
+for(const origin of ['https://example.github.io/mapaderiscoslaboratorio/', 'http://127.0.0.1:8765/mapaderiscoslaboratorio/']) {
+  assert.equal(new URL(manifest.id,origin).href,origin);
+  assert.equal(new URL(manifest.start_url,origin).href,origin);
+  assert.equal(new URL(manifest.scope,origin).href,origin);
+}
+assert.notEqual(new URL(manifest.id,scope).pathname,'/','PWA não pode usar identidade raiz compartilhada');
 assert.equal(manifest.display,'standalone');
 assert.equal(manifest.icons.length,4);
 for(const icon of manifest.icons)assert.ok(existsSync(resolve(root,icon.src)),icon.src);
@@ -72,7 +79,7 @@ assert.ok(db.has('mapa-riscos-shell-versao-anterior'));
 failFor=null;
 await lifetime('install');
 assert.ok(assetRequests.length>=25,'Todos os arquivos locais precisam ser pré-cacheados');
-assert.ok([...db.entries()].find(([name]) => name.includes('uiux-0.9.1-home-fit-v1'))[1].has(home+'manifest.webmanifest'));
+assert.ok([...db.entries()].find(([name,cache]) => name === 'mapa-riscos-shell-uiux-0.9.1.2-pwa-identity-v1' && cache.has(home+'manifest.webmanifest')));
 await lifetime('activate');
 assert.equal(claimCalls,1);
 for(const url of paths){const result=await request(url);assert.equal(result?.from,'cache',url);}

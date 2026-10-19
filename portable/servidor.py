@@ -16,29 +16,44 @@ import webbrowser
 
 ROOT = Path(__file__).resolve().parent.parent
 ALLOWED_SUFFIXES = {'.html', '.css', '.js', '.json', '.webmanifest', '.svg', '.png'}
+APP_PATH = '/mapaderiscoslaboratorio/'
 
 
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
-    def is_allowed(self):
+    def app_relative(self):
+        """Remove the PWA-specific URL prefix; reject unrelated paths."""
         path = unquote(urlsplit(self.path).path)
-        if '\\' in path or '\x00' in path:
-            return False
-        segments = path.strip('/').split('/')
+        if not path.startswith(APP_PATH) or '\\' in path or '\x00' in path:
+            return None
+        relative = path[len(APP_PATH):]
+        segments = relative.split('/')
         if any(x in ('.', '..') or x.startswith('.') for x in segments if x):
+            return None
+        return '/' + relative
+
+    def is_allowed(self):
+        relative = self.app_relative()
+        if relative is None:
             return False
-        if path in ('/', '/index.html'):
+        if relative in ('/', '/index.html'):
             return True
-        if not path.startswith(('/js/', '/css/', '/assets/')) and path not in ('/sw.js', '/manifest.webmanifest'):
+        if not relative.startswith(('/js/', '/css/', '/assets/')) and relative not in ('/sw.js', '/manifest.webmanifest'):
             return False
-        candidate = (ROOT / path.lstrip('/')).resolve()
+        candidate = (ROOT / relative.lstrip('/')).resolve()
         try:
             candidate.relative_to(ROOT)
         except ValueError:
             return False
         return candidate.suffix.lower() in ALLOWED_SUFFIXES and candidate.is_file()
+
+    def translate_path(self, path):
+        relative = self.app_relative()
+        if relative is None:
+            return str(ROOT / '__not_available__')
+        return str(ROOT / (relative.lstrip('/') or 'index.html'))
 
     def do_GET(self):
         if not self.is_allowed():
@@ -71,7 +86,7 @@ class Handler(SimpleHTTPRequestHandler):
 
 def main():
     parser = argparse.ArgumentParser(description='Mapa de Riscos — distribuição portátil local')
-    parser.add_argument('--port', type=int, default=8765, help='Padrão 8765; manter para preservar origem dos projetos')
+    parser.add_argument('--port', type=int, default=8765, help='Padrão 8765; mesma origem dos projetos anteriores. Use porta diferente somente com backup JSON.')
     parser.add_argument('--no-browser', action='store_true')
     args = parser.parse_args()
     if not 0 <= args.port <= 65535:
@@ -81,7 +96,7 @@ def main():
     except OSError as exc:
         raise SystemExit(f'Não foi possível abrir a porta {args.port}: {exc}. Feche outra cópia antes de tentar novamente.')
     port = server.server_address[1]
-    url = f'http://127.0.0.1:{port}/'
+    url = f'http://127.0.0.1:{port}{APP_PATH}'
     print(f'\nMapa de Riscos — modo portátil\nAcesse: {url}\nServidor local; não compartilha projetos pela rede.\nPressione Ctrl+C para encerrar.\n', flush=True)
     if not args.no_browser:
         Timer(0.8, lambda: webbrowser.open(url)).start()

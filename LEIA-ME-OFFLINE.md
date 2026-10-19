@@ -1,4 +1,4 @@
-# Mapa de Riscos do Laboratório — edição portátil offline (UIUX-0.9.0)
+# Mapa de Riscos do Laboratório — edição portátil offline (UIUX-0.9.1.2)
 
 Esta distribuição contém os arquivos de execução locais da aplicação, sem necessidade de conexão com Google Apps Script, Google Sheets, CDN ou outros serviços para construir mapas, trabalhar com a biblioteca e exportar JSON.
 
@@ -8,13 +8,21 @@ Esta distribuição contém os arquivos de execução locais da aplicação, sem
 
 **Linux/macOS:** com Python 3 instalado, abra a pasta extraída e execute `sh portable/iniciar.sh` (ou `python3 portable/servidor.py`).
 
-**Endereço de uso:** `http://127.0.0.1:8765/`. O servidor funciona exclusivamente no próprio computador (interface de loopback), sem exposição à rede escolar. Ao fechar o terminal, o servidor é encerrado; ao executar de novo, ele poderá reabrir a aplicação.
+**Endereço de uso isolado:** `http://127.0.0.1:8765/mapaderiscoslaboratorio/`. O servidor funciona exclusivamente no próprio computador (interface de loopback), sem exposição à rede escolar. Ao fechar o terminal, o servidor é encerrado; ao executar de novo, ele poderá reabrir a aplicação.
 
 O programa funciona mesmo sem conexão à internet, pois todos os recursos do editor estão no ZIP. Não use `file://` como caminho recomendado: as políticas de scripts, IndexedDB e PWA variam entre navegadores. **O ZIP por si só não executa um servidor: é necessário usar um dos iniciadores.** A alternativa com Python exige Python 3 instalado; a alternativa com PowerShell depende dos componentes padrão do Windows e ainda precisa de testes nesse sistema operacional.
 
+## Se havia outro PWA instalado no desktop
+
+Esta edição tem identificação oficial específica no manifesto (`id: /mapaderiscoslaboratorio/`) e funciona na rota `/mapaderiscoslaboratorio/`, em vez de ocupar a raiz `/`. A instalação nova tem escopo próprio e não deve assumir a janela/atalho de um outro aplicativo com início em `/`.
+
+**Não remova outros PWAs nem limpe os dados do navegador.** Se existir um atalho antigo do próprio Mapa de Riscos abrindo o PWA incorreto, exporte primeiro os projetos importantes em JSON. Só então remova o atalho/instalação anterior do Mapa de Riscos, sem selecionar a opção de apagar dados do site, e instale novamente a partir do novo endereço. A remoção de um aplicativo e o apagamento de dados são operações diferentes, mas o comportamento exato depende do navegador.
+
+Este ajuste mantém a porta 8765 para que a origem de localStorage e IndexedDB permaneça a mesma. A biblioteca local ainda está associada à origem, e **não** a um PWA específico. Se outro servidor já usar essa porta, feche-o antes de iniciar o MRL, ou use outra porta com backup JSON; mudar a porta troca a origem e não migra os projetos automaticamente.
+
 ## Como manter os projetos
 
-- A biblioteca IndexedDB e o autosave do `localStorage` pertencem **ao navegador e à origem**, não à pasta ZIP. Reinstalar a aplicação em outra pasta usando exatamente `http://127.0.0.1:8765/` tende a reutilizar os mesmos dados no mesmo perfil do navegador.
+- A biblioteca IndexedDB e o autosave do `localStorage` pertencem **ao navegador e à origem**, não à pasta ZIP. Reinstalar a aplicação em outra pasta usando exatamente `http://127.0.0.1:8765/mapaderiscoslaboratorio/` tende a reutilizar os mesmos dados no mesmo perfil do navegador.
 - **Não mude a porta nem troque `127.0.0.1` por `localhost`:** esses endereços são origens diferentes, e a biblioteca de projetos pode parecer vazia.
 - **A versão do GitHub Pages e a edição portátil não compartilham automaticamente os projetos.** Para transferir um projeto, abra-o na origem antiga, use **Baixar JSON**, depois **Abrir** o JSON na origem nova. Confira o mapa antes de descartar o arquivo exportado.
 - Limpar os dados do site, trocar de perfil, usar navegação privada ou reinstalar o navegador pode remover os projetos. **Mantenha cópias JSON fora do navegador.** O PWA e o cache não substituem backups dos trabalhos.

@@ -1,9 +1,9 @@
 {
-  "name": "Mapa de Riscos do Laboratório",
-  "short_name": "Mapa de Riscos",
+  "name": "MRL — Mapa de Riscos do Laboratório",
+  "short_name": "MRL · Riscos Lab",
   "description": "Editor 2D para mapeamento e prevenção de riscos laboratoriais com funcionamento offline.",
   "lang": "pt-BR",
-  "id": "./",
+  "id": "/mapaderiscoslaboratorio/",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

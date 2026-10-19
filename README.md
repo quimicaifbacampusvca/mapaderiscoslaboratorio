@@ -94,3 +94,9 @@ Na primeira inicialização, o programa **copia** o autosave e a cópia anterior
 **Limitações:** biblioteca local, sem conta, nuvem ou sincronização entre dispositivos; limpar os dados do site também pode apagar IndexedDB. Exportar JSON continua sendo o caminho portável para backups. O service worker 0.8.3 inclui os dois novos scripts e instala o cache completo antes da atualização. Abertura online inicial, instalação e modo offline hospedado precisam de conferência real no GitHub Pages.
 
 Testes: `node tests/uiux-083-library.mjs` e `python qa/uiux083-browser.py` (modo Chromium isolado com API IndexedDB simulada). Veja `qa/RELATORIO-UIUX-0.8.3.md`.
+
+## UIUX-0.8.4 — Distribuição portátil para uso offline
+
+O pacote `Mapa-de-Riscos-Portatil-Offline-UIUX-0.8.4.zip` contém o shell estático local com checksums e iniciadores para uso em computadores escolares, sem chamada ao backend. Windows: `portable/iniciar.cmd` (Python 3 instalado, ou fallback PowerShell); Linux/macOS: `sh portable/iniciar.sh` com Python 3. Endereço padrão **`http://127.0.0.1:8765/`**, sempre fixo para preservar o acesso à biblioteca local entre sessões do mesmo navegador. Para transferência do GitHub Pages ou entre computadores, **exporte e importe arquivos JSON**; dados em diferentes origens não sincronizam automaticamente. A versão portátil ainda requer homologação real de Windows, Firefox, WebKit e PWA instalado.
+
+Os scripts de geração e verificação ficam em `tools/montar-portatil.py` e `tools/validar-portatil.py`. Instruções completas: `LEIA-ME-OFFLINE.md`; relatório técnico: `qa/RELATORIO-UIUX-0.8.4.md`.

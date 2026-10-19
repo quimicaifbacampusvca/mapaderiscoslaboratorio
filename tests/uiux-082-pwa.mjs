@@ -79,7 +79,7 @@ assert.ok(db.has('mapa-riscos-shell-versao-anterior'));
 failFor=null;
 await lifetime('install');
 assert.ok(assetRequests.length>=25,'Todos os arquivos locais precisam ser pré-cacheados');
-assert.ok([...db.entries()].find(([name,cache]) => name === 'mapa-riscos-shell-uiux-0.9.3-accessibility-v1' && cache.has(home+'manifest.webmanifest')));
+assert.ok([...db.entries()].find(([name,cache]) => name === 'mapa-riscos-shell-uiux-0.9.3.1-theme-contrast-v1' && cache.has(home+'manifest.webmanifest')));
 await lifetime('activate');
 assert.equal(claimCalls,1);
 for(const url of paths){const result=await request(url);assert.equal(result?.from,'cache',url);}

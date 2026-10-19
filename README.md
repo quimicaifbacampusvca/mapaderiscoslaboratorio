@@ -146,3 +146,8 @@ Os três seletores (`areaSelect`, `areaType` e `doorConnection`) usam uma camada
 ## UIUX-0.9.3 — Acessibilidade (base SIAB 1.0.0)
 
 Configurações passa a usar um diálogo modal com foco administrado. Sua seção Acessibilidade oferece tema claro/escuro, alto contraste, tamanho de texto em passos de 10% (80–200%), espaçamento, movimento reduzido, abertura, leitura simples, simulações visuais de cores e restauração de padrões. VLibras é opcional e requer internet. As preferências ficam numa chave própria e não alteram geometria nem exportações. Ver `qa/RELATORIO-UIUX-0.9.3.md`.
+
+
+## UIUX-0.9.3.1 — Paridade de cores e contraste
+
+Foi realizada auditoria de tema claro/escuro, alto contraste, leitura simples e cinco simulações de visão de cores. A apresentação dos cartões, camadas, painéis e formulários passa a usar tokens pareados de superfície/texto sem recolorir o Canvas ou os pictogramas de risco. `css/temas-contraste.css` deve ser carregado após `css/acessibilidade.css`. Novo cache PWA versionado. Ver `qa/RELATORIO-UIUX-0.9.3.1.md`.

@@ -39,24 +39,11 @@ html[data-mrl-theme] .home-content h1 {font-size:clamp(24px,calc(34px * var(--mr
 html[data-mrl-theme] .settings-panel :is(input,select,button) {min-height:36px;}
 html[data-mrl-spacing="on"] :is(.left-panel,.right-panel,.home-content,header.topbar,.settings-panel,.library-panel) {letter-spacing:.065em;}
 html[data-mrl-reading="on"] :is(.left-panel,.right-panel,.settings-panel,.home-content) {font-weight:500;line-height:1.55;}
-html[data-mrl-reading="on"] :is(.left-panel,.right-panel,.settings-panel) p {color:#f4f9fc !important;}
+html[data-mrl-reading="on"] :is(.left-panel,.right-panel,.settings-panel) p {color:var(--mrl-ui-ink) !important;}
 html[data-mrl-motion="reduced"] *,html[data-mrl-motion="reduced"] *::before,html[data-mrl-motion="reduced"] *::after {animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}
 html[data-mrl-intro="off"] .home-screen :is(.home-brand-mark,.proto-visual,.home-preview) {animation:none!important;}
-/* Contraste alto: preserva códigos semânticos dos riscos no Canvas e nos SVGs. */
-html[data-mrl-contrast="on"] :is(.left-panel,.right-panel,.settings-panel,header.topbar,.home-screen,.library-panel) {background:#090e13!important;color:#fff!important;border-color:#f4f6f8!important;}
-html[data-mrl-contrast="on"] :is(.left-panel,.right-panel,.settings-panel,header.topbar,.home-screen,.library-panel) :is(button,input,select,details,summary,.panel-section,.home-card,.library-item) {border-color:#f4f6f8!important;}
-html[data-mrl-contrast="on"] :is(.left-panel,.right-panel,.settings-panel,.home-screen) :is(p,label,small,span,strong,h1,h2,h3) {color:#fff!important;}
-html[data-mrl-contrast="on"] :is(.left-panel,.right-panel,.settings-panel,header.topbar,.home-screen) :is(button,input,select) {background:#111d28!important;color:#fff!important;}
-html[data-mrl-contrast="on"] :is(button,select,input,summary,a):focus-visible {outline:3px solid #ffe66d!important;outline-offset:3px!important;}
-/* Tema claro: somente painéis e controles. Não inverter o Canvas: suas cores carregam informação técnica. */
-html[data-mrl-theme="light"] {color-scheme:light;}
-html[data-mrl-theme="light"] :is(.left-panel,.right-panel,.settings-panel,header.topbar,.home-screen,.library-panel) {background:#eaf2f7!important;color:#122b3b!important;border-color:#7996a8!important;}
-html[data-mrl-theme="light"] :is(.left-panel,.right-panel,.settings-panel,header.topbar,.home-screen,.library-panel) :is(button,input,select,.panel-section,.panel-section-head,.home-card,.library-item,.mrl-a11y-group,summary) {background:#f7fbfe!important;color:#173549!important;border-color:#8cabbc!important;}
-html[data-mrl-theme="light"] :is(.left-panel,.right-panel,.settings-panel,.home-screen,.library-panel) :is(h1,h2,h3,p,label,span,strong,small,legend) {color:#173549!important;}
-html[data-mrl-theme="light"] .settings-panel::backdrop {background:rgba(8,24,34,.60);}
-html[data-mrl-theme="light"] .mrl-a11y-row {border-color:#b1c5d0;}
-html[data-mrl-theme="light"] .mrl-a11y-row input[role="switch"]:checked {background:#17638c!important;}
-html[data-mrl-theme="light"] :is(.topbar,.home-screen,.settings-panel) :is(button,a,input,summary,select):focus-visible {outline-color:#8b3c00!important;}
+/* Paletas específicas e precedência de contrastes: css/temas-contraste.css.
+   Não aplicar cor forçada a spans indiscriminadamente: sinais e botões semânticos. */
 .mrl-cvd-overlay[hidden] {display:none!important;}
 .mrl-cvd-overlay {pointer-events:none;position:fixed;inset:0;z-index:9999;}
 html[data-mrl-cvd="protanopia"] .mrl-cvd-overlay {backdrop-filter:url(#mrl-protanopia);-webkit-backdrop-filter:url(#mrl-protanopia);}
@@ -71,6 +58,6 @@ html[data-mrl-cvd="acromatopsia"] .mrl-cvd-overlay {backdrop-filter:grayscale(1)
 .settings-panel label.mrl-a11y-select-row {flex-direction:column;align-items:stretch;}
 .settings-panel .mrl-a11y-row input[role="switch"] {height:25px;min-height:25px!important;max-height:25px;flex:0 0 44px;}
 .settings-panel .mrl-font-step output {color:inherit!important;font-size:calc(12px * var(--mrl-font-scale))!important;line-height:1.45;opacity:1;}
-html[data-mrl-theme="light"] .settings-panel .mrl-font-step output {color:#173549!important;}
+html[data-mrl-theme="light"] .settings-panel .mrl-font-step output {color:var(--mrl-ui-ink)!important;}
 .settings-panel:is(dialog) {left:auto!important;right:max(12px,env(safe-area-inset-right))!important;top:max(56px,env(safe-area-inset-top))!important;}
 @media(max-width:540px){.settings-panel:is(dialog){left:12px!important;right:12px!important;top:auto!important;bottom:12px!important;}}

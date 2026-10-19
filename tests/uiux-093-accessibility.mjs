@@ -20,6 +20,6 @@ assert.match(css,/data-mrl-motion="reduced"/);
 assert.doesNotMatch(access,/state\.room|\.cam\.zoom|indexedDB|MAPA_RUNTIME/);
 assert.match(sw,/\.\/css\/acessibilidade\.css/);
 assert.match(sw,/\.\/js\/accessibility\.js/);
-assert.match(sw,/uiux-0\.9\.3-accessibility-v1/);
+assert.match(sw,/uiux-0\.9\.3\.1-theme-contrast-v1/);
 assert.ok(html.indexOf('src="js/accessibility.js"') < html.indexOf('src="js/settings-menu.js"'));
 console.log('UIUX-0.9.3 — contrato estático de acessibilidade: OK');

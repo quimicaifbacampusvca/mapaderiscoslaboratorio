@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {dirname,resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const R=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const css=readFileSync(resolve(R,'css/temas-contraste.css'),'utf8');
+const sw=readFileSync(resolve(R,'sw.js'),'utf8');
+for(const s of ['#complianceReportModal .report-stat b','#complianceReportModal .report-score.ok','#complianceReportModal .report-score.pending'])assert.ok(css.includes(s),'Falta contraste em '+s);
+for(const c of ['--mrl-ui-ink','#16552f','#654000','#ffe5a4','#baf5cd'])assert.ok(css.includes(c));
+assert.match(sw,/uiux-0\.9\.3\.3\.1-report-contrast-v1/);
+assert.match(sw,/\.\/css\/temas-contraste\.css/);
+assert.doesNotMatch(css,/(?:localStorage|indexedDB|drawImage|requestDraw)\s*\(/);
+console.log('UIUX-0.9.3.3.1 — estatísticas e indicadores do relatório: OK');

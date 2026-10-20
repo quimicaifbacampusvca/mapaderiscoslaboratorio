@@ -86,3 +86,20 @@ html[data-mrl-theme] .modal-card :is(button,.model-card,a):focus-visible {
   outline:3px solid var(--mrl-ui-focus)!important;
   outline-offset:2px!important;
 }
+
+/* UIUX-0.9.3.3.1 — contraste dos números e indicadores de conformidade. */
+html[data-mrl-theme] #complianceReportModal .report-stat b {
+  color:var(--mrl-ui-ink)!important;
+}
+html[data-mrl-theme] #complianceReportModal .report-score.ok {
+  background:#163e2c!important;color:#baf5cd!important;border-color:#71c69d!important;
+}
+html[data-mrl-theme="light"] #complianceReportModal .report-score.ok {
+  background:#d8f6e3!important;color:#16552f!important;border-color:#387850!important;
+}
+html[data-mrl-theme] #complianceReportModal .report-score.pending {
+  background:#514012!important;color:#ffe5a4!important;border-color:#c09a35!important;
+}
+html[data-mrl-theme="light"] #complianceReportModal .report-score.pending {
+  background:#fff0bb!important;color:#654000!important;border-color:#8c6217!important;
+}

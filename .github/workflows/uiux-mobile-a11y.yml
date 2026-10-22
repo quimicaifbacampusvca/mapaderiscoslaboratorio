@@ -1,0 +1,37 @@
+name: UIUX 0.9.3.3.2 — regressão estática
+on:
+  pull_request:
+    paths:
+      - 'css/**'
+      - 'sw.js'
+      - 'tests/**'
+      - '.github/workflows/uiux-mobile-a11y.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'css/**'
+      - 'sw.js'
+      - 'tests/**'
+      - '.github/workflows/uiux-mobile-a11y.yml'
+permissions:
+  contents: read
+jobs:
+  contratos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Executar contratos de acessibilidade e integridade
+        run: |
+          set -euo pipefail
+          node tests/core-smoke.mjs
+          node tests/no-login-smoke.mjs
+          node tests/uiux-082-pwa.mjs
+          node tests/uiux-093-accessibility.mjs
+          node tests/uiux-0931-theme-contract.mjs
+          node tests/uiux-0932-dynamic-contrast.mjs
+          node tests/uiux-0933-dialog-theme.mjs
+          node tests/uiux-0933a-report-contrast.mjs
+          node tests/uiux-0934-mobile-a11y.mjs

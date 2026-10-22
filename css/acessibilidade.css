@@ -53,6 +53,38 @@ html[data-mrl-cvd="acromatopsia"] .mrl-cvd-overlay {backdrop-filter:grayscale(1)
 @media(max-width:540px) {.settings-panel{inset:auto 12px 12px!important; width:calc(100vw - 24px);max-height:calc(100dvh - 24px);padding:13px;}.mrl-a11y-row{gap:6px;}.mrl-a11y-body{gap:9px;}}
 @media(forced-colors:active){.mrl-a11y-row input[role="switch"] {appearance:auto;-webkit-appearance:auto;}.settings-panel,.mrl-a11y-group{forced-color-adjust:auto;}}
 @media(prefers-reduced-motion:reduce){.mrl-a11y-heading span,.mrl-a11y-row input[role="switch"]::before{transition:none!important;}}
+
+/* UIUX-0.9.3.3.2 — limite horizontal do painel a 200% em telas estreitas.
+   Somente interface de configurações; não altera Canvas, objetos ou JSON. */
+.settings-panel .mrl-a11y-body {
+  grid-template-columns:minmax(0,1fr);
+  min-width:0;
+  max-width:100%;
+}
+.settings-panel :is(.settings-panel-section,.mrl-a11y-body,.mrl-a11y-group,.mrl-a11y-row) {
+  min-width:0;
+  max-width:100%;
+  box-sizing:border-box;
+}
+.settings-panel .mrl-a11y-row > span {
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+.settings-panel :is(.mrl-a11y-reset,#mrlEnableVlibras) {
+  box-sizing:border-box;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+@media (max-width:540px) {
+  .settings-panel .mrl-font-step {
+    min-width:0;
+    max-width:100%;
+  }
+}
+
 /* Contrato local de alinhamento: o CSS genérico do editor define label em coluna. */
 .settings-panel label.mrl-a11y-row {display:flex;flex-direction:row;align-items:center;justify-content:space-between;text-align:left;}
 .settings-panel label.mrl-a11y-select-row {flex-direction:column;align-items:stretch;}

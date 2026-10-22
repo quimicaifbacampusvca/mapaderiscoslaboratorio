@@ -38,6 +38,7 @@ jobs:
       - name: Executar C04 isolado, depois P01 isolado, em cada motor
         shell: bash
         run: |
+          set +e
           set -uo pipefail
           mkdir -p qa-individual
           echo '| Caso | Ambiente | Motor | Resultado |' >> "$GITHUB_STEP_SUMMARY"

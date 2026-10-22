@@ -9,7 +9,7 @@ const sw=read('sw.js');
 assert.match(html,/<link rel="stylesheet" href="css\/temas-contraste\.css">/);
 assert.ok(html.indexOf('href="css/temas-contraste.css"')>html.indexOf('href="css/acessibilidade.css"'));
 assert.match(sw,/css\/temas-contraste\.css/);
-assert.match(sw,/uiux-0\.9\.3\.3\.1-report-contrast-v1/);
+assert.match(sw,/uiux-0\.9\.3\.3\.2-mobile-a11y-v1/);
 for(const v of ['dark','light'])assert.ok(theme.includes('html[data-mrl-theme="'+v+'"]'));
 for(const v of ['dark','light'])assert.ok(theme.includes('[data-mrl-theme="'+v+'"]'));
 for(const s of ['--mrl-ui-card','--mrl-ui-ink','--mrl-ui-muted','--mrl-ui-control','--mrl-ui-focus'])assert.ok(theme.includes(s));

@@ -19,22 +19,19 @@ on:
       - 'tests/**'
       - '.github/workflows/homologacao-real.yml'
   workflow_dispatch:
-    inputs:
-      destino:
-        description: 'Aplicação a testar (publicado usa GitHub Pages real)'
-        type: choice
-        options: [local, publicado]
-        default: local
-        required: true
 
 permissions:
   contents: read
 
 jobs:
   navegador-real:
-    name: Chromium / Firefox / WebKit
+    name: ${{ matrix.destino }} / Chromium, Firefox e WebKit
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        destino: [local, publicado]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -45,6 +42,7 @@ jobs:
       - name: Instalar motores de navegador
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Iniciar servidor da cópia do branch
+        if: matrix.destino == 'local'
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/mrl-http.log 2>&1 &
           for n in $(seq 1 20); do
@@ -53,16 +51,27 @@ jobs:
           done
           cat /tmp/mrl-http.log
           exit 1
-      - name: Executar cenários H01-H10 e amostragem de viewports
+      - name: Conferir publicação HTTPS e versão do cache PWA
+        if: matrix.destino == 'publicado'
+        run: |
+          set -euo pipefail
+          SITE='https://quimicaifbacampusvca.github.io/mapaderiscoslaboratorio/'
+          curl -fsSL --retry 3 "$SITE" -o /tmp/mrl-site.html
+          curl -fsSL --retry 3 "${SITE}sw.js" -o /tmp/mrl-site-sw.js
+          grep -q 'Mapa de Riscos' /tmp/mrl-site.html
+          grep -q 'CACHE_NAME' /tmp/mrl-site-sw.js
+          echo "GitHub Pages verificado: $SITE"
+          grep 'const CACHE_NAME' /tmp/mrl-site-sw.js
+      - name: Executar H01-H10, acessibilidade complementar e PWA
         run: npx playwright test --config=tests/playwright.homologacao.config.mjs
         env:
           CI: 'true'
-          MRL_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.destino == 'publicado' && 'https://quimicaifbacampusvca.github.io/mapaderiscoslaboratorio/' || 'http://127.0.0.1:4173/' }}
+          MRL_URL: ${{ matrix.destino == 'publicado' && 'https://quimicaifbacampusvca.github.io/mapaderiscoslaboratorio/' || 'http://127.0.0.1:4173/' }}
       - name: Guardar relatórios, capturas, vídeos e traces
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: homologacao-real-${{ github.run_id }}
+          name: homologacao-${{ matrix.destino }}-${{ github.run_id }}
           path: tests/qa-results/
           retention-days: 30
           if-no-files-found: warn

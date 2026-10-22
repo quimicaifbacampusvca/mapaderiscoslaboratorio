@@ -1,0 +1,88 @@
+name: Auditoria individual C04 e P01
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/qa-individual-c04-p01.yml'
+      - 'tests/homologacao-complementar.spec.mjs'
+      - 'tests/playwright.homologacao.config.mjs'
+      - 'css/acessibilidade.css'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  casos-isolados:
+    name: C04 e depois P01 — navegador por navegador
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar Playwright
+        run: npm install --no-save --no-package-lock @playwright/test@1.56.1
+      - name: Instalar Chromium, Firefox e WebKit
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Servir somente a cópia de testes em localhost
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/mrl-http.log 2>&1 &
+          for n in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/mrl-http.log
+          exit 1
+      - name: Executar C04 isolado, depois P01 isolado, em cada motor
+        shell: bash
+        run: |
+          set +e
+          set -uo pipefail
+          mkdir -p qa-individual
+          echo '| Caso | Ambiente | Motor | Resultado |' >> "$GITHUB_STEP_SUMMARY"
+          echo '|---|---|---|---|' >> "$GITHUB_STEP_SUMMARY"
+          failures=0
+          for caso in C04 P01; do
+            for ambiente in local publicado; do
+              if [ "$ambiente" = publicado ]; then
+                export MRL_URL='https://quimicaifbacampusvca.github.io/mapaderiscoslaboratorio/'
+              else
+                export MRL_URL='http://127.0.0.1:4173/'
+              fi
+              for motor in chromium firefox webkit; do
+                echo "::group::${caso} / ${ambiente} / ${motor}"
+                destino="qa-individual/${caso}/${ambiente}/${motor}"
+                mkdir -p "$destino"
+                rm -rf tests/qa-results
+                CI='' npx playwright test --config=tests/playwright.homologacao.config.mjs \
+                  --project="$motor" --grep="${caso} —" --retries=0 \
+                  >"$destino/console.log" 2>&1
+                codigo=$?
+                cat "$destino/console.log"
+                if [ -d tests/qa-results ]; then
+                  cp -a tests/qa-results/. "$destino/"
+                fi
+                if [ "$codigo" -eq 0 ]; then
+                  resultado='APROVADO'
+                else
+                  resultado='REPROVADO'
+                  failures=$((failures+1))
+                fi
+                echo "${codigo}" > "$destino/exit-code.txt"
+                echo "| ${caso} | ${ambiente} | ${motor} | ${resultado} |" >> "$GITHUB_STEP_SUMMARY"
+                echo "::endgroup::"
+              done
+            done
+          done
+          echo "Falhas individuais: $failures"
+          exit "$([ "$failures" -eq 0 ] && echo 0 || echo 1)"
+      - name: Preservar todas as evidências separadas por caso e navegador
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: c04-p01-individuais-${{ github.run_id }}
+          path: qa-individual/
+          if-no-files-found: warn
+          retention-days: 30

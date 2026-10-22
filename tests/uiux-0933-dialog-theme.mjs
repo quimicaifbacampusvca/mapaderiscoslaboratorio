@@ -7,6 +7,6 @@ const css=readFileSync(resolve(R,'css/temas-contraste.css'),'utf8');
 const sw=readFileSync(resolve(R,'sw.js'),'utf8');
 const required=['.modal-card,.modal-body','.modal-header,.models-footer','.model-card,.report-stat,.report-row,.model-thumb','.btn-secondary,.btn-close','.modal-card .btn-danger','.modal-card :is(button,.model-card,a):focus-visible','--mrl-ui-card','--mrl-ui-ink','--mrl-ui-muted','--mrl-ui-control'];
 for(const s of required)assert.ok(css.includes(s),'Tema incompleto: '+s);
-assert.match(sw,/uiux-0\.9\.3\.3\.1-report-contrast-v1/);
+assert.match(sw,/uiux-0\.9\.3\.3\.2-mobile-a11y-v1/);
 assert.doesNotMatch(css,/localStorage\s*\(|indexedDB\s*\(/);
 console.log('UIUX-0.9.3.3 — paridade cromática de diálogos: OK');

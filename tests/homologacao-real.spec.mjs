@@ -40,12 +40,14 @@ async function editor(page, options={}) {
 }
 
 async function openSettings(page) {
-  const trigger=page.locator('#app.hidden').count;
   // Escolher o botão de configurações a partir da tela visível.
   const inEditor=await page.locator('#app').evaluate(e=>!e.classList.contains('hidden'));
   await page.locator(inEditor?'#editorSettingsBtn':'#homeSettingsBtn').click();
   await expect(page.locator('#settingsPanel')).toHaveAttribute('open','');
-  await page.locator('#mrlA11ySummary').click();
+  // O <details> mantém seu estado após fechar o diálogo: não inverter se já está aberto.
+  if(!(await page.locator('#mrlA11yDetails').evaluate(el=>el.open))) {
+    await page.locator('#mrlA11ySummary').click();
+  }
   await expect(page.locator('#mrlA11yBody')).toBeVisible();
 }
 

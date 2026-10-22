@@ -2,8 +2,8 @@ import {defineConfig,devices} from '@playwright/test';
 
 export default defineConfig({
   testDir: '.',
-  testMatch: 'homologacao-real.spec.mjs',
-  timeout: 45_000,
+  testMatch: 'homologacao-*.spec.mjs',
+  timeout: 90_000,
   expect: {timeout: 10_000},
   retries: process.env.CI ? 1 : 0,
   workers: 1,

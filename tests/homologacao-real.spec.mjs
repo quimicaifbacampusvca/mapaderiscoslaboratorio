@@ -28,7 +28,8 @@ async function visit(page,{autosave=false,previous=false,objects=false}={}) {
     },{current:autosave?project('Laboratório QA',objects):null,
       backup:previous?project('Cópia anterior QA',true):null});
   }
-  await page.goto('/');
+  // Manter o subcaminho /mapaderiscoslaboratorio/ no GitHub Pages.
+  await page.goto('./');
   await expect(page.locator('#homeScreen')).toBeVisible();
   await page.waitForFunction(()=>Boolean(window.MAPA_RUNTIME && window.MapaProjectLibrary && window.MRLAccessibility));
 }

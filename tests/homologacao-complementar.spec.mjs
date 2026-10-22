@@ -146,13 +146,15 @@ test('C04 — texto 200%: controles essenciais não extrapolam horizontalmente',
   }
 });
 
-test('P01 — PWA: recarga offline preserva Home e projeto local',async({page,context})=>{
+test('P01 — PWA: recarga offline preserva Home e projeto local',async({page,context,browserName})=>{
   await home(page);
   const before=await page.evaluate(key=>localStorage.getItem(key),AUTOSAVE);
   await page.waitForFunction(()=>!!navigator.serviceWorker?.controller,null,{timeout:20_000});
   await context.setOffline(true);
   try {
-    await page.reload({waitUntil:'domcontentloaded',timeout:15_000});
+    // WebKit/Linux pode falhar na API reload; testar navegação HTTPS equivalente offline.
+    if(browserName==='webkit') await page.goto('./',{waitUntil:'domcontentloaded',timeout:15_000});
+    else await page.reload({waitUntil:'domcontentloaded',timeout:15_000});
     await expect(page.locator('#homeScreen')).toBeVisible();
     await expect(page.locator('#homeContinue')).toBeVisible();
     expect(await page.evaluate(()=>navigator.onLine)).toBe(false);

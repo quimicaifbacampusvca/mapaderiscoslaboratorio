@@ -1,0 +1,46 @@
+name: "QuímiX | Reação R8 — cinco frames Blender/Cycles"
+on:
+  push:
+    branches: [design/quimix-acento-blender]
+    paths:
+      - 'experimentos-identidade/quimix/identidades/blender/reacao_3d_refinada.py'
+      - 'experimentos-identidade/quimix/identidades/blender/montar_quadro_reacao.py'
+      - '.github/workflows/quimix-reacao-r8.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  render-reacao:
+    name: Renderizar QuímiX Reação R8
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar Blender no runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends blender
+          blender --version | head -n 3
+      - name: Verificar scripts
+        run: |
+          python3 -m py_compile experimentos-identidade/quimix/identidades/blender/reacao_3d_refinada.py
+          python3 -m py_compile experimentos-identidade/quimix/identidades/blender/montar_quadro_reacao.py
+      - name: Construir cena, salvar .blend e renderizar cinco quadros Cycles
+        run: |
+          mkdir -p renders-r8
+          blender -b --factory-startup -t 4 --python experimentos-identidade/quimix/identidades/blender/reacao_3d_refinada.py -- --output renders-r8 --samples 20 --resolution 1024
+      - name: Gerar HTML somente a partir dos renders confirmados
+        run: |
+          python3 experimentos-identidade/quimix/identidades/blender/montar_quadro_reacao.py renders-r8
+          test "$(find renders-r8 -maxdepth 1 -type f -name '*.png' | wc -l)" -eq 5
+          test -s renders-r8/comparativo_renderizado.html
+          test -s renders-r8/QuimiX_REACAO_R8.blend
+      - uses: actions/upload-artifact@v4
+        with:
+          name: QuimiX-Reacao-R8-renders-3D
+          path: renders-r8/*
+          retention-days: 30
+          if-no-files-found: error
+
+# Trigger: script ou workflow atualizado no branch experimental.
+# Fim do workflow QuímiX Reação R8.

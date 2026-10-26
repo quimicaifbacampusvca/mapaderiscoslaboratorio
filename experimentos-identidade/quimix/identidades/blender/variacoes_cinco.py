@@ -47,6 +47,8 @@ for theme,colors in pal.items():
  finally:sys.argv=original
  scene=bpy.context.scene;scene.frame_set(120);scene.render.resolution_x=1120;scene.render.resolution_y=672
  scene.render.engine='CYCLES';scene.cycles.samples=12
+ scene.render.image_settings.file_format='PNG';scene.render.resolution_percentage=100
+ print('QUIMIX_RENDER_START',theme,'engine',scene.render.engine,'frame',scene.frame_current,flush=True)
  try:scene.cycles.use_denoising=True
  except Exception:pass
  a,b,c=colors;A,B,C=[mat(theme+' '+str(i),color) for i,color in enumerate(colors)]

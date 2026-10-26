@@ -1,0 +1,33 @@
+name: QuímiX — cinco identidades Blender Cycles
+on:
+  push:
+    branches:
+      - design/quimix-acento-blender
+    paths:
+      - 'experimentos-identidade/quimix/identidades/blender/variacoes_cinco.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar Blender
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends blender
+          blender --version | head -3
+      - name: Renderizar cinco variações em Blender Cycles
+        run: |
+          mkdir -p renders
+          blender -b --factory-startup -t 4 --python experimentos-identidade/quimix/identidades/blender/variacoes_cinco.py -- --output renders
+          test "$(find renders -name '*.png' | wc -l)" -eq 5
+          test "$(find renders -name '*.blend' | wc -l)" -eq 5
+      - uses: actions/upload-artifact@v4
+        with:
+          name: QuimiX-5-Blender-renders
+          path: renders/*
+          retention-days: 30
+          if-no-files-found: error

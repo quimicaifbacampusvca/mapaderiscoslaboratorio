@@ -40,7 +40,7 @@ footer{color:#647f90;font-size:11px;line-height:1.6;margin-top:19px;display:flex
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition-duration:.01ms!important}}
 </style>
 </head>
-<body>
+<body><div role="status" style="font:600 13px/1.5 system-ui,sans-serif;background:#33291a;color:#ffe3a9;padding:12px 24px;text-align:center;border-bottom:1px solid #735522">ESTUDO 2D ANTERIOR (SUPERADO): ciano e magenta convergiam juntos. A sequência aprovada é ciano à esquerda → reação no X → magenta à direita. Consulte a cena Blender 3D deste branch.</div>
 <main>
 <header>
 <div><div class="kicker">ESTÚDIO DE IDENTIDADE / QUÍMIX</div><h1>Construção do <em>símbolo</em> X</h1><p class="subtitle">Estudo de movimento baseado no SVG original. A cinética prepara a futura animação no Blender; nesta fase, o nome e o acento do í permanecem fora de cena.</p></div>
@@ -115,7 +115,7 @@ footer{color:#647f90;font-size:11px;line-height:1.6;margin-top:19px;display:flex
 (()=>{'use strict';
 const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)];
 const $seek=$('#seek'),$play=$('#play'),stage=$('#stage'),$badge=$('#phaseBadge');
-const DURATION=5;let t=0,playing=!window.matchMedia('(prefers-reduced-motion: reduce)').matches,loop=true,last=null,raf=0;
+const DURATION=5;let t=0,playing=false,loop=true,last=null,raf=0;
 const phases=[['Potencial','Os quatro polos se energizam nas posições iniciais. A geometria do símbolo ainda não aparece.'],['Convergência','Duas forças complementares avançam em quatro vetores diagonais. A chegada ao centro provoca a síntese.'],['Síntese','A convergência acende o núcleo; o corpo de grafite emerge com ligeira resposta elástica e revela a forma original.'],['Estrutura','Os vetores recuam. Acendem-se as quatro ligações internas e seis pontos da estrutura original.'],['Repouso','O brilho residual diminui. A marca permanece sólida, legível e pronta para receber o nome posteriormente.']];
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));const mix=(a,b,u)=>a+(b-a)*u;const phase=(v,a,b)=>clamp((v-a)/(b-a));const smooth=u=>u*u*(3-2*u);const ease=u=>1-Math.pow(1-u,3);const pop=u=>{const p=clamp(u);return p===0?0:(p===1?1:1+Math.sin(p*Math.PI)*.09)};
 const xWhole=$('#x-whole'),body=$('#x-body'),depth=$('#x-depth'),clip=$('#body-clip'),ledL=$('#x-led-left'),ledR=$('#x-led-right'),core=$('#core-group'),glow=$('#impact-glow'),wave=$('#energy-wave'),pulse=$('#energy-core');

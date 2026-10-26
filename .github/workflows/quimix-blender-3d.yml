@@ -1,0 +1,48 @@
+name: QuímiX — Render Blender 3D
+on:
+  push:
+    branches: [design/quimix-acento-blender]
+    paths:
+      - experimentos-identidade/quimix/blender/quimix_reacao_x.py
+  workflow_dispatch:
+    inputs:
+      render_full:
+        description: Renderizar também o filme completo
+        required: false
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  render-blender:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar Blender 3D
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends blender ffmpeg
+          blender --version | head -2
+      - name: Renderizar cinco quadros e salvar a cena editável
+        run: |
+          blender --background --factory-startup -t 4 \
+            --python experimentos-identidade/quimix/blender/quimix_reacao_x.py \
+            -- --output render --still
+      - name: Filme 3D completo (opcional)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.render_full }}
+        run: |
+          blender --background --factory-startup -t 4 \
+            --python experimentos-identidade/quimix/blender/quimix_reacao_x.py \
+            -- --output render --animation
+          ffmpeg -y -loglevel error -framerate 24 -i render/frames/frame_%04d.png \
+            -c:v libx264 -crf 21 -pix_fmt yuv420p render/quimix_blender_3d.mp4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quimix-blender3d-reagentes-produtos
+          path: |
+            render/*.blend
+            render/*.png
+            render/*.mp4
+          retention-days: 30
+          if-no-files-found: error

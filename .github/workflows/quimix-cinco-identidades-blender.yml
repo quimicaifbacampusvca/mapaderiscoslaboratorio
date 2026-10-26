@@ -25,9 +25,13 @@ jobs:
           blender -b --factory-startup -t 4 --python experimentos-identidade/quimix/identidades/blender/variacoes_cinco.py -- --output renders
           test "$(find renders -name '*.png' | wc -l)" -eq 5
           test "$(find renders -name '*.blend' | wc -l)" -eq 5
+      - name: Criar HTML interativo com os cinco renders finais
+        run: |
+          python3 experimentos-identidade/quimix/identidades/gerar_comparativo_blender_actions.py renders
+          test -s renders/QuimiX_Comparativo_Renders_Blender.html
       - uses: actions/upload-artifact@v4
         with:
-          name: QuimiX-5-Blender-renders
+          name: QuimiX-5-Blender-renders-e-HTML
           path: renders/*
           retention-days: 30
           if-no-files-found: error

@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b101b">
+<title>QuímiX — convergência para a marca oficial | V5</title>
+<style>
+:root{color-scheme:dark;--bg:#070b13;--panel:#101824;--muted:#8d9bb0;--line:#26384a;--cy:#00e5ff;--pi:#ff2a8d;--ink:#e8f3ff;--serif:'Segoe UI',Inter,Arial,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0%,#142135 0,#0b101b 37%,#06090f 100%);font:14px/1.5 var(--serif);color:var(--ink);min-height:100vh}
+button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid var(--cy);outline-offset:3px}
+.app{width:min(1460px,100%);margin:auto;padding:22px clamp(14px,2.5vw,36px) 34px}
+.top{display:flex;gap:20px;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap}
+.identity{display:flex;align-items:center;gap:15px}.identity-icon{width:50px;height:50px;border-radius:15px;border:1px solid #3b5366;background:linear-gradient(138deg,#133041,#101729 54%,#372039);display:grid;place-items:center;font-weight:800;font-size:29px;line-height:1;color:#cfe6ee;text-shadow:-4px 0 15px #00e5ff82,4px 0 15px #ff2a8d82}.eyebrow{font-size:11px;letter-spacing:.2em;color:#92a8be;text-transform:uppercase}.top h1{font-size:clamp(18px,2.4vw,25px);font-weight:630;letter-spacing:-.04em;margin:1px 0}.top p{color:#9daec1;font-size:12px;margin:0}
+.status{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.flag{border:1px solid #395066;border-radius:100px;font-size:11px;letter-spacing:.055em;padding:8px 12px;background:#0a1420;display:flex;align-items:center;gap:7px}.flag .dot{width:7px;height:7px;border-radius:50%;background:#677d95}.flag.good{border-color:#21685e;color:#9ef1da}.flag.good .dot{background:#33d6b4;box-shadow:0 0 12px #33d6b4}.flag.bad{border-color:#81463d;color:#f8bcad}.flag.bad .dot{background:#e97964}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:14px}.screen{overflow:hidden;background:#080e18;border:1px solid #344456;border-radius:18px;position:relative;min-height:530px;box-shadow:inset 0 0 70px #14304725,0 15px 55px #0005}.screen:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 42% 47%,#16344b42 0,transparent 56%),linear-gradient(180deg,#fff1 1px,transparent 1px),linear-gradient(90deg,#fff1 1px,transparent 1px);background-size:auto,44px 44px,44px 44px;mask-image:linear-gradient(90deg,transparent,#000 13% 87%,transparent);pointer-events:none;opacity:.35}.screen:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#0f1b2a18,#090f18 94%)}
+#view{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab;filter:saturate(1.08) contrast(1.03)}#view.dragging{cursor:grabbing}.screen:before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 54%,rgba(255,255,255,.03),rgba(255,255,255,0) 24%),radial-gradient(circle at 50% 54%,rgba(0,229,255,.10),rgba(0,229,255,0) 35%),radial-gradient(circle at 50% 54%,rgba(255,42,141,.08),rgba(255,42,141,0) 43%),linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0));mix-blend-mode:screen}.screen:after{content:'';position:absolute;inset:-1px;pointer-events:none;border-radius:18px;box-shadow:inset 0 0 80px rgba(255,255,255,.03),inset 0 -40px 80px rgba(0,0,0,.28)}
+.display-top,.display-bottom{position:absolute;left:22px;right:22px;z-index:2;pointer-events:none}.display-top{top:19px;display:flex;align-items:start;justify-content:space-between;gap:10px}.scene-code{font-size:10px;letter-spacing:.13em;color:#9aadc1}.phase-title{font-size:clamp(18px,2.8vw,28px);font-weight:640;line-height:1.2;margin-top:5px;letter-spacing:-.04em}.phase-sub{font-size:12px;color:#b6c6d6;margin-top:4px;max-width:410px}.bigtime{font-size:31px;letter-spacing:-.05em;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}.bigtime small{font-size:12px;color:#93a4b9;font-weight:400;letter-spacing:.04em}.display-bottom{bottom:20px;display:flex;justify-content:space-between;align-items:end;gap:15px;color:#9db0c4;font-size:11px;letter-spacing:.06em}.display-bottom .hint{background:#111d2bb8;border:1px solid #2a3b4d;border-radius:8px;padding:7px 10px}.chiprow{display:flex;gap:7px;flex-wrap:wrap}.element-chip{display:flex;gap:7px;align-items:center;background:#0d1824c4;border:1px solid #324355;padding:7px 10px;border-radius:100px}.element-chip i{width:7px;height:7px;background:var(--cy);border-radius:50%;box-shadow:0 0 7px var(--cy)}.element-chip.pink i{background:var(--pi);box-shadow:0 0 7px var(--pi)}
+.side{display:flex;flex-direction:column;gap:13px}.panel{background:linear-gradient(145deg,#111c29,#0b121d);border:1px solid #2d4054;border-radius:14px;padding:18px}.panel h2{margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#e0eaf4}.panel p{color:#98adc0;font-size:12px;margin:0 0 12px}.step{border-left:2px solid #344759;margin-left:6px;padding:1px 0 14px 15px;position:relative;color:#879aae}.step:last-child{padding-bottom:0}.step[role="button"]{cursor:pointer}.step:focus-visible{outline:2px solid var(--cy);outline-offset:2px}.step:before{content:"";position:absolute;left:-6px;top:5px;width:10px;height:10px;border-radius:50%;border:2px solid #485b6b;background:#0f1823}.step b{font-weight:650;display:block;color:#a4b3c2;font-size:12px}.step small{display:block;font-size:11px;line-height:1.5}.step.active{border-left-color:#00d8ee}.step.active:before{background:#00dcf5;border-color:#00dcf5;box-shadow:0 0 15px #00e5ff88}.step.active b{color:#ecfaff}.step.done:before{background:#497b8a;border-color:#497b8a}
+.metric{display:grid;grid-template-columns:1fr auto;align-items:center;padding:9px 0;border-bottom:1px solid #26384b;color:#a7b8c9;font-size:12px}.metric:last-child{border-bottom:0}.metric strong{color:#d9f6ff;font-variant-numeric:tabular-nums}.metal{color:#eff8fc}.aqua{color:var(--cy)}.pinktext{color:#ff67a8}
+.controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#0e1724;border:1px solid #2a4055;border-radius:14px;margin-top:14px;padding:14px 18px}.action{display:grid;place-items:center;border:1px solid #40566b;border-radius:9px;background:#192738;color:#e6f6ff;height:36px;min-width:38px;padding:0 11px}.action.primary{background:linear-gradient(140deg,#14c4df,#0f9cbd);color:#00121c;border-color:#42daf4;font-weight:800}.action:hover{filter:brightness(1.14)}.time-slider{accent-color:#08d5ef;flex:1;min-width:180px;cursor:pointer}.speed{background:#182838;color:#deeeff;border:1px solid #40576c;border-radius:8px;padding:8px 10px}.ctl-time{width:49px;text-align:right;font-size:12px;color:#b4c8d9;font-variant-numeric:tabular-nums}.controls label{font-size:12px;color:#9dacbf}.legend{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:10px 3px 0;color:#95a8bc;font-size:11px}.smallnote{margin-top:16px;color:#8ea3b9;font-size:12px;line-height:1.6}.smallnote b{color:#d0e0ef}.alert{display:none;margin-top:12px;padding:14px;background:#311e28;border:1px solid #744754;border-radius:10px;color:#ffcad9;white-space:pre-wrap}.alert.visible{display:block}.diagnostics{font:11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;color:#9cc6d1;white-space:pre-wrap;overflow-wrap:anywhere;background:#060e16;border-radius:10px;padding:10px;min-height:82px;max-height:180px;overflow:auto}
+@media(max-width:1100px){.main{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}.screen{min-height:520px}}@media(max-width:650px){.app{padding:13px}.screen{min-height:440px;border-radius:12px}.display-top{top:14px;left:14px;right:14px}.display-bottom{left:14px;right:14px;bottom:13px}.display-bottom .hint{display:none}.side{grid-template-columns:1fr}.panel{padding:14px}.legend{gap:6px}.controls{padding:10px;gap:9px}.top{gap:10px}.identity-icon{width:43px;height:43px}.bigtime{font-size:24px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* V5 — tipografia extraída dos mesmos WOFF2 do aplicativo, convertida em contornos SVG;
+   símbolo X copiado literalmente do HTML original, sem redesenhar a marca. */
+.qm-official-lockup{position:absolute;left:50%;top:53%;z-index:2;display:flex;align-items:flex-end;gap:2px;transform:translate(-50%,-50%) scale(var(--lock-scale,2.65));transform-origin:center center;color:#edf0f5;white-space:nowrap;pointer-events:none;opacity:0;isolation:isolate}
+.qm-original-name{display:block;width:79.891px;height:52px;position:relative;transform-origin:right bottom;will-change:transform,opacity;opacity:0;filter:none}
+.qm-exact-word{width:100%;height:52px;display:block;overflow:visible}
+.qm-original-x{display:block;flex:0 0 auto;width:60.923px;height:44px;position:relative;top:-2px;overflow:hidden;will-change:transform,opacity;opacity:0;color:#edf0f5}
+.qm-original-x>svg{width:100%;height:100%;display:block;overflow:hidden}
+.qm-original-x svg [stroke="#4a5568"]{stroke:#8c93a8}
+/* The temporary extrusion lives on the word layer only, never on the final word or original mark */
+.qm-original-name::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:var(--type-depth,0);background:linear-gradient(120deg,transparent,#00e5ff13,transparent,#ff2a8d11);filter:drop-shadow(-8px 8px 5px rgba(0,0,0,.38))}
+.qm-original-name::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:var(--type-chroma,0);background:linear-gradient(90deg,#00e5ff2b,transparent 48%,#ff2a8d2d);mix-blend-mode:screen}
+.qm-official-lockup.finished .qm-original-name::before,.qm-official-lockup.finished .qm-original-name::after{opacity:0}
+.qm-original-x::before{content:'';position:absolute;inset:0;pointer-events:none;border-radius:60%;box-shadow:0 0 32px 9px rgba(0,229,255,var(--mark-glow,0)),0 0 28px 10px rgba(255,42,141,var(--mark-glow,0))}
+.qm-official-lockup.finished .qm-original-x::before{display:none}
+@media(max-width:980px){.qm-official-lockup{--lock-scale:2.1}}
+@media(max-width:600px){.qm-official-lockup{--lock-scale:1.40;top:56%}}
+@media(prefers-reduced-motion:reduce){.qm-original-name,.qm-original-x{transition:none!important}}
+
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="top"><div class="identity"><div class="identity-icon" aria-hidden="true">X</div><div><div class="eyebrow">Identidade cinética · estudo isolado</div><h1>QuímiX <span style="color:#7091a9;font-weight:400">/ construção molecular</span></h1><p>Geometria do projeto Blender · apresentação 3D WebGL · trajetórias WebAssembly</p></div></div><div class="status"><div class="flag" id="wasmStatus"><i class="dot"></i><span id="wasmLabel">Iniciando WebAssembly...</span></div><div class="flag" id="gpuStatus"><i class="dot"></i><span id="gpuLabel">Verificando WebGL...</span></div></div></div>
+  <div class="main"><section class="screen" aria-label="Visualizador tridimensional da reação química estilizada"><canvas id="view" aria-label="Cena 3D: esferas cianas formam o X e geram nós magentas"></canvas><div id="officialLockup" class="qm-official-lockup" role="img" aria-label="QuímiX — assinatura oficial reproduzida do programa">
+  <div id="officialWord" class="qm-original-name"><svg class="qm-exact-word" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 79.891 52" width="79.891" height="52" role="presentation" aria-hidden="true"><g fill="currentColor" transform="translate(0 41) scale(0.03040 -0.03040)"><path transform="translate(0 0)" d="M338 -14Q206 -14 128.0 58.5Q50 131 50 266V434Q50 569 128.0 641.5Q206 714 338 714Q470 714 548.0 641.5Q626 569 626 434V266Q626 131 548.0 58.5Q470 -14 338 -14ZM338 104Q412 104 453.0 147.0Q494 190 494 262V438Q494 510 453.0 553.0Q412 596 338 596Q265 596 223.5 553.0Q182 510 182 438V262Q182 190 223.5 147.0Q265 104 338 104ZM384 -180Q335 -180 304.5 -149.5Q274 -119 274 -68V0H402V-48Q402 -78 430 -78H489V-180Z"/><path transform="translate(666 0)" d="M259 -8Q201 -8 157.5 18.5Q114 45 90.0 92.0Q66 139 66 200V496H192V210Q192 154 219.5 126.0Q247 98 298 98Q356 98 388.0 136.5Q420 175 420 244V496H546V0H422V65H404Q392 40 359.0 16.0Q326 -8 259 -8Z"/><path transform="translate(1272 0)" d="M70 0V496H196V0Z"/><path transform="translate(1528 0)" d="M70 0V496H194V442H212Q225 467 255.0 485.5Q285 504 334 504Q387 504 419.0 483.5Q451 463 468 430H486Q503 462 534.0 483.0Q565 504 622 504Q668 504 705.5 484.5Q743 465 765.5 425.5Q788 386 788 326V0H662V317Q662 358 641.0 378.5Q620 399 582 399Q539 399 515.5 371.5Q492 344 492 293V0H366V317Q366 358 345.0 378.5Q324 399 286 399Q243 399 219.5 371.5Q196 344 196 293V0Z"/><path transform="translate(2372 0)" d="M70 0V496H196V0ZM133 554Q99 554 75.5 576.0Q52 598 52 634Q52 670 75.5 692.0Q99 714 133 714Q168 714 191.0 692.0Q214 670 214 634Q214 598 191.0 576.0Q168 554 133 554Z"/></g><svg x="38.8" y="2" width="25.84" height="25.84" viewBox="0 0 20 20" overflow="visible">
+<defs><linearGradient id="qm-v5-i-bond-grad" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#00e5ff"/><stop offset="1" stop-color="#ff2a8d"/></linearGradient></defs>
+<line x1="4" y1="16.5" x2="15" y2="4.5" stroke="url(#qm-v5-i-bond-grad)" stroke-width="2.3" stroke-linecap="round"/>
+<circle cx="4" cy="16.5" r="2.1" fill="#00c2e6"/><circle cx="4" cy="16.5" r="0.8" fill="#ffffff"/>
+<circle cx="15" cy="4.5" r="2.8" fill="#ff2a8d"/><circle cx="15" cy="4.5" r="1" fill="#ffffff"/>
+</svg></svg></div>
+  <div id="officialMark" class="qm-original-x" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650" width="100%" height="100%">
+          <defs>
+          <filter id="qm-glow-cyan" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="12" result="blur1" />
+          <feGaussianBlur stdDeviation="24" result="blur2" />
+          <feMerge>
+          <feMergeNode in="blur2" />
+          <feMergeNode in="blur1" />
+          <feMergeNode in="SourceGraphic" />
+          </feMerge>
+          </filter>
+          <filter id="qm-glow-pink" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="12" result="blur1" />
+          <feGaussianBlur stdDeviation="24" result="blur2" />
+          <feMerge>
+          <feMergeNode in="blur2" />
+          <feMergeNode in="blur1" />
+          <feMergeNode in="SourceGraphic" />
+          </feMerge>
+          </filter>
+          <filter id="qm-node-glow-cyan" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feMerge>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
+          </feMerge>
+          </filter>
+          <filter id="qm-node-glow-pink" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feMerge>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
+          </feMerge>
+          </filter>
+          <clipPath id="qm-left-half">
+          <rect x="0" y="0" width="450" height="650" />
+          </clipPath>
+          <clipPath id="qm-right-half">
+          <rect x="450" y="0" width="450" height="650" />
+          </clipPath>
+          </defs>
+          
+          <line x1="450" y1="50" x2="450" y2="600" stroke="#4a5568" stroke-width="1.5" />
+          
+          <g clip-path="url(#qm-left-half)">
+          <path d="M 265,100 L 370,100 L 450,270 L 530,100 L 635,100 L 495,325 L 635,550 L 530,550 L 450,380 L 370,550 L 265,550 L 405,325 Z" fill="none" stroke="#00e5ff" stroke-width="28" opacity="0.65" filter="url(#qm-glow-cyan)" />
+          </g>
+          
+          <g clip-path="url(#qm-right-half)">
+          <path d="M 265,100 L 370,100 L 450,270 L 530,100 L 635,100 L 495,325 L 635,550 L 530,550 L 450,380 L 370,550 L 265,550 L 405,325 Z" fill="none" stroke="#ff2a8d" stroke-width="28" opacity="0.65" filter="url(#qm-glow-pink)" />
+          </g>
+          
+          <path d="M 265,100 L 370,100 L 450,270 L 530,100 L 635,100 L 495,325 L 635,550 L 530,550 L 450,380 L 370,550 L 265,550 L 405,325 Z" fill="currentColor" stroke="#4a5568" stroke-width="4" stroke-linejoin="miter" stroke-miterlimit="10" />
+          
+          <g stroke="#4a5568" stroke-width="2.5" stroke-linecap="round">
+          <line x1="380" y1="180" x2="433" y2="325" />
+          <line x1="380" y1="470" x2="433" y2="325" />
+          <line x1="520" y1="180" x2="467" y2="325" />
+          <line x1="520" y1="470" x2="467" y2="325" />
+          </g>
+          
+          <circle cx="380" cy="180" r="7" fill="#00d2ff" filter="url(#qm-node-glow-cyan)" />
+          <circle cx="380" cy="180" r="2.5" fill="currentColor" />
+          <circle cx="380" cy="470" r="7" fill="#00d2ff" filter="url(#qm-node-glow-cyan)" />
+          <circle cx="380" cy="470" r="2.5" fill="currentColor" />
+          <circle cx="433" cy="325" r="7" fill="#00d2ff" filter="url(#qm-node-glow-cyan)" />
+          <circle cx="433" cy="325" r="2.5" fill="currentColor" />
+          
+          <circle cx="520" cy="180" r="7" fill="#ff3385" filter="url(#qm-node-glow-pink)" />
+          <circle cx="520" cy="180" r="2.5" fill="currentColor" />
+          <circle cx="520" cy="470" r="7" fill="#ff3385" filter="url(#qm-node-glow-pink)" />
+          <circle cx="520" cy="470" r="2.5" fill="currentColor" />
+          <circle cx="467" cy="325" r="7" fill="#ff3385" filter="url(#qm-node-glow-pink)" />
+          <circle cx="467" cy="325" r="2.5" fill="currentColor" />
+          
+          <line x1="433" y1="325" x2="260" y2="325" stroke="#4a5568" stroke-width="2.5" />
+          <circle cx="260" cy="325" r="22" fill="none" stroke="#4a5568" stroke-width="2.5" />
+          <circle cx="260" cy="325" r="13" fill="none" stroke="#4a5568" stroke-width="2.5" />
+          <circle cx="260" cy="325" r="7" fill="#8b5cf6" filter="url(#qm-node-glow-cyan)" />
+          <circle cx="260" cy="325" r="2.5" fill="currentColor" />
+          
+          <polyline points="245,310 200,210 110,210" fill="none" stroke="#4a5568" stroke-width="2.5" stroke-linejoin="round" />
+          <polyline points="245,340 200,440 110,440" fill="none" stroke="#4a5568" stroke-width="2.5" stroke-linejoin="round" />
+          
+          <circle cx="200" cy="210" r="14" fill="currentColor" stroke="#4a5568" stroke-width="2.5" />
+          <circle cx="200" cy="210" r="6" fill="#00d2ff" filter="url(#qm-node-glow-cyan)" />
+          <circle cx="200" cy="210" r="2" fill="currentColor" />
+          
+          <circle cx="110" cy="210" r="14" fill="currentColor" stroke="#4a5568" stroke-width="2.5" />
+          <circle cx="110" cy="210" r="6" fill="#00d2ff" filter="url(#qm-node-glow-cyan)" />
+          <circle cx="110" cy="210" r="2" fill="currentColor" />
+          
+          <circle cx="200" cy="440" r="14" fill="currentColor" stroke="#4a5568" stroke-width="2.5" />
+          <circle cx="200" cy="440" r="6" fill="#ff3385" filter="url(#qm-node-glow-pink)" />
+          <circle cx="200" cy="440" r="2" fill="currentColor" />
+          
+          <circle cx="110" cy="440" r="11" fill="currentColor" stroke="#4a5568" stroke-width="2.5" />
+          
+          <line x1="467" y1="325" x2="575" y2="325" stroke="#4a5568" stroke-width="2.5" />
+          <circle cx="575" cy="325" r="6" fill="currentColor" stroke="#4a5568" stroke-width="2.5" />
+          
+          <line x1="575" y1="325" x2="535" y2="260" stroke="#4a5568" stroke-width="2.5" />
+          <line x1="575" y1="325" x2="535" y2="390" stroke="#4a5568" stroke-width="2.5" />
+          
+          <line x1="585" y1="319" x2="640" y2="319" stroke="#4a5568" stroke-width="2.5" />
+          <line x1="585" y1="331" x2="640" y2="331" stroke="#4a5568" stroke-width="2.5" />
+          
+          <line x1="640" y1="325" x2="720" y2="210" stroke="#4a5568" stroke-width="2.5" />
+          <line x1="640" y1="325" x2="720" y2="440" stroke="#4a5568" stroke-width="2.5" />
+          
+          <circle cx="720" cy="210" r="14" fill="currentColor" stroke="#4a5568" stroke-width="2.5" />
+          <circle cx="720" cy="210" r="6" fill="#ff3385" filter="url(#qm-node-glow-pink)" />
+          <circle cx="720" cy="210" r="2" fill="currentColor" />
+          
+          <circle cx="720" cy="440" r="11" fill="currentColor" stroke="#4a5568" stroke-width="2.5" />
+          </svg></div>
+  </div><div class="display-top"><div><div class="scene-code">QMX / 001 &nbsp; · &nbsp; BLENDER SCENE STUDY · V5 / ORIGINAL LOCKUP</div><div class="phase-title" id="phaseTitle">Reagentes</div><div class="phase-sub" id="phaseSub">Esferas cianas se ativam nas ramificações originais.</div></div><div class="bigtime"><span id="bigTime">0.00</span><small> / 5.00s</small></div></div><div class="display-bottom"><div class="chiprow"><span class="element-chip"><i></i> Entrada · ciano</span><span class="element-chip pink"><i></i> Saída · magenta</span></div><span class="hint">Arraste para girar · Roda para zoom</span></div></section><aside class="side"><section class="panel"><h2>Sequência da reação</h2><div class="step" id="step0" tabindex="0" role="button" aria-label="Ir à etapa 1 da animação"><b>01 — Reagentes</b><small>Ativação das quatro entradas cianas.</small></div><div class="step" id="step1" tabindex="0" role="button" aria-label="Ir à etapa 2 da animação"><b>02 — Convergência</b><small>Ramificações e anéis conduzem ao núcleo.</small></div><div class="step" id="step2" tabindex="0" role="button" aria-label="Ir à etapa 3 da animação"><b>03 — Síntese</b><small>Energia colore intensamente o X antes da convergência para o símbolo oficial.</small></div><div class="step" id="step3" tabindex="0" role="button" aria-label="Ir à etapa 4 da animação"><b>04 — Quími</b><small>A palavra surge com profundidade a partir da estabilização do X.</small></div><div class="step" id="step4" tabindex="0" role="button" aria-label="Ir à etapa 5 da animação"><b>05 — Assinatura oficial</b><small>Contornos da fonte e X extraídos do aplicativo; todos os efeitos temporários desaparecem.</small></div></section><section class="panel"><h2>Fidelidade ao programa</h2><div class="metric"><span>Silhueta</span><strong>12 vértices</strong></div><div class="metric"><span>Ligações centrais</span><strong>4</strong></div><div class="metric"><span>Anéis concêntricos</span><strong>2</strong></div><div class="metric"><span>Ligação dupla</span><strong>2 traços</strong></div><div class="metric"><span>Fonte da palavra</span><strong>Space Grotesk 700 (contornos)</strong></div><div class="metric"><span>Ordem</span><strong>Quími + X</strong></div><div class="metric"><span>Tempo total</span><strong>120 quadros / 24 fps</strong></div></section><section class="panel"><h2>Diagnóstico real</h2><p>WebAssembly é usado para a cinética, WebGL para desenhar o volume 3D.</p><div class="diagnostics" id="diag" aria-live="polite">Aguardando inicialização...</div></section></aside></div>
+  <div class="controls"><button class="action primary" id="play" aria-label="Reproduzir ou pausar">▶</button><button class="action" id="restart" aria-label="Reiniciar">↺</button><label for="scrub">Linha do tempo</label><input class="time-slider" type="range" id="scrub" min="0" max="5" step="0.005" value="0" aria-label="Posição na linha do tempo, em segundos"><span class="ctl-time" id="seekLabel">0.00s</span><select class="speed" id="speed" aria-label="Velocidade"><option value="0.5">0,5×</option><option value="1" selected>1×</option><option value="1.5">1,5×</option><option value="2">2×</option></select><button class="action" id="resetCamera" aria-label="Redefinir ângulo de câmera">⌖ Câmera</button></div>
+  <div class="legend"><span>Reagentes <span class="aqua">● ● ● ●</span> → centro do X → produtos <span class="pinktext">● ● ● ●</span></span><span>Use a barra de tempo para inspecionar cada fase.</span></div>
+  <div id="error" class="alert" role="alert"></div>
+  <p class="smallnote"><b>Sobre a fidelidade:</b> esta cena usa as coordenadas originais do SVG e a estrutura definida no script de Blender 3D. O HTML apresenta uma reconstituição volumétrica em WebGL para inspeção interativa; <b>não é um vídeo renderizado pelo Blender</b>. O módulo WASM incorporado é real e testável offline. A sequência visual é uma metáfora da reação, não uma representação de mecanismo químico literal.</p>
+</main>
+<script>
+'use strict';
+const WASM_B64 = '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';
+const $=id=>document.getElementById(id);
+const canvas=$('view');let engine=null,wasm=null,glOK=false,now=0,play=false,rate=1,last=0,angle=.19,tilt=.17,dist=8.6,drag=false,px=0,py=0;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const length=5;const points=[[265,100],[370,100],[450,270],[530,100],[635,100],[495,325],[635,550],[530,550],[450,380],[370,550],[265,550],[405,325]];
+const left=[[[110,210],[200,210]],[[110,440],[200,440]],[[200,210],[245,310],[260,325]],[[200,440],[245,340],[260,325]],[[260,325],[433,325]]];
+const right=[[[467,325],[575,325]],[[575,325],[535,260]],[[575,325],[535,390]],[[585,319],[640,319]],[[585,331],[640,331]],[[640,325],[720,210]],[[640,325],[720,440]]];
+const innerL=[[[380,180],[433,325]],[[380,470],[433,325]]],innerR=[[[467,325],[520,180]],[[467,325],[520,470]]];
+const CY=[0,.87,1], PI=[1,.18,.56], STEEL=[.34,.44,.56], GRAPH=[.16,.21,.27], WHITE=[.87,.97,1];
+const xy=(p,z=.21)=>[(p[0]-450)*.008,(325-p[1])*.008,z], clamp=x=>Math.max(0,Math.min(1,x));
+const smooth=(a,b,t)=>{let x=clamp((t-a)/(b-a));return x*x*(3-2*x)};
+const mix=(a,b,t)=>a+(b-a)*t;
+const easeOutCubic=t=>1-Math.pow(1-clamp(t),3);
+const easeInOutCubic=t=>{t=clamp(t);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2};
+const easeOutBack=t=>{t=clamp(t);const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)};
+const pulse=(a,b,t,f=1)=>mix(a,b,.5+.5*Math.sin(t*f*Math.PI*2));
+const pdesc=[
+  ['Reagentes','Esferas cianas se ativam nas ramificações originais.'],
+  ['Convergência','As esferas viajam para o núcleo circular à esquerda.'],
+  ['Síntese','O X recebe destaque cromático máximo antes de convergir ao símbolo oficial.'],
+  ['Quími','A palavra se encaixa à esquerda do X e recupera o aspecto do programa.'],
+  ['Assinatura oficial','O Quími e o X encaixam no arranjo original; os efeitos 3D se dissipam.']
+];
+function phase(t){return t<.15?0:t<.51?1:t<.65?2:t<.93?3:4}
+function diag(s){$('diag').textContent=s}
+function flag(id,label,ok,message){const n=$(id);n.classList.toggle('good',ok);n.classList.toggle('bad',!ok);$(label).textContent=message}
+function error(message){$('error').classList.add('visible');$('error').textContent=message}
+async function initWasm(){
+  try {
+    const bin=Uint8Array.from(atob(WASM_B64),c=>c.charCodeAt(0));
+    if(!WebAssembly.validate(bin))throw new Error('WebAssembly.validate retornou false');
+    const {instance}=await WebAssembly.instantiate(bin);
+    const m=instance.exports;
+    if(!m.sample||!m.cue||m.check()!==0x51584D58)throw new Error('Teste de integridade do módulo não passou');
+    if(Math.abs(m.sample(0,0,0)-110)>.01||Math.abs(m.sample(7,0,1)-720)>.01||m.cue(3,1)>.01)throw new Error('Resultados de cinética fora da faixa de referência');
+    wasm=m;flag('wasmStatus','wasmLabel',true,'WebAssembly ativo · validado');
+    diag('✓ Módulo WASM: '+bin.length+' bytes\n✓ Validate: true\n✓ Exports: sample(), cue(), check()\n✓ Teste: 110 → centro → 720\n✓ Pulso final: zero\n✓ Instanciação: sem servidor externo\n✓ Execução: motor de trajetórias real');
+    $('play').disabled=false;if(!reduce){play=true;$('play').textContent='Ⅱ'}
+  }catch(e){flag('wasmStatus','wasmLabel',false,'WebAssembly indisponível');diag('✗ '+e.message+'\nNão há simulação de cinética falsa.');error('Não foi possível ativar WebAssembly: '+e.message+'. A cena fica em repouso até que o navegador ofereça suporte WASM.');$('play').disabled=true}
+}
+const vector=(x,y,z)=>[x,y,z];const sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]], add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], mul=(a,s)=>[a[0]*s,a[1]*s,a[2]*s], dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],len=a=>Math.hypot(...a),norm=a=>{const l=len(a)||1;return a.map(x=>x/l)};
+function perspective(fov,aspect,near,far){const f=1/Math.tan(fov/2), nf=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*nf,-1,0,0,(2*far*near)*nf,0])}
+function lookAt(eye,center,up){const z=norm(sub(eye,center)),x=norm(cross(up,z)),y=cross(z,x);return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1]);}
+function matMul(a,b){const o=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++)for(let k=0;k<4;k++)o[c*4+r]+=a[k*4+r]*b[c*4+k];return o}
+function mat(x=0,y=0,z=0,sx=1,sy=1,sz=1){return new Float32Array([sx,0,0,0,0,sy,0,0,0,0,sz,0,x,y,z,1])}
+function segmentMat(a,b,r){const d=sub(b,a),l=len(d);if(l<.00001)return null;const z=norm(d),x=norm(cross(Math.abs(z[2])>.93?[0,1,0]:[0,0,1],z)),y=cross(z,x),m=mul(add(a,b),.5);return new Float32Array([x[0]*r,x[1]*r,x[2]*r,0,y[0]*r,y[1]*r,y[2]*r,0,z[0]*l,z[1]*l,z[2]*l,0,m[0],m[1],m[2],1]);}
+function shader(gl,type,src){let s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error('Shader: '+gl.getShaderInfoLog(s));return s}
+function createMesh(gl,v,indices){const data=new Float32Array(v),idx=new Uint16Array(indices);const buf=gl.createBuffer(),elem=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,elem);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,idx,gl.STATIC_DRAW);return {buf,elem,count:idx.length}}
+function uvSphere(){let v=[],inds=[],lon=22,lat=14;for(let j=0;j<=lat;j++){let a=Math.PI*j/lat;for(let i=0;i<=lon;i++){let b=2*Math.PI*i/lon,x=Math.sin(a)*Math.cos(b),y=Math.sin(a)*Math.sin(b),z=Math.cos(a);v.push(x,y,z,x,y,z)}}for(let j=0;j<lat;j++)for(let i=0;i<lon;i++){let a=j*(lon+1)+i,b=a+lon+1;inds.push(a,b,a+1,b,b+1,a+1)}return {v,inds}}
+function cylinder(){let v=[],inds=[],n=18;for(let j=0;j<2;j++){let z=j-.5;for(let i=0;i<=n;i++){let a=2*Math.PI*i/n,x=Math.cos(a),y=Math.sin(a);v.push(x,y,z,x,y,0)}}for(let i=0;i<n;i++){let k=n+1;inds.push(i,i+k,i+1,i+k,i+k+1,i+1)}return {v,inds}}
+function torus(){let v=[],inds=[],N=56,M=8;for(let i=0;i<=N;i++){let a=i/N*Math.PI*2;for(let j=0;j<=M;j++){let b=j/M*Math.PI*2,rr=1+Math.cos(b)*.065,z=Math.sin(b)*.065;v.push(rr*Math.cos(a),rr*Math.sin(a),z,Math.cos(a)*Math.cos(b),Math.sin(a)*Math.cos(b),Math.sin(b))}}for(let i=0;i<N;i++)for(let j=0;j<M;j++){let a=i*(M+1)+j,b=a+M+1;inds.push(a,a+1,b,a+1,b+1,b)}return {v,inds}}
+function area(poly){return poly.reduce((a,p,i)=>a+p[0]*poly[(i+1)%poly.length][1]-poly[(i+1)%poly.length][0]*p[1],0)/2}
+function tris(poly){const order=[...poly.keys()],ccw=area(poly)>0?1:-1,out=[];function cross2(a,b,c){return (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])}function inside(a,b,c,p){let q=cross2(a,b,p),r=cross2(b,c,p),s=cross2(c,a,p);return ccw>0?q>=0&&r>=0&&s>=0:q<=0&&r<=0&&s<=0}let loops=0;while(order.length>3&&loops++<100){let found=false;for(let i=0;i<order.length;i++){let p=order[(i+order.length-1)%order.length],q=order[i],r=order[(i+1)%order.length],a=poly[p],b=poly[q],c=poly[r];if(cross2(a,b,c)*ccw<=.0000001)continue;let valid=true;for(let k of order)if(k!==p&&k!==q&&k!==r&&inside(a,b,c,poly[k])){valid=false;break}if(!valid)continue;out.push(...(ccw>0?[p,q,r]:[r,q,p]));order.splice(i,1);found=true;break}if(!found)throw Error('Não foi possível triangular a silhueta fiel do X')}out.push(...(ccw>0?order:[...order].reverse()));return out}
+function xMesh(){const poly=points.map(p=>xy(p,0)),faces=tris(poly),n=poly.length,v=[],inds=[];for(let side=0;side<2;side++){let z=side===0?.15:-.15,normal=side===0?1:-1;for(let p of poly)v.push(p[0],p[1],z,0,0,normal);for(let i=0;i<faces.length;i+=3){if(side===0)inds.push(faces[i],faces[i+1],faces[i+2]);else inds.push(n+faces[i+2],n+faces[i+1],n+faces[i]);}}
+const ccw=area(poly)>0?1:-1;for(let i=0;i<n;i++){let a=poly[i],b=poly[(i+1)%n],d=norm([b[1]-a[1],-(b[0]-a[0]),0]).map(q=>q*ccw),base=v.length/6;v.push(a[0],a[1],.15,...d,b[0],b[1],.15,...d,a[0],a[1],-.15,...d,b[0],b[1],-.15,...d);inds.push(base,base+2,base+1,base+1,base+2,base+3)}return {v,inds}}
+function initGL(){const gl=canvas.getContext('webgl',{antialias:true,alpha:false,preserveDrawingBuffer:false})||canvas.getContext('experimental-webgl');if(!gl)throw Error('WebGL indisponível neste navegador');const vs=shader(gl,gl.VERTEX_SHADER,'attribute vec3 aP;attribute vec3 aN;uniform mat4 uM;uniform mat4 uVP;varying vec3 vN;varying vec3 vP;void main(){vec4 p=uM*vec4(aP,1.);vP=p.xyz;vN=normalize(mat3(uM)*aN);gl_Position=uVP*p;}'),fs=shader(gl,gl.FRAGMENT_SHADER,'precision mediump float;varying vec3 vN;varying vec3 vP;uniform vec3 uColor;uniform float uEm,uAlpha;void main(){vec3 n=normalize(vN);vec3 lit=normalize(vec3(-.43,.68,1.));float d=max(dot(n,lit),0.);float r=pow(1.-abs(n.z),2.0);vec3 col=uColor*(.28+d*.65+r*.35+uEm*1.2);col+=vec3(.07,.12,.17)*max(0.,dot(n,normalize(vec3(.3,-.7,.5))));gl_FragColor=vec4(col,uAlpha);}');let program=gl.createProgram();gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error('Link: '+gl.getProgramInfoLog(program));const attrP=gl.getAttribLocation(program,'aP'),attrN=gl.getAttribLocation(program,'aN');const u={M:gl.getUniformLocation(program,'uM'),VP:gl.getUniformLocation(program,'uVP'),Color:gl.getUniformLocation(program,'uColor'),Em:gl.getUniformLocation(program,'uEm'),Alpha:gl.getUniformLocation(program,'uAlpha')};let primitives={sphere:createMesh(gl,...Object.values(uvSphere())),cylinder:createMesh(gl,...Object.values(cylinder())),torus:createMesh(gl,...Object.values(torus())),x:createMesh(gl,...Object.values(xMesh()))};gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.clearColor(.023,.041,.069,1);gl.useProgram(program);gl.enableVertexAttribArray(attrP);gl.enableVertexAttribArray(attrN);
+ function draw(mesh,model,col,em=0,alpha=1){if(!model||alpha<.005)return;const m=primitives[mesh];gl.bindBuffer(gl.ARRAY_BUFFER,m.buf);gl.vertexAttribPointer(attrP,3,gl.FLOAT,false,24,0);gl.vertexAttribPointer(attrN,3,gl.FLOAT,false,24,12);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,m.elem);gl.uniformMatrix4fv(u.M,false,model);gl.uniform3fv(u.Color,col);gl.uniform1f(u.Em,em);gl.uniform1f(u.Alpha,Math.min(1,alpha));gl.depthMask(alpha>.98);gl.drawElements(gl.TRIANGLES,m.count,gl.UNSIGNED_SHORT,0);}
+ function orb(svg,r,c,alpha=1,em=0,z=.34){let p=xy(svg,z);if(alpha<.005)return;draw('sphere',mat(...p,r,r,r),c,em,alpha);if(em>.05){draw('sphere',mat(...p,r*1.42,r*1.42,r*1.42),c,Math.max(1.2,em*.68),alpha*.14);draw('sphere',mat(...p,r*1.92,r*1.92,r*1.92),c,Math.max(.55,em*.24),alpha*.06);draw('sphere',mat(p[0]-r*.15,p[1]+r*.15,p[2]+r*.12,r*.22,r*.22,r*.22),WHITE,1.5,alpha*.42)}}
+ function link(a,b,col=STEEL,alpha=1,r=.015,z=.30){draw('cylinder',segmentMat(xy(a,z),xy(b,z),r),col,.1,alpha)}
+ function chain(coords,part,col=STEEL,alpha=1,r=.015,z=.30){if(part<=0||alpha<=0)return;let full=0;for(let i=0;i<coords.length-1;i++){full+=len(sub(coords[i+1].concat(0),coords[i].concat(0)))}let remaining=part*full;for(let i=0;i<coords.length-1;i++){let a=coords[i],b=coords[i+1],L=len(sub(b.concat(0),a.concat(0)));if(remaining<=0)break;let q=Math.min(1,remaining/L);link(a,[a[0]+(b[0]-a[0])*q,a[1]+(b[1]-a[1])*q],col,alpha,r,z);remaining-=L}}
+ function ring(svg,r,col,alpha=1,z=.32){let p=xy(svg,z);draw('torus',mat(...p,r,r,r),col,.6,alpha)}
+ function render(t){let c=wasm?wasm.cue:null;const prog=i=>c?clamp(c(i,t)):0;let rawLp=prog(0),rawBp=prog(1),rawRp=prog(2),rawEvent=prog(3),rawCn=prog(4),rawPn=prog(5);
+  let lp=easeInOutCubic(rawLp),bp=rawBp>=.999?1:easeOutBack(rawBp),rp=easeInOutCubic(rawRp),event=easeOutCubic(rawEvent),cn=easeInOutCubic(rawCn),pn=easeInOutCubic(rawPn),corePulse=.55+.45*Math.sin((t*length*1.6+event*.7)*Math.PI*2)*event;
+  let w=canvas.clientWidth||900,h=canvas.clientHeight||520,dpr=Math.min(devicePixelRatio||1,2),W=Math.floor(w*dpr),H=Math.floor(h*dpr);if(canvas.width!==W||canvas.height!==H){canvas.width=W;canvas.height=H}gl.viewport(0,0,W,H);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  let camAngle=angle + .16*smooth(.08,.42,rawLp) - .10*smooth(.64,.96,rawRp), camTilt=tilt + .05*Math.sin(t*length*.8)*smooth(.16,.92,rawBp), camDist=Math.max(5.2,dist - 1.25*smooth(.20,.76,rawBp) - .42*event + .16*smooth(.83,1,rawRp));
+  let eye=[Math.sin(camAngle)*Math.cos(camTilt)*camDist,Math.sin(camTilt)*camDist,Math.cos(camAngle)*Math.cos(camTilt)*camDist];gl.uniformMatrix4fv(u.VP,false,matMul(perspective(.63,W/H,.1,55),lookAt(eye,[0,0,.04],[0,1,0])));
+  let gridAlpha=.16 + .10*smooth(.15,.95,rawBp);
+  for(let x=-4;x<=4;x++)link([450+x*80,-20],[450+x*80,685],[.09,.15,.23],gridAlpha,.003,-.40);
+  for(let y=-3;y<=3;y++)link([-100,325+y*85],[1000,325+y*85],[.09,.15,.23],gridAlpha,.003,-.40);
+  if(bp>.001){let sx=.025+.995*bp, sz=.14+1.18*bp;let chromaRise=smooth(.34,.78,rawBp), settle=smooth(.84,1,t), chroma=chromaRise*(1-settle), official=settle;draw('x',mat(0,0,.01,sx*1.09,sx*1.09,sz*1.14),[.10,.15,.22],.7+.45*event,.20+.18*bp);if(chroma>.001){draw('x',mat(-.08,0,.05,sx*1.05,sx*1.05,sz*1.02),CY,1.8+2.4*chroma,.08+.12*chroma);draw('x',mat(.08,0,.05,sx*1.05,sx*1.05,sz*1.02),PI,1.8+2.4*chroma,.08+.12*chroma);draw('x',mat(0,0,.02,sx*1.02,sx*1.02,sz*.99),[.68,.74,.8],.25+1.1*chroma,.18+.12*chroma);}draw('x',mat(0,0,0,sx,sx,sz),GRAPH,.95+1.1*event,.42+.28*bp+.30*official);draw('x',mat(0,0,.03,sx*.992,sx*.992,sz*.94),[.25,.30,.37],.18,.88+.12*official);for(let i=0;i<points.length;i++){const a=points[i],b=points[(i+1)%points.length],col=a[0]+b[0]<900?CY:PI;let edgeAlpha=(.16+.34*chroma+.12*official)*bp;chain([a,b],smooth(.10,1,bp),col,edgeAlpha,.0135,.21)}}
+  left.forEach((seg,i)=>chain(seg,clamp((lp-(i<2?0:.21))/(i<2?.34:.79)),STEEL,.48+lp*.4,.0135,.31));
+  if(lp>.12){ring([260,325],.176,STEEL,lp,.35);ring([260,325],.104,STEEL,lp,.35);orb([260,325],.058,[.53,.35,1],lp,1.35,.36)}
+  [[110,210],[200,210],[200,440],[110,440]].forEach((p,i)=>{let factor=clamp((lp-(i===0?.10:i===1?.17:i===2?.25:.33))*3.9);ring(p,i===3?.088:.112,STEEL,factor,.33)});
+  innerL.forEach((ch,i)=>chain(ch,clamp((lp-.36)*2.8),STEEL,lp,.0155,.38));
+  [[380,180],[380,470],[433,325]].forEach((p,i)=>orb(p,.064,CY,cn*.95,2.5,.46));
+  if(wasm)for(let i=0;i<4;i++){let px=wasm.sample(i,0,t),py=wasm.sample(i,1,t),z=wasm.sample(i,2,t),alpha=wasm.sample(i,3,t),sz=wasm.sample(i,4,t);orb([px,py],.10*sz,CY,alpha,3.2,z+.10)}
+  if(event>.002){draw('sphere',mat(0,0,.14,.22+.20*event,.22+.20*event,.22+.20*event),[.16,.32,.38],1.1,.12+.08*event);orb([450,325],.19*(.45+.85*event),WHITE,.68*event,5.5,.61);ring([450,325],.13+.54*event,CY,event*.8,.52);ring([450,325],.10+.76*event,PI,event*.34,.56)}
+  right.forEach((seg,i)=>chain(seg,clamp((rp-i*.06)*1.95),STEEL,.34+rp*.66,.0152,.32));
+  innerR.forEach((ch,i)=>chain(ch,clamp((rp-.06-i*.05)*2.15),STEEL,rp,.0152,.39));
+  [[467,325],[520,180],[520,470]].forEach((p,i)=>orb(p,.068,PI,clamp((pn-i*.09)*2.55),2.3,.44));
+  if(wasm)for(let i=4;i<8;i++){let x=wasm.sample(i,0,t),y=wasm.sample(i,1,t),z=wasm.sample(i,2,t),alpha=wasm.sample(i,3,t),sz=wasm.sample(i,4,t);orb([x,y],.086*sz,PI,alpha,3.0,z+.10)}
+  ring([720,210],.112,STEEL,rp,.33);ring([720,440],.088,STEEL,rp,.33);orb([720,210],.07,PI,clamp((pn-.24)*2.2),2.6,.41);
+  orb([200,440],.05,PI,smooth(.94,.985,t),1.1,.40);
+  orb([433,325],.07,CY,cn,2.2+.8*corePulse,.49);
+  orb([467,325],.07,PI,pn,2.2+.8*corePulse,.49);
+ }
+ flag('gpuStatus','gpuLabel',true,'WebGL 3D ativo · cena cromática convergente');return {render}
+}
+
+/* Canvas fallback renders the *same source geometry* with a projected, shaded
+   construction. It does not pretend to be WebGL: the status explicitly says so.
+   Every moving sphere still samples the same WebAssembly kernel. */
+function initCanvasFallback(){
+ const ctx=canvas.getContext('2d',{alpha:false});if(!ctx)throw Error('WebGL e Canvas 2D indisponíveis');
+ function render(t){
+  const DPR=Math.min(devicePixelRatio||1,2),width=canvas.clientWidth||900,height=canvas.clientHeight||520;
+  let W=Math.ceil(width*DPR),H=Math.ceil(height*DPR);
+  if(canvas.width!==W||canvas.height!==H){canvas.width=W;canvas.height=H}ctx.setTransform(DPR,0,0,DPR,0,0);
+  let rawLp=wasm?wasm.cue(0,t):0,rawBp=wasm?wasm.cue(1,t):0,rawRp=wasm?wasm.cue(2,t):0,rawEnergy=wasm?wasm.cue(3,t):0,rawCyan=wasm?wasm.cue(4,t):0,rawPink=wasm?wasm.cue(5,t):0;
+  let leftProgress=easeInOutCubic(rawLp),bodyProgress=rawBp>=.999?1:easeOutBack(rawBp),rightProgress=easeInOutCubic(rawRp),energy=easeOutCubic(rawEnergy),cyan=easeInOutCubic(rawCyan),pink=easeInOutCubic(rawPink),corePulse=.55+.45*Math.sin((t*length*1.6+energy*.7)*Math.PI*2)*energy;
+  let camAngle=angle + .16*smooth(.08,.42,rawLp) - .10*smooth(.64,.96,rawRp), camTilt=tilt + .05*Math.sin(t*length*.8)*smooth(.16,.92,rawBp), camDist=Math.max(5.2,dist - 1.25*smooth(.20,.76,rawBp) - .42*energy + .16*smooth(.83,1,rawRp));
+  let cx=width*.5,cy=height*.55,unit=Math.min(width/7.7,height/5.15);
+  function pos(p,z=.15){let v=xy(p,z),x=v[0],y=v[1],zz=v[2];let xx=x*Math.cos(camAngle)+zz*Math.sin(camAngle),dep=zz*Math.cos(camAngle)-x*Math.sin(camAngle),yy=y*Math.cos(camTilt)-dep*Math.sin(camTilt),depth=dep*Math.cos(camTilt)+y*Math.sin(camTilt), k=camDist/(camDist-depth);return [cx+xx*unit*k,cy-yy*unit*k,k];}
+  function path(pnts,z=.15){ctx.beginPath();pnts.forEach((p,i)=>{let [x,y]=pos(p,z);i?ctx.lineTo(x,y):ctx.moveTo(x,y)})}
+  function strokeline(pnts,part,color,alpha=.8,thick=1.7,z=.22){if(part<=0||alpha<=0)return;let distances=[0],tot=0;for(let i=1;i<pnts.length;i++){tot+=Math.hypot(pnts[i][0]-pnts[i-1][0],pnts[i][1]-pnts[i-1][1]);distances.push(tot)}let total=tot*clamp(part),pp=[pnts[0]];for(let i=1;i<pnts.length;i++){let seg=distances[i]-distances[i-1];if(total>=distances[i])pp.push(pnts[i]);else if(total>distances[i-1]){let q=(total-distances[i-1])/seg;pp.push([pnts[i-1][0]+(pnts[i][0]-pnts[i-1][0])*q,pnts[i-1][1]+(pnts[i][1]-pnts[i-1][1])*q]);break}else break}if(pp.length<2)return;ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.lineWidth=thick;ctx.lineCap='round';ctx.lineJoin='round';ctx.shadowBlur=thick*2.5;ctx.shadowColor=color;path(pp,z);ctx.stroke();ctx.restore()}
+  function dot(p,r,color,alpha=1,power=1){if(alpha<=.001)return;let [x,y,k]=pos(p,.4),rad=r*unit*k*2.55;ctx.save();ctx.globalAlpha=alpha;let g=ctx.createRadialGradient(x,y,0,x,y,rad*(3.2+.7*power));g.addColorStop(0,color+'ee');g.addColorStop(.22,color+'75');g.addColorStop(.55,color+'1d');g.addColorStop(1,color+'00');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,rad*(3.2+.7*power),0,Math.PI*2);ctx.fill();ctx.fillStyle=color;ctx.shadowBlur=22+8*power;ctx.shadowColor=color;ctx.beginPath();ctx.arc(x,y,Math.max(2.2,rad),0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.globalAlpha=alpha*.16;ctx.arc(x,y,Math.max(4,rad*1.9),0,Math.PI*2);ctx.fill();ctx.fillStyle='#effcff';ctx.globalAlpha=alpha*.7;ctx.beginPath();ctx.arc(x-rad*.28,y-rad*.34,Math.max(.8,rad*.24),0,Math.PI*2);ctx.fill();ctx.restore()}
+  function ring(p,r,color,alpha=1,power=1){if(alpha<=0)return;let [x,y,k]=pos(p,.28),rr=r*unit*k;ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.lineWidth=1.5+.8*power;ctx.shadowBlur=10+6*power;ctx.shadowColor=color;ctx.beginPath();ctx.ellipse(x,y,rr,rr*(.97-.10*Math.abs(camTilt)),0,0,Math.PI*2);ctx.stroke();ctx.restore()}
+  ctx.clearRect(0,0,width,height);const bg=ctx.createRadialGradient(cx,cy,5,cx,cy,width*.72);bg.addColorStop(0,'#13324e');bg.addColorStop(.48,'#0d1a2d');bg.addColorStop(.78,'#091220');bg.addColorStop(1,'#060c15');ctx.fillStyle=bg;ctx.fillRect(0,0,width,height);
+  let aura=ctx.createRadialGradient(cx,cy,0,cx,cy,width*.33);aura.addColorStop(0,'rgba(255,255,255,.03)');aura.addColorStop(.15,'rgba(0,229,255,.11)');aura.addColorStop(.32,'rgba(255,42,141,.09)');aura.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=aura;ctx.fillRect(0,0,width,height);
+  for(let i=-4;i<=4;i++)strokeline([[450+i*80,-20],[450+i*80,670]],1,'#243b54',.27+.08*smooth(.15,.95,rawBp),.8,-.3);
+  for(let i=-3;i<=3;i++)strokeline([[-100,325+i*85],[1000,325+i*85]],1,'#243b54',.27+.08*smooth(.15,.95,rawBp),.8,-.3);
+  if(bodyProgress>.001){const b=.025+.995*bodyProgress,ss=points.map(p=>[450+(p[0]-450)*b,325+(p[1]-325)*b]);const chromaRise=smooth(.34,.78,rawBp),settle=smooth(.84,1,t),chroma=chromaRise*(1-settle),official=settle;ctx.save();ctx.globalAlpha=.22+.18*bodyProgress;ctx.fillStyle='#0f151d';ctx.shadowColor='#00d7f44a';ctx.shadowBlur=25*bodyProgress;path(ss.map(p=>[p[0]+6,p[1]+10]),-.10);ctx.fill();ctx.restore();if(chroma>.001){ctx.save();ctx.globalAlpha=.10+.20*chroma;path(ss,.16);const glowSplit=ctx.createLinearGradient(cx-220,cy,cx+220,cy);glowSplit.addColorStop(0,'#00e5ff');glowSplit.addColorStop(.44,'#7fefff');glowSplit.addColorStop(.56,'#ffd8ea');glowSplit.addColorStop(1,'#ff2a8d');ctx.fillStyle=glowSplit;ctx.shadowBlur=38+18*chroma;ctx.shadowColor='rgba(255,255,255,.18)';ctx.fill();ctx.restore();}ctx.save();ctx.globalAlpha=.66+.18*bodyProgress+.14*official;path(ss,.18);ctx.fillStyle='#313c4a';ctx.fill();ctx.lineWidth=2.5;ctx.strokeStyle='#708292';ctx.shadowColor='rgba(255,255,255,.06)';ctx.shadowBlur=12;ctx.stroke();ctx.clip();const shine=ctx.createLinearGradient(cx-180,cy-30,cx+180,cy+26);shine.addColorStop(0,`rgba(0,229,255,${0.16+0.22*chroma})`);shine.addColorStop(.42,`rgba(255,255,255,${0.08+0.10*chroma})`);shine.addColorStop(.6,'#ffffff06');shine.addColorStop(1,`rgba(255,42,141,${0.18+0.24*chroma})`);ctx.fillStyle=shine;ctx.fillRect(0,0,width,height);ctx.restore();ctx.save();ctx.globalAlpha=.10+.09*energy+.08*chroma;path(ss,.29);ctx.strokeStyle=chroma>.001?'#f3ffff':'#cfefff';ctx.lineWidth=7+2*chroma;ctx.shadowBlur=35+18*chroma;ctx.shadowColor=chroma>.001?'rgba(255,255,255,.65)':'#e9fbff';ctx.stroke();ctx.restore();points.forEach((p,i)=>strokeline([p,points[(i+1)%points.length]],bodyProgress,p[0]<450?'#00e5ff':'#ff2a8d',bodyProgress*(.28+.42*chroma+.14*official),2.4,.19))}
+  left.forEach((l,i)=>strokeline(l,clamp((leftProgress-(i<2?0:.2))/(i<2?.38:.82)),'#778ca3',.46+.40*leftProgress,1.9,.30));
+  if(leftProgress>.1){ring([260,325],.176,'#7890a3',leftProgress,1);ring([260,325],.104,'#7890a3',leftProgress,.7);dot([260,325],.033,'#9560ff',leftProgress,.8)}
+  [[110,210],[200,210],[200,440],[110,440]].forEach((p,i)=>ring(p,i===3?.09:.11,'#607990',leftProgress,.6));
+  innerL.forEach(l=>strokeline(l,clamp((leftProgress-.40)*2.85),'#8393a5',leftProgress,2.0,.40));
+  [[380,180],[380,470],[433,325]].forEach(p=>dot(p,.048,'#00e5ff',cyan*.82,1.15));
+  if(wasm)for(let i=0;i<4;i++)dot([wasm.sample(i,0,t),wasm.sample(i,1,t)],.078*wasm.sample(i,4,t),'#00e5ff',wasm.sample(i,3,t),1.45);
+  if(energy>.001){dot([450,325],.17,'#d8ffff',energy,1.7);ring([450,325],.13+energy*.5,'#5ef7ff',energy*.85,1.3);ring([450,325],.1+energy*.72,'#ff5fb3',energy*.3,1.1)}
+  right.forEach((l,i)=>strokeline(l,clamp((rightProgress-i*.06)*1.95),'#8da0b0',rightProgress*.95,2.05,.33));
+  innerR.forEach((l,i)=>strokeline(l,clamp((rightProgress-.08-i*.05)*2.15),'#9c8d9f',rightProgress,2.2,.40));
+  [[467,325],[520,180],[520,470]].forEach((p,i)=>dot(p,.052,'#ff2a8d',clamp((pink-i*.09)*2.5),1.2));
+  if(wasm)for(let i=4;i<8;i++)dot([wasm.sample(i,0,t),wasm.sample(i,1,t)],.069*wasm.sample(i,4,t),'#ff2a8d',wasm.sample(i,3,t),1.5);
+  ring([720,210],.11,'#8190a1',rightProgress,.8);ring([720,440],.09,'#8190a1',rightProgress,.7);dot([720,210],.057,'#ff2a8d',clamp((pink-.25)*2.2),1.3);dot([200,440],.046,'#ff2a8d',smooth(.94,.985,t),.8);
+  dot([433,325],.058,'#00e5ff',cyan,1.35+corePulse*.2);dot([467,325],.058,'#ff2a8d',pink,1.35+corePulse*.2);
+ }
+ return {render}
+}
+
+function updateSignature(){
+ const logo=$('officialLockup'),word=$('officialWord'),mark=$('officialMark');
+ if(!logo||!word||!mark)return;
+ // Final logo is the exact word contours + literal official X SVG. No redraw at any time.
+ const handoff=smooth(.74,.93,now), move=smooth(.80,.985,now), letters=smooth(.77,.965,now), final=smooth(.93,1,now);
+ const initialOffset=-(word.offsetWidth+2)/2;
+ logo.style.opacity=(handoff).toFixed(4);
+ mark.style.opacity=(smooth(.745,.91,now)).toFixed(4);
+ mark.style.transform=`translate3d(${(initialOffset*(1-move)).toFixed(2)}px,${(-6*(1-move)).toFixed(2)}px,0) scale(${(1.03-.03*move).toFixed(4)})`;
+ word.style.opacity=letters.toFixed(4);
+ word.style.transform=`translate3d(${(-53*(1-letters)).toFixed(2)}px,${(8*(1-letters)).toFixed(2)}px,0) rotateY(${(26*(1-letters)).toFixed(2)}deg)`;
+ word.style.setProperty('--type-depth',(1-smooth(.86,.99,now)).toFixed(4));
+ word.style.setProperty('--type-chroma',(Math.sin(letters*Math.PI)*.55*(1-final)).toFixed(4));
+ mark.style.setProperty('--mark-glow',(.16*(1-final)).toFixed(4));
+ logo.classList.toggle('finished',now>=.999);
+ // All temporary WebGL/Canvas scene volume leaves the frame.
+ // The last frame is solely the original source-derived 2D signature.
+ canvas.style.opacity=(1-smooth(.76,.985,now)).toFixed(4);
+}
+function updateUI(){const s=now*length,pp=phase(now);$('bigTime').textContent=s.toFixed(2);$('scrub').value=s.toFixed(3);$('seekLabel').textContent=s.toFixed(2)+'s';$('phaseTitle').textContent=pdesc[pp][0];$('phaseSub').textContent=pdesc[pp][1];for(let i=0;i<5;i++)$('step'+i).className='step '+(i===pp?'active':i<pp?'done':'');updateSignature()}
+function tick(tm){if(!last)last=tm;let dt=Math.min((tm-last)/1000,.08);last=tm;if(play&&wasm){now+=dt*rate/length;if(now>=1){now=1;play=false;$('play').textContent='▶'}}if(engine)engine.render(now);updateUI();requestAnimationFrame(tick)}
+$('play').onclick=()=>{if(!wasm)return;if(now>=1)now=0;play=!play;$('play').textContent=play?'Ⅱ':'▶'};
+$('restart').onclick=()=>{now=0;play=!!wasm&&!reduce;$('play').textContent=play?'Ⅱ':'▶'};
+$('scrub').oninput=e=>{now=clamp(Number(e.target.value)/length);play=false;$('play').textContent='▶'};
+$('speed').onchange=e=>{rate=Number(e.target.value)};
+$('resetCamera').onclick=()=>{angle=.19;tilt=.17;dist=8.6};
+canvas.addEventListener('pointerdown',e=>{drag=true;px=e.clientX;py=e.clientY;canvas.setPointerCapture(e.pointerId);canvas.classList.add('dragging')});
+canvas.addEventListener('pointerup',()=>{drag=false;canvas.classList.remove('dragging')});
+canvas.addEventListener('pointercancel',()=>{drag=false;canvas.classList.remove('dragging')});
+canvas.addEventListener('pointermove',e=>{if(!drag)return;angle+=(e.clientX-px)*.009;tilt=clamp((tilt+(e.clientY-py)*.007+.85)/1.7)*1.7-.85;px=e.clientX;py=e.clientY});
+canvas.addEventListener('wheel',e=>{e.preventDefault();dist=Math.max(5.5,Math.min(14,dist+e.deltaY*.008))},{passive:false});
+for(let i=0;i<5;i++){const el=$('step'+i);el.onclick=()=>{$('scrub').value=[.06,.31,.59,.78,.97][i]*5;$('scrub').dispatchEvent(new Event('input'))};el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.click()}}}
+async function begin(){try{engine=initGL()}catch(e){console.warn('WebGL 3D indisponível, ativando projeção em Canvas 2D:',e);try{engine=initCanvasFallback();$('gpuLabel').textContent='Canvas 2D · fallback';$('gpuStatus').classList.remove('good','bad')}catch(f){flag('gpuStatus','gpuLabel',false,'Renderização indisponível');error('Falha na renderização: '+f.message)}}await initWasm();requestAnimationFrame(tick)}
+begin();
+</script>
+</body>
+</html>

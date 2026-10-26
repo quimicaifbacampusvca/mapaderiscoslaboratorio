@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0",
+  "date": "2026-10-26",
+  "status": "scope_only",
+  "repository": "quimicaifbacampusvca/mapaderiscoslaboratorio",
+  "branch": "design/quimix-acento-blender",
+  "master_asset": "QuimiX_MASTER.blend",
+  "source_program_logo": "laboratoriovirtual/index.html + favicon.svg",
+  "experimental_typography": "quimi_a_refinada_v7.svg",
+  "default_final": "published_canonical_logo",
+  "experimental_final": "theme_wordmark_A",
+  "timeline_seconds": 7,
+  "fps": 30,
+  "frame_count": 210,
+  "phases": [
+    {
+      "name": "ativacao",
+      "start": 0,
+      "end": 1.2
+    },
+    {
+      "name": "aproximacao",
+      "start": 1.2,
+      "end": 2.8
+    },
+    {
+      "name": "formacao_x",
+      "start": 2.8,
+      "end": 4.2
+    },
+    {
+      "name": "quimi",
+      "start": 4.2,
+      "end": 5.5
+    },
+    {
+      "name": "convergencia",
+      "start": 5.5,
+      "end": 6.4
+    },
+    {
+      "name": "assinatura",
+      "start": 6.4,
+      "end": 7
+    }
+  ],
+  "themes": {
+    "reacao": {
+      "title": "Reação / Temperatura",
+      "palette": {
+        "input": "#00E5FF",
+        "output": "#FF2A8D",
+        "transition": "#7B61FF",
+        "structure": "#232A34",
+        "highlight": "#EAF7FF"
+      },
+      "accent": "Vetor de ligação energizado",
+      "file": "QuimiX_REACAO.blend"
+    },
+    "atomica": {
+      "title": "Atômica",
+      "palette": {
+        "ambient": "#1F4E79",
+        "electron": "#63C7FF",
+        "nucleus": "#FFD166",
+        "excited": "#47E5BC",
+        "structure": "#2F3742",
+        "highlight": "#F4F9FF"
+      },
+      "accent": "Emissão eletrônica estilizada",
+      "file": "QuimiX_ATOMICA.blend"
+    },
+    "ligacoes": {
+      "title": "Ligações Químicas",
+      "palette": {
+        "node_a": "#20C997",
+        "node_b": "#3A86FF",
+        "active_bond": "#A8E063",
+        "structure": "#4A5568",
+        "depth": "#1B4965",
+        "highlight": "#F7FBFF"
+      },
+      "accent": "Ponte molecular inclinada",
+      "file": "QuimiX_LIGACOES.blend"
+    },
+    "ph": {
+      "title": "pH / Soluções",
+      "palette": {
+        "solution_a": "#EF476F",
+        "indicator": "#9D4EDD",
+        "solution_b": "#3A86FF",
+        "balance": "#8AC926",
+        "transition": "#FFD166",
+        "highlight": "#F8FCFF"
+      },
+      "accent": "Gota inclinada retornando a acento agudo",
+      "file": "QuimiX_PH.blend"
+    },
+    "cristalina": {
+      "title": "Cristalina",
+      "palette": {
+        "edge": "#5BC0EB",
+        "face": "#64DFDF",
+        "facet": "#7B2CBF",
+        "structure": "#495057",
+        "highlight": "#F1F7FF",
+        "refracted": "#A9F0FF"
+      },
+      "accent": "Faceta prismática",
+      "file": "QuimiX_CRISTALINA.blend"
+    }
+  },
+  "pending": [
+    "modelagem Blender",
+    "renderização Eevee/Cycles",
+    "export glTF",
+    "homologação visual",
+    "testes WebGL/WebAssembly"
+  ]
+}

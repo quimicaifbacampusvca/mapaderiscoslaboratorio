@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080d17">
+<title>QuímiX — Estudo Interativo de Construção do X</title>
+<style>
+:root{color-scheme:dark;--bg:#090f1b;--ink:#e5f3fa;--muted:#8da6b7;--cyan:#00e5ff;--pink:#ff2a8d;--border:#273544;--panel:rgba(13,23,36,.88)}
+*{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;font-family:Inter,'Segoe UI',system-ui,Arial,sans-serif;color:var(--ink);background:radial-gradient(ellipse 65% 80% at 45% -20%,#182a3b 0%,transparent 80%),var(--bg);letter-spacing:.01em}
+button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid #00e5ff;outline-offset:3px}
+main{max-width:1450px;padding:27px clamp(18px,3.6vw,54px) 50px;margin:0 auto}
+header{display:flex;gap:22px;align-items:flex-start;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap}
+.kicker{display:flex;align-items:center;gap:8px;color:#92cad9;text-transform:uppercase;font-size:11px;letter-spacing:.22em;font-weight:700}.kicker:before{content:'';width:6px;height:6px;display:inline-block;border-radius:50%;background:var(--cyan);box-shadow:0 0 11px var(--cyan)}
+h1{font-weight:620;letter-spacing:-.045em;font-size:clamp(27px,3vw,44px);margin:8px 0 5px}h1 em{font-weight:400;font-style:normal;color:#9ab3c3} .subtitle{color:var(--muted);margin:0;font-size:13px;max-width:700px;line-height:1.55}
+.pill{border:1px solid #355064;background:#0d1a29;border-radius:99px;font-size:11px;color:#a8c2d2;white-space:nowrap;padding:9px 13px;margin-top:5px;display:flex;align-items:center;gap:7px}
+.stage-shell{border:1px solid #2b4153;position:relative;overflow:hidden;background:#070d17;box-shadow:0 22px 110px #02050a90,inset 0 0 0 1px #ffffff06;border-radius:14px}
+.stage-shell:before{content:'';pointer-events:none;position:absolute;inset:0;opacity:.5;background:radial-gradient(ellipse 55% 65% at center,#10263a 0%,transparent 73%)}
+.stage-shell.light{background:#e5edf2}.stage-shell.light:before{background:radial-gradient(ellipse 65% 75% at center,#c9dfe8 0%,transparent 78%)}
+#viewport{display:block;width:100%;height:clamp(330px,53vw,630px);position:relative;overflow:visible}
+.svg-label{font-size:13px;fill:#7f9bad;letter-spacing:2px;font-weight:500}.svg-label-small{font-size:11px;fill:#526b80;letter-spacing:2px}.stage-shell.light .svg-label{fill:#52768c}.stage-shell.light .svg-label-small{fill:#67869a}
+#gridlines{opacity:.38;transition:opacity .22s}#circles{opacity:.85;transition:opacity .22s} .hide-guides #gridlines,.hide-guides #circles,.hide-guides .guide{opacity:0!important}
+#impact-glow,#energy-wave,#energy-core{pointer-events:none}
+#x-silhouette{filter:url(#body-shadow)}
+#x-outline{fill:none;stroke:url(#rim-grad);stroke-width:2.4;stroke-linejoin:bevel}
+#x-inset{fill:none;stroke:#899dab;stroke-width:1.2;opacity:.48;transform:translate(0,-5px)}
+#leftrim,#rightrim{mix-blend-mode:screen}
+#stage-stats{pointer-events:none;position:absolute;bottom:18px;left:22px;right:22px;display:flex;justify-content:space-between;gap:12px;color:#8197a9;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+#stage-stats strong{color:#bbdbe7;font-size:12px;font-weight:550} .light #stage-stats{color:#627b8e} .light #stage-stats strong{color:#355367}
+.corner{position:absolute;width:20px;height:20px;border-color:#45677a;opacity:.66;pointer-events:none}.corner.tl{top:17px;left:17px;border-top:1px solid;border-left:1px solid}.corner.tr{top:17px;right:17px;border-top:1px solid;border-right:1px solid}.corner.bl{bottom:17px;left:17px;border-bottom:1px solid;border-left:1px solid}.corner.br{bottom:17px;right:17px;border-bottom:1px solid;border-right:1px solid}
+.toolbar{display:grid;grid-template-columns:auto 1fr auto;gap:23px;align-items:center;margin-top:17px;padding:17px 19px;border-radius:12px;background:var(--panel);border:1px solid var(--border)}
+.playcontrols{display:flex;gap:8px;align-items:center}.iconbtn{display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:40px;padding:0 15px;border:1px solid #36576b;background:#132637;color:#e8f7ff;border-radius:8px;font-size:12px;white-space:nowrap}.iconbtn.primary{background:linear-gradient(115deg,#00bad3,#008ca9);border-color:#03b9d5;color:#041b25;font-weight:750}.iconbtn:hover{filter:brightness(1.14)}.iconbtn.secondary{width:40px;padding:0;font-size:18px}.timegroup{display:flex;gap:13px;align-items:center;min-width:0}.timer{font-size:12px;color:#c9d9e1;font-variant-numeric:tabular-nums;white-space:nowrap}.timer span{color:#71889b}
+input[type=range]{width:100%;cursor:pointer;accent-color:#00d4ec;height:6px}input[type=range]::-webkit-slider-runnable-track{height:5px}input[type=range]::-webkit-slider-thumb{margin-top:-4px}
+.switches{display:flex;gap:6px;align-items:center}.switches button{background:#111e2c;border:1px solid #293e4e;border-radius:7px;color:#94b0c2;padding:10px 11px;font-size:11px}.switches button.active{color:#e2fbff;border-color:#00afc78a;background:#0b3440}
+legend{display:block} .details{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:16px;margin-top:18px}.phase-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.phase{appearance:none;border:1px solid #253c4d;border-radius:10px;padding:14px 11px 13px;background:#101b29;color:#a6becd;text-align:left;min-height:112px;position:relative;overflow:hidden}.phase:before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:#314456}.phase.active{border-color:#168e9d;background:linear-gradient(130deg,#123543,#0d1a29 65%);color:#f2fdff}.phase.active:before{background:linear-gradient(to right,#02daf0,#e82f92)}.phase .num{font-size:10px;letter-spacing:.12em;color:#6d91a4}.phase .name{font-size:13px;font-weight:650;display:block;margin:11px 0 7px;letter-spacing:.015em}.phase .interval{font-size:11px;color:#8a9eac}
+.info{border-radius:10px;border:1px solid #263949;background:#101b29;padding:16px}.info h2{font-size:13px;margin:0 0 9px;font-weight:600;letter-spacing:.05em}.info p{font-size:12px;color:#91abba;line-height:1.6;margin:0}.info .divider{border-top:1px solid #293c4c;margin:14px 0}.info .tags{display:flex;flex-wrap:wrap;gap:6px}.tag{font-size:10px;border-radius:4px;border:1px solid #365062;padding:5px 7px;color:#93b3c2;letter-spacing:.03em}
+footer{color:#647f90;font-size:11px;line-height:1.6;margin-top:19px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}footer strong{font-weight:550;color:#a5c0cf}
+@media(max-width:1020px){.details{grid-template-columns:1fr}.toolbar{gap:14px}.switches{grid-column:1/-1;justify-content:flex-end}}@media(max-width:680px){main{padding:18px 12px 28px}.stage-shell{border-radius:8px}#viewport{height:340px}header{margin-bottom:15px} .pill{display:none}.toolbar{grid-template-columns:1fr;gap:13px;margin-top:11px;padding:12px}.playcontrols{justify-content:space-between}.timegroup{grid-row:1}.switches{grid-column:1}.phase-list{grid-template-columns:repeat(2,1fr)}.phase{min-height:90px}.phase:last-child{grid-column:1/-1}.details{margin-top:12px}.svg-label-small{font-size:15px}.iconbtn{flex:1}.iconbtn.secondary{flex:0 0 45px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div><div class="kicker">ESTÚDIO DE IDENTIDADE / QUÍMIX</div><h1>Construção do <em>símbolo</em> X</h1><p class="subtitle">Estudo de movimento baseado no SVG original. A cinética prepara a futura animação no Blender; nesta fase, o nome e o acento do í permanecem fora de cena.</p></div>
+<div class="pill">◉&nbsp; PROTÓTIPO CINÉTICO • VERSÃO 01</div>
+</header>
+<section aria-label="Animação de formação do X">
+<div class="stage-shell" id="stage"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+<svg id="viewport" viewBox="0 0 1100 700" preserveAspectRatio="xMidYMid meet" role="img" aria-label="X original do QuímiX construído pela convergência de quatro vetores luminosos ciano e magenta, com corpo de grafite e ligações internas.">
+<defs>
+<pattern id="grid" width="35" height="35" patternUnits="userSpaceOnUse"><path d="M35 0 H0 V35" fill="none" stroke="#31506a" stroke-width=".75"/></pattern>
+<pattern id="microgrid" width="7" height="7" patternUnits="userSpaceOnUse"><path d="M7 0H0V7" fill="none" stroke="#234258" stroke-width=".4"/></pattern>
+<radialGradient id="halo"><stop offset="0" stop-color="#0a3148" stop-opacity=".7"/><stop offset=".65" stop-color="#102037" stop-opacity=".14"/><stop offset="1" stop-color="#0b1524" stop-opacity="0"/></radialGradient>
+<linearGradient id="graphite" x1="0" x2="1" y1="0" y2=".85" objectBoundingBox="true"><stop offset="0" stop-color="#647485"/><stop offset=".13" stop-color="#323f4d"/><stop offset=".5" stop-color="#1b2735"/><stop offset=".86" stop-color="#344252"/><stop offset="1" stop-color="#17222f"/></linearGradient>
+<linearGradient id="rim-grad"><stop offset="0%" stop-color="#01eaff"/><stop offset="42%" stop-color="#6b9bb3"/><stop offset="52%" stop-color="#9b849c"/><stop offset="100%" stop-color="#ff338d"/></linearGradient>
+<linearGradient id="beam-cyan" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#00e5ff" stop-opacity=".2"/><stop offset="1" stop-color="#4bf6ff"/></linearGradient><linearGradient id="beam-pink"><stop offset="0" stop-color="#ff2a8d" stop-opacity=".2"/><stop offset="1" stop-color="#ff58b7"/></linearGradient>
+<filter id="soft-glow" x="-90%" y="-90%" width="280%" height="280%"><feGaussianBlur stdDeviation="7"/></filter>
+<filter id="wide-glow" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur stdDeviation="22"/></filter>
+<filter id="body-shadow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="4" dy="15" stdDeviation="10" flood-color="#000915" flood-opacity=".85"/></filter>
+<clipPath id="body-reveal"><rect id="body-clip" x="-30" y="325" width="960" height="0" /></clipPath>
+<clipPath id="clip-left"><rect x="0" y="0" width="450" height="650"/></clipPath>
+<clipPath id="clip-right"><rect x="450" y="0" width="450" height="650"/></clipPath>
+</defs>
+<rect width="1100" height="700" fill="url(#microgrid)" opacity=".15"/><rect width="1100" height="700" fill="url(#grid)" id="gridlines"/>
+<circle cx="550" cy="350" r="308" fill="url(#halo)" id="background-halo"/>
+<g id="circles" fill="none" stroke="#24445c"><circle cx="550" cy="350" r="270" stroke-opacity=".7"/><circle cx="550" cy="350" r="190" stroke-opacity=".7"/><circle cx="550" cy="350" r="95" stroke-opacity=".76"/><path d="M550 69v562M269 350h562" stroke-dasharray="2 14" stroke-opacity=".6"/></g>
+<text x="40" y="55" class="svg-label">QX / LABORATÓRIO DE MARCA</text><text x="1060" y="55" text-anchor="end" class="svg-label-small">01 — SÍNTESE ESTRUTURAL</text>
+<g id="logo" transform="translate(100 25)">
+<!-- Todas as formas abaixo usam o sistema de coordenadas 900x650 do SVG do programa. -->
+<g id="vector-group">
+ <g id="beam-0"><line class="beam-halo" x1="315" y1="110" x2="450" y2="325" stroke="#00e5ff" stroke-width="20" opacity=".38" filter="url(#soft-glow)"/><line class="beam-main" x1="315" y1="110" x2="450" y2="325" stroke="#0eeaff" stroke-width="6" stroke-linecap="round"/><circle class="beam-tip" r="9" fill="#00e5ff" filter="url(#soft-glow)"/><circle class="beam-head" r="5" fill="#8ffaff"/></g>
+ <g id="beam-1"><line class="beam-halo" x1="315" y1="540" x2="450" y2="325" stroke="#00e5ff" stroke-width="20" opacity=".38" filter="url(#soft-glow)"/><line class="beam-main" x1="315" y1="540" x2="450" y2="325" stroke="#0eeaff" stroke-width="6" stroke-linecap="round"/><circle class="beam-tip" r="9" fill="#00e5ff" filter="url(#soft-glow)"/><circle class="beam-head" r="5" fill="#8ffaff"/></g>
+ <g id="beam-2"><line class="beam-halo" x1="585" y1="110" x2="450" y2="325" stroke="#ff2a8d" stroke-width="20" opacity=".38" filter="url(#soft-glow)"/><line class="beam-main" x1="585" y1="110" x2="450" y2="325" stroke="#ff2a8d" stroke-width="6" stroke-linecap="round"/><circle class="beam-tip" r="9" fill="#ff2a8d" filter="url(#soft-glow)"/><circle class="beam-head" r="5" fill="#ffd2ec"/></g>
+ <g id="beam-3"><line class="beam-halo" x1="585" y1="540" x2="450" y2="325" stroke="#ff2a8d" stroke-width="20" opacity=".38" filter="url(#soft-glow)"/><line class="beam-main" x1="585" y1="540" x2="450" y2="325" stroke="#ff2a8d" stroke-width="6" stroke-linecap="round"/><circle class="beam-tip" r="9" fill="#ff2a8d" filter="url(#soft-glow)"/><circle class="beam-head" r="5" fill="#ffd2ec"/></g>
+</g>
+<g id="x-whole">
+<g id="x-depth" transform="translate(6 11)"><path fill="#08121e" stroke="#182536" stroke-width="3" d="M265 100 L370 100 L450 270 L530 100 L635 100 L495 325 L635 550 L530 550 L450 380 L370 550 L265 550 L405 325 Z"/></g>
+<g id="x-body" clip-path="url(#body-reveal)"><path id="x-silhouette" fill="url(#graphite)" stroke="#465e70" stroke-width="4" stroke-linejoin="miter" d="M265 100 L370 100 L450 270 L530 100 L635 100 L495 325 L635 550 L530 550 L450 380 L370 550 L265 550 L405 325 Z"/><path id="x-outline" d="M265 100 L370 100 L450 270 L530 100 L635 100 L495 325 L635 550 L530 550 L450 380 L370 550 L265 550 L405 325 Z"/><path id="x-inset" d="M265 100 L370 100 L450 270 L530 100 L635 100 L495 325 L635 550 L530 550 L450 380 L370 550 L265 550 L405 325 Z"/></g>
+<!-- A iluminação de bordas é independente da forma estrutural. -->
+<g id="x-led-left" clip-path="url(#clip-left)"><path d="M265 100 L370 100 L450 270 L530 100 L635 100 L495 325 L635 550 L530 550 L450 380 L370 550 L265 550 L405 325 Z" fill="none" stroke="#00e5ff" stroke-width="11" opacity=".7" filter="url(#soft-glow)"/></g>
+<g id="x-led-right" clip-path="url(#clip-right)"><path d="M265 100 L370 100 L450 270 L530 100 L635 100 L495 325 L635 550 L530 550 L450 380 L370 550 L265 550 L405 325 Z" fill="none" stroke="#ff2a8d" stroke-width="11" opacity=".7" filter="url(#soft-glow)"/></g>
+</g>
+<g id="bond-group" stroke="#819aa9" stroke-width="3" stroke-linecap="round" fill="none">
+<line class="bond" x1="380" y1="180" x2="433" y2="325"/><line class="bond" x1="380" y1="470" x2="433" y2="325"/><line class="bond" x1="520" y1="180" x2="467" y2="325"/><line class="bond" x1="520" y1="470" x2="467" y2="325"/></g>
+<g id="node-group">
+<circle class="structure-node" cx="380" cy="180" r="7" fill="#00e5ff"/><circle class="structure-node" cx="380" cy="470" r="7" fill="#00e5ff"/><circle class="structure-node" cx="433" cy="325" r="7" fill="#00e5ff"/>
+<circle class="structure-node" cx="520" cy="180" r="7" fill="#ff2a8d"/><circle class="structure-node" cx="520" cy="470" r="7" fill="#ff2a8d"/><circle class="structure-node" cx="467" cy="325" r="7" fill="#ff2a8d"/></g>
+<g id="core-group"><circle id="impact-glow" cx="450" cy="325" r="32" fill="#c7fbff" filter="url(#wide-glow)"/><circle id="energy-core" cx="450" cy="325" r="11" fill="#e5fcff"/><circle id="energy-wave" cx="450" cy="325" r="18" stroke="#5beaff" fill="none" stroke-width="3"/></g>
+</g>
+<g class="guide" stroke="#56738a" opacity=".34" fill="none"><path d="M65 615h160M875 615h160" stroke-width="1"/><circle cx="550" cy="350" r="5"/></g>
+</svg>
+<div id="stage-stats"><span id="phaseBadge">01 / POTENCIAL</span><span><strong id="timeStat">0,00s</strong> / 5,00s</span></div>
+</div>
+<div class="toolbar">
+<div class="playcontrols"><button type="button" id="play" class="iconbtn primary" aria-label="Pausar animação">Ⅱ &nbsp; Pausar</button><button type="button" id="restart" class="iconbtn secondary" title="Reiniciar">↺</button></div>
+<div class="timegroup"><label for="seek" class="timer" id="timeLabel">0,00 <span>/ 5,00s</span></label><input id="seek" type="range" min="0" max="5" step="0.01" value="0" aria-label="Posição da animação"></div>
+<div class="switches"><button id="toggleGrid" type="button" class="active" aria-pressed="true">Guias</button><button id="toggleLoop" type="button" class="active" aria-pressed="true">Repetição</button><button id="toggleTheme" type="button" aria-pressed="false">Fundo claro</button></div>
+</div>
+<div class="details">
+<div class="phase-list" aria-label="Etapas da animação">
+<button type="button" class="phase active" data-time="0.15"><span class="num">FASE 01</span><span class="name">Potencial</span><span class="interval">0,0 – 0,5 s</span></button>
+<button type="button" class="phase" data-time="1.2"><span class="num">FASE 02</span><span class="name">Convergência</span><span class="interval">0,5 – 1,9 s</span></button>
+<button type="button" class="phase" data-time="2.5"><span class="num">FASE 03</span><span class="name">Síntese</span><span class="interval">1,9 – 3,2 s</span></button>
+<button type="button" class="phase" data-time="3.85"><span class="num">FASE 04</span><span class="name">Estrutura</span><span class="interval">3,2 – 4,3 s</span></button>
+<button type="button" class="phase" data-time="4.82"><span class="num">FASE 05</span><span class="name">Repouso</span><span class="interval">4,3 – 5,0 s</span></button>
+</div>
+<aside class="info"><h2 id="phaseTitle">01 / Potencial</h2><p id="phaseDesc">Os quatro polos se energizam nas posições iniciais. A geometria do símbolo ainda não aparece.</p><div class="divider"></div><div class="tags"><span class="tag">SVG de origem preservado</span><span class="tag">5,0 segundos</span><span class="tag">Sem bibliotecas</span></div></aside>
+</div>
+</section>
+<footer><span><strong>Base geométrica:</strong> símbolo SVG original do programa (12 vértices, viewBox 900 × 650).<br> <strong>Direção:</strong> modelo preparatório para Blender; ainda não é um render 3D.</span><span>ATALHOS &nbsp; ESPAÇO: executar/pausar &nbsp; · &nbsp; ← →: ±0,1s</span></footer>
+</main>
+<script>
+(()=>{'use strict';
+const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)];
+const $seek=$('#seek'),$play=$('#play'),stage=$('#stage'),$badge=$('#phaseBadge');
+const DURATION=5;let t=0,playing=!window.matchMedia('(prefers-reduced-motion: reduce)').matches,loop=true,last=null,raf=0;
+const phases=[['Potencial','Os quatro polos se energizam nas posições iniciais. A geometria do símbolo ainda não aparece.'],['Convergência','Duas forças complementares avançam em quatro vetores diagonais. A chegada ao centro provoca a síntese.'],['Síntese','A convergência acende o núcleo; o corpo de grafite emerge com ligeira resposta elástica e revela a forma original.'],['Estrutura','Os vetores recuam. Acendem-se as quatro ligações internas e seis pontos da estrutura original.'],['Repouso','O brilho residual diminui. A marca permanece sólida, legível e pronta para receber o nome posteriormente.']];
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));const mix=(a,b,u)=>a+(b-a)*u;const phase=(v,a,b)=>clamp((v-a)/(b-a));const smooth=u=>u*u*(3-2*u);const ease=u=>1-Math.pow(1-u,3);const pop=u=>{const p=clamp(u);return p===0?0:(p===1?1:1+Math.sin(p*Math.PI)*.09)};
+const xWhole=$('#x-whole'),body=$('#x-body'),depth=$('#x-depth'),clip=$('#body-clip'),ledL=$('#x-led-left'),ledR=$('#x-led-right'),core=$('#core-group'),glow=$('#impact-glow'),wave=$('#energy-wave'),pulse=$('#energy-core');
+const nodeEls=all('.structure-node'),bonds=all('.bond'),beams=all('#vector-group>g');
+const startPts=[[315,110],[315,540],[585,110],[585,540]],endPt=[450,325];
+beams.forEach((g,i)=>{const dist=Math.hypot(startPts[i][0]-450,startPts[i][1]-325);g.querySelectorAll('line').forEach(line=>{line.setAttribute('stroke-dasharray',dist);line.setAttribute('stroke-dashoffset',dist)});});
+bonds.forEach(el=>{let d=Math.hypot(+el.getAttribute('x2')-(+el.getAttribute('x1')),+el.getAttribute('y2')-(+el.getAttribute('y1')));el.dataset.len=d;el.setAttribute('stroke-dasharray',d);el.setAttribute('stroke-dashoffset',d)});
+function currentIndex(time){return time<.5?0:time<1.9?1:time<3.2?2:time<4.3?3:4}
+function draw(time){t=clamp(time,0,DURATION);
+  const index=currentIndex(t),names=['POTENCIAL','CONVERGÊNCIA','SÍNTESE','ESTRUTURA','REPOUSO'];
+  $badge.textContent=String(index+1).padStart(2,'0')+' / '+names[index];
+  $('#phaseTitle').textContent=String(index+1).padStart(2,'0')+' / '+phases[index][0];$('#phaseDesc').textContent=phases[index][1];
+  all('.phase').forEach((btn,i)=>{btn.classList.toggle('active',i===index);btn.setAttribute('aria-current',i===index?'step':'false')});
+  $seek.value=t.toFixed(2);$('#timeLabel').innerHTML=t.toFixed(2).replace('.',',')+' <span>/ 5,00s</span>';$('#timeStat').textContent=t.toFixed(2).replace('.',',')+'s';
+  beams.forEach((g,i)=>{const lag=[0,.15,.07,.23][i],start=.50+lag,end=1.82+lag;const p=ease(phase(t,start,end));const hide=smooth(phase(t,2.14,3.1));
+    g.style.opacity=(1-hide).toFixed(3);const [sx,sy]=startPts[i];const x=mix(sx,450,p),y=mix(sy,325,p);
+    const len=Math.hypot(sx-450,sy-325);g.querySelectorAll('line').forEach(line=>line.setAttribute('stroke-dashoffset',(len*(1-p)).toFixed(2)));
+    g.querySelectorAll('.beam-tip,.beam-head').forEach(el=>{el.setAttribute('cx',x.toFixed(2));el.setAttribute('cy',y.toFixed(2))});
+    const active=smooth(phase(t,.05+i*.035,.42+i*.035));g.querySelector('.beam-head').setAttribute('r',(3.5+2.2*active).toFixed(2));
+  });
+  const appear=phase(t,1.86,3.12),scale=pop(appear),rise=ease(appear),frameScale=.04+.96*scale;
+  xWhole.setAttribute('transform',`translate(${450*(1-frameScale)} ${325*(1-frameScale)}) scale(${frameScale})`);
+  const visible=clamp(phase(t,1.86,2.75));
+  body.style.opacity=visible.toFixed(3);depth.style.opacity=visible.toFixed(3);
+  const reveal=ease(phase(t,1.90,2.72))*540;clip.setAttribute('y',(325-reveal/2).toFixed(1));clip.setAttribute('height',reveal.toFixed(1));
+  ledL.style.opacity=(.08+.55*smooth(phase(t,2.3,3.3))-.31*smooth(phase(t,4.1,5))).toFixed(2);
+  ledR.style.opacity=ledL.style.opacity;
+  const flash=Math.max(0,1-Math.abs(t-2.10)/.46);core.style.opacity=(flash*1.0).toFixed(3);
+  pulse.setAttribute('r',(6+30*smooth(phase(t,1.88,2.18))).toFixed(1));glow.setAttribute('r',(15+72*flash).toFixed(1));
+  const wr=phase(t,2.00,3.12);wave.setAttribute('r',(15+155*ease(wr)).toFixed(1));wave.style.opacity=((1-wr)*.86).toFixed(3);
+  bonds.forEach((el,i)=>{const p=ease(phase(t,3.14+i*.105,3.74+i*.105));el.setAttribute('stroke-dashoffset',(+el.dataset.len*(1-p)).toFixed(2));el.style.opacity=(p*.84).toFixed(3)});
+  nodeEls.forEach((el,i)=>{const p=pop(phase(t,3.32+i*.087,3.65+i*.087));el.setAttribute('r',(7*p).toFixed(2));el.style.opacity=(p>0?1:0);});
+  $('#background-halo').setAttribute('opacity',(.37+.18*flash).toFixed(2));
+}
+function setPlay(val){playing=val;$play.textContent=playing?'Ⅱ   Pausar':'▶   Reproduzir';$play.setAttribute('aria-label',playing?'Pausar animação':'Reproduzir animação');last=null}
+function tick(now){if(last===null)last=now;const delta=Math.min((now-last)/1000,.085);last=now;if(playing){let nt=t+delta;if(nt>=5){if(loop)nt=0;else{nt=5;setPlay(false)}}draw(nt)}raf=requestAnimationFrame(tick)}
+$play.addEventListener('click',()=>{if(t>=5)setPlay(true),draw(0);else setPlay(!playing)});
+$('#restart').addEventListener('click',()=>{draw(0);setPlay(true)});
+$seek.addEventListener('input',e=>{draw(Number(e.target.value));setPlay(false)});
+all('.phase').forEach(btn=>btn.addEventListener('click',()=>{setPlay(false);draw(Number(btn.dataset.time))}));
+$('#toggleGrid').addEventListener('click',e=>{const b=e.currentTarget;const on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',String(on));b.classList.toggle('active',on);stage.classList.toggle('hide-guides',!on)});
+$('#toggleLoop').addEventListener('click',e=>{loop=!loop;e.currentTarget.setAttribute('aria-pressed',String(loop));e.currentTarget.classList.toggle('active',loop)});
+$('#toggleTheme').addEventListener('click',e=>{const on=!stage.classList.contains('light');stage.classList.toggle('light',on);e.currentTarget.classList.toggle('active',on);e.currentTarget.setAttribute('aria-pressed',String(on));});
+document.addEventListener('keydown',e=>{if(e.target.matches('input,button,textarea,select'))return;if(e.code==='Space'){e.preventDefault();setPlay(!playing)}if(e.key==='ArrowRight'){e.preventDefault();setPlay(false);draw(t+.1)}if(e.key==='ArrowLeft'){e.preventDefault();setPlay(false);draw(t-.1)}});
+draw(playing?0:5);setPlay(playing);raf=requestAnimationFrame(tick);
+})();
+</script>
+</body></html>

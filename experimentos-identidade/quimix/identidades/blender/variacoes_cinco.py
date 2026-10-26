@@ -99,4 +99,4 @@ for theme,colors in pal.items():
  bpy.ops.render.render(write_still=True)
  print('QUIMIX_RENDER_OK',theme,scene.render.filepath)
  shutil.rmtree(baseout,ignore_errors=True)
-print('QUIMIX_FIVE_DONE')
+print('QUIMIX_FIVE_DONE — artifatos PNG/BLEND prontos para empacotamento HTML')

@@ -46,13 +46,68 @@ function getRectIntersectionArea(r1, r2) {
 }
 
 /**
- * Calcula a área total de interseção entre dois objetos, somando suas partes geométricas.
+ * Converte os sub-retângulos de um objeto em polígonos na orientação real.
+ * A rotação ocorre em torno do centro do objeto completo, inclusive em bancadas L.
+ */
+function getObjectPolygons(o) {
+  const cx = o.x + o.w / 2;
+  const cy = o.y + o.h / 2;
+  const rad = (o.rot || 0) * Math.PI / 180;
+  const cos = Math.cos(rad), sin = Math.sin(rad);
+  return getObjectRects(o).map(r => [
+    {x:r.x, y:r.y}, {x:r.x+r.w, y:r.y},
+    {x:r.x+r.w, y:r.y+r.h}, {x:r.x, y:r.y+r.h}
+  ].map(p => {
+    const dx = p.x - cx, dy = p.y - cy;
+    return {x:cx + dx*cos - dy*sin, y:cy + dx*sin + dy*cos};
+  }));
+}
+
+/** Interseção de polígonos convexos por recorte Sutherland-Hodgman. */
+function clipConvexPolygon(subject, clip) {
+  const eps = 1e-9;
+  const inside = (p,a,b) => (b.x-a.x)*(p.y-a.y) - (b.y-a.y)*(p.x-a.x) >= -eps;
+  const intersection = (p,q,a,b) => {
+    const rx=q.x-p.x, ry=q.y-p.y, sx=b.x-a.x, sy=b.y-a.y;
+    const denom=rx*sy-ry*sx;
+    if (Math.abs(denom) < eps) return {x:q.x,y:q.y};
+    const t=((a.x-p.x)*sy-(a.y-p.y)*sx)/denom;
+    return {x:p.x+t*rx,y:p.y+t*ry};
+  };
+  let output=subject;
+  for (let i=0;i<clip.length && output.length;i++) {
+    const a=clip[i], b=clip[(i+1)%clip.length], input=output;
+    output=[];
+    for (let j=0;j<input.length;j++) {
+      const curr=input[j], prev=input[(j+input.length-1)%input.length];
+      const currIn=inside(curr,a,b), prevIn=inside(prev,a,b);
+      if (currIn) {
+        if (!prevIn) output.push(intersection(prev,curr,a,b));
+        output.push(curr);
+      } else if (prevIn) output.push(intersection(prev,curr,a,b));
+    }
+  }
+  return output;
+}
+function polygonArea(points) {
+  if (points.length<3) return 0;
+  let sum=0;
+  for (let i=0;i<points.length;i++) {
+    const a=points[i],b=points[(i+1)%points.length];
+    sum+=a.x*b.y-b.x*a.y;
+  }
+  return Math.abs(sum)/2;
+}
+
+/**
+ * Área real de interseção: polígonos rotacionados e partes sem sobreposição de bancada L.
+ * Não altera a geometria serializada no JSON.
  */
 function getIntersectionArea(o1, o2) {
-  const rects1 = getObjectRects(o1);
-  const rects2 = getObjectRects(o2);
-  let total = 0;
-  for (const r1 of rects1) for (const r2 of rects2) total += getRectIntersectionArea(r1, r2);
+  let total=0;
+  for (const p1 of getObjectPolygons(o1))
+    for (const p2 of getObjectPolygons(o2))
+      total+=polygonArea(clipConvexPolygon(p1,p2));
   return total;
 }
 
@@ -70,8 +125,9 @@ function isRectFullyContained(inner, outer) {
  * Verifica se um item apoiado cabe inteiramente em uma das superfícies da base.
  */
 function isSupportedItemContainedOnBase(supported, base) {
-  const supportedRect = { x: supported.x, y: supported.y, w: supported.w, h: supported.h };
-  return getObjectRects(base).some(baseRect => isRectFullyContained(supportedRect, baseRect));
+  const needed = supported.w * supported.h;
+  const covered = getIntersectionArea(supported, base);
+  return covered >= needed - Math.max(1e-6, needed * 1e-5);
 }
 
 /**
@@ -99,11 +155,12 @@ function getExitClearanceRect(exitObj) {
  * Verifica se algum elemento sólido bloqueia a área de aproximação de uma saída.
  */
 function isExitClearanceBlocked(exitObj, objects = []) {
-  const rect = getExitClearanceRect(exitObj);
+  // Envelope didático de aproximação (1,2 m), NÃO um limite legal universal.
+  const rect = {...getExitClearanceRect(exitObj), rot:0};
   return objects.some(o => {
-    if (o.id === exitObj.id || o.hidden || !SOLID_BLOCKERS.includes(o.type)) return false;
-    if (TIPOS_APOIADOS.includes(o.type)) return false;
-    return !(o.x + o.w < rect.x || o.x > rect.x + rect.w || o.y + o.h < rect.y || o.y > rect.y + rect.h);
+    if (o.id === exitObj.id || !SOLID_BLOCKERS.includes(o.type)) return false;
+    // Ocultar não desmaterializa obstáculos; rotação é considerada pela SAT.
+    return checkRectangleOverlap(o, rect);
   });
 }
 
@@ -139,7 +196,7 @@ function checkRectangleOverlap(o1, o2) {
  * Calcula a fração da largura útil da porta bloqueada por outro objeto.
  */
 function calculateDoorBlockRatio(doorObj, blockerObj) {
-  const rad = ((doorObj.rot || 0) * Math.PI) / 180;
+  const rad = ((doorObj.rot || 0) + (doorObj.w < doorObj.h ? 90 : 0)) * Math.PI / 180;
   const doorAxis = { x: Math.cos(rad), y: Math.sin(rad) };
   const project = (corners, axis) => {
     let min = Infinity, max = -Infinity;

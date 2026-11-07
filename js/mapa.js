@@ -1774,6 +1774,8 @@ function updateUI() {
     const epiInput = $("epi");
     const isRisk = RISK_TYPES.includes(o.type);
     buildDoorConnectionField(o);
+    const doorConnection = $("doorConnection");
+    if (doorConnection) doorConnection.disabled = o.locked;
     if (epiField && epiInput) {
       epiField.classList.toggle("hidden", !isRisk);
       epiInput.value = isRisk ? (o.epi || "") : "";
@@ -2341,7 +2343,7 @@ on("applyProps", "click", () => {
     }
   });
 
-  if (state.selectedObjects.length === 1 && state.selectedObjects[0].type === "door") {
+  if (state.selectedObjects.length === 1 && state.selectedObjects[0].type === "door" && !state.selectedObjects[0].locked) {
     state.selectedObjects[0].connectionAreaId = $("doorConnection")?.value || null;
     syncAreaConnections();
   }

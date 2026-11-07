@@ -159,8 +159,9 @@ function isExitClearanceBlocked(exitObj, objects = []) {
   const rect = {...getExitClearanceRect(exitObj), rot:0};
   return objects.some(o => {
     if (o.id === exitObj.id || !SOLID_BLOCKERS.includes(o.type)) return false;
-    // Ocultar não desmaterializa obstáculos; rotação é considerada pela SAT.
-    return checkRectangleOverlap(o, rect);
+    // Testar a forma real (inclusive o vão livre de bancadas em L), com rotação.
+    // Ocultar no Canvas não elimina a obstrução física.
+    return getIntersectionArea(o, rect) > 1e-8;
   });
 }
 

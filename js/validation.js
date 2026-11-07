@@ -3,7 +3,7 @@
  */
 function validateObject(o, objects, room) {
   const problems = [];
-  if (o.hidden) return { valid: true, problems: [] };
+  // Visibilidade é somente gráfica: objetos físicos ocultos continuam na análise.
 
   const corners = getObjectCorners(o);
   const isOutOfBounds = corners.some(p =>
@@ -16,7 +16,7 @@ function validateObject(o, objects, room) {
   const isZone = CIRCULATION.includes(o.type);
 
   for (const other of objects) {
-    if (other.id === o.id || other.hidden) continue;
+    if (other.id === o.id) continue;
 
     const overlaps = checkRectangleOverlap(o, other);
     if (!overlaps) continue;
@@ -50,25 +50,21 @@ function validateObject(o, objects, room) {
 
     if (isFurnitureOrEquip && isOtherExit) {
       const blockRatio = calculateDoorBlockRatio(other, o);
-      if (blockRatio > 0.8) {
-        problems.push(`Bloqueia mais de 80% da saída (${(blockRatio * 100).toFixed(0)}%) — Violação da NR-23.`);
-      } else if (blockRatio > 0) {
-        problems.push(`Sobrepõe a rota de fuga/saída (${(blockRatio * 100).toFixed(0)}%).`);
+      if (blockRatio > 0) {
+        problems.push("Obstrução geométrica de saída/passagem — verificar desobstrução (NR-23, item 23.3.4.1).");
       }
     }
 
     if (isExit && isOtherFurnitureOrEquip) {
       const blockRatio = calculateDoorBlockRatio(o, other);
-      if (blockRatio > 0.8) {
-        problems.push(`Saída bloqueada em mais de 80% por ${TYPES[other.type]?.[0] || other.type} — Violação da NR-23.`);
-      } else if (blockRatio > 0) {
-        problems.push(`Saída desobstruída parcialmente por ${TYPES[other.type]?.[0] || other.type}.`);
+      if (blockRatio > 0) {
+        problems.push(`Saída/passagem sobreposta por ${TYPES[other.type]?.[0] || other.type} — verificar desobstrução (NR-23, item 23.3.4.1).`);
       }
     }
   }
 
   if (isExit && isExitClearanceBlocked(o, objects)) {
-    problems.push('Objeto na área de aproximação da saída — rota de fuga obstruída (NR-23).');
+    problems.push('Alerta geométrico: objeto na zona didática de aproximação da saída (1,2 m de referência, sem equivalência normativa universal).');
   }
 
   return { valid: problems.length === 0, problems };

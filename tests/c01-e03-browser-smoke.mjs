@@ -139,6 +139,7 @@ async function mobile(width){
     assert.equal(await page.locator('#btnToggleTools').getAttribute('aria-expanded'),'false');
     await page.locator('#btnToggleProps').click();
     assert.equal(await page.locator('#btnToggleProps').getAttribute('aria-expanded'),'true');
+    await page.locator('#panelTab-layers').click();
     assert.match(await page.locator('#totalObjectsBadge').innerText(),/1 itens/);
     await page.locator('#panelTab-properties').click();
     assert.ok(await page.locator('#x').isVisible());

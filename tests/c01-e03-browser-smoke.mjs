@@ -72,6 +72,21 @@ async function desktop(){
     assert.match(await page.locator('#totalObjectsBadge').innerText(),/3 itens/);
     mark('ocultação preserva inventário e resumo dos riscos');
 
+    // O usuário pode guardar uma revisão e recuperá-la sem alterar o JSON v4.
+    await page.locator('#librarySaveRevision').click();
+    await page.waitForFunction(async()=>{
+      try{
+        const id=localStorage.getItem('mapa_riscos_library_active_id');
+        if(!id || !window.MapaProjectLibrary)return false;
+        const [item,versions]=await Promise.all([
+          window.MapaProjectLibrary.load(id),
+          window.MapaProjectLibrary.revisions(id)
+        ]);
+        return !!item && item.payload.areas[0].objetos.length===3 && versions.length>=1;
+      }catch{return false;}
+    },null,{timeout:15000});
+    mark('biblioteca IndexedDB e revisão explícita do projeto');
+
     const [download]=await Promise.all([
       page.waitForEvent('download',{timeout:15000}),
       page.locator('#save').click()
@@ -102,6 +117,25 @@ async function desktop(){
     assert.equal(await page.locator('#check-exit').evaluate(e=>e.classList.contains('ok')),false);
     assert.match(await page.locator('#complianceSection').innerText(),/não uma certificação normativa/i);
     mark('saída obstruída reprova critério didático, sem alegar laudo');
+    await page.screenshot({path:path.join(out,browserName+'-desktop-relatorio.png'),fullPage:true});
+
+    // Importação deve respeitar confirmação: cancelar preserva o projeto, aceitar restaura JSON.
+    const importFile=async()=>{
+      const chooserPromise=page.waitForEvent('filechooser',{timeout:15000});
+      await page.locator('#load').click();
+      const chooser=await chooserPromise;
+      await chooser.setFiles({name:'projeto-c01-e03.json',mimeType:'application/json',buffer:Buffer.from(raw,'utf8')});
+      await page.locator('#confirmModal').waitFor({state:'visible',timeout:15000});
+    };
+    assert.equal((await getState(page)).count,4);
+    await importFile();
+    await page.locator('#cancelConfirm').click();
+    assert.equal((await getState(page)).count,4,'Cancelar importação preserva os objetos');
+    await importFile();
+    await page.locator('#confirmAction').click();
+    await page.waitForFunction(()=>window.MAPA_RUNTIME.state.objects.length===3);
+    assert.equal((await getState(page)).objects.find(o=>o.type==='chemical').hidden,true);
+    mark('importação JSON v4 — cancelar e confirmar sem perda de dados');
 
     if(browserName==='chromium'){
       const sw=await page.evaluate(async()=>{
@@ -111,7 +145,7 @@ async function desktop(){
       });
       assert.ok(sw,'PWA não registrou Service Worker em localhost');
       await page.reload({waitUntil:'domcontentloaded'});
-      await page.waitForFunction(()=>navigator.serviceWorker?.controller!==null);
+      await page.waitForFunction(()=>Boolean(navigator.serviceWorker?.controller));
       await context.setOffline(true);
       await page.reload({waitUntil:'domcontentloaded'});
       assert.ok(await page.locator('#homeNewProject').isVisible());
@@ -153,6 +187,7 @@ async function mobile(width){
       'Rolagem horizontal inesperada na viewport '+width+': '+JSON.stringify(dims));
     assert.ok(dims.rect.left>=-3 && dims.rect.right<=dims.viewport+3,
       'Drawer direito fora da viewport: '+JSON.stringify(dims));
+    await page.screenshot({path:path.join(out,browserName+'-mobile-'+width+'-painel.png'),fullPage:true});
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('#btnToggleProps').getAttribute('aria-expanded'),'false');
     mark('painéis, paleta, abas, foco/fechamento e largura '+width+'px');

@@ -65,4 +65,45 @@ assert.match(mapa,/const activeObjects=area\.objetos;/,
 assert.match(read('index.html'),/Indicadores de preenchimento, não uma certificação normativa/,
   'Placar não pode se apresentar como laudo');
 assert.equal(Object.keys(sandbox.TYPES).length,23);
+
+// A caixa externa da bancada L cobre um espaço fisicamente vazio.
+// Um objeto nessa região não pode causar falsa colisão ou falso bloqueio.
+const emptyCornerDoor = {id:'saida-canto',type:'door',x:3,y:3,w:.9,h:.12,rot:0};
+const emptyCornerL = {id:'l-canto',type:'benchL',x:0,y:0,w:2,h:2,rot:0};
+assert.equal(sandbox.isExitClearanceBlocked(emptyCornerDoor,[emptyCornerDoor,emptyCornerL]),false);
+assert.equal(sandbox.validateObject(emptyCornerL,[emptyCornerDoor,emptyCornerL],room).valid,true);
+
+// A nota de saída deve avaliar a validade real do objeto, mesmo com obstáculos ocultos.
+const calcStart = mapa.indexOf('function calculateCompliance(area){');
+const calcEnd = mapa.indexOf('/**\n * Atualiza visualmente os dez checks',calcStart);
+assert.ok(calcStart >= 0 && calcEnd > calcStart,'Função de cálculo de avaliação não encontrada');
+const area = {id:'laboratorio',dimensoes:room,objetos:[door,bench]};
+const scoreContext = {
+  state:{areaAtiva:'outra-area'},
+  EXITS:['door','exit'],
+  RISK_TYPES:[...sandbox.RISK_TYPES],
+  isObjectValid:(obj,objects)=>sandbox.validateObject(obj,objects,area.dimensoes)
+};
+vm.createContext(scoreContext);
+vm.runInContext(mapa.slice(calcStart,calcEnd)+'\nglobalThis.calculateCompliance=calculateCompliance;',scoreContext);
+const obstructedScore=scoreContext.calculateCompliance(area);
+assert.equal(obstructedScore.checks['check-exit'],false,
+  'Uma saída obstruída não pode receber aprovação didática');
+assert.equal(scoreContext.state.areaAtiva,'outra-area',
+  'O cálculo não pode mudar permanentemente a área ativa');
+const hiddenChemical={id:'r-oculto',type:'chemical',x:5,y:2,w:1,h:1,rot:0,hidden:true,epi:'Óculos'};
+area.objetos=[door,hiddenChemical];
+const safeScore=scoreContext.calculateCompliance(area);
+assert.equal(safeScore.checks['check-exit'],true);
+assert.equal(safeScore.checks['check-chemical-bio'],true,
+  'A ocultação visual não pode remover riscos do inventário');
+assert.equal(safeScore.checks['check-epi'],true,
+  'EPIs de riscos ocultos devem continuar inventariados');
+
+// Proteção do vínculo de porta é uma regra de domínio, não apenas disabled do seletor.
+assert.match(mapa,/state\.selectedObjects\[0\]\.type === "door" && !state\.selectedObjects\[0\]\.locked/,
+  'A ligação de uma porta bloqueada não pode ser modificada');
+assert.match(mapa,/doorConnection\.disabled = o\.locked/,
+  'O seletor visual deve refletir a restrição de edição');
+
 console.log('C01/E03: contratos de inventário, geometria e segurança OK');

@@ -18,7 +18,11 @@ function validateObject(o, objects, room) {
   for (const other of objects) {
     if (other.id === o.id) continue;
 
-    const overlaps = checkRectangleOverlap(o, other);
+    // A caixa externa de bancadas L inclui um vazio: não confundir esse espaço
+    // com matéria ocupada. Para formas retangulares, manter o teste SAT leve.
+    const overlaps = (o.type === "benchL" || other.type === "benchL")
+      ? getIntersectionArea(o, other) > 1e-8
+      : checkRectangleOverlap(o, other);
     if (!overlaps) continue;
 
     const isOtherFurnitureOrEquip = SOLID_BLOCKERS.includes(other.type);

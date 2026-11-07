@@ -43,10 +43,11 @@ jobs:
         run: node tests/c01-e03-browser-smoke.mjs "${{ matrix.browser }}"
         env:
           MRL_TEST_URL: http://127.0.0.1:8765/
-      - name: Guardar capturas quando houver falha
-        if: failure()
+      - name: Guardar evidências visuais e capturas de falhas
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: navegador-${{ matrix.browser }}-falhas
+          name: navegador-${{ matrix.browser }}-evidencias
           path: qa/browser-artifacts/
-          if-no-files-found: ignore
+          if-no-files-found: warn
+          retention-days: 14

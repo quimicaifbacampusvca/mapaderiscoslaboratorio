@@ -565,10 +565,9 @@ function getObjectHandles(o) {
 /**
  * Identifica se o ponto informado está sobre alguma alça de manipulação do objeto.
  */
-function hitTestHandle(sx, sy, o) {
+function hitTestHandle(sx, sy, o, radius = 11) {
   if (!o || o.locked || o.hidden) return null;
   const handles = getObjectHandles(o);
-  const radius = 10;
   for (let k in handles) {
     const h = handles[k];
     if (Math.hypot(sx - h.x, sy - h.y) <= radius) return k;
@@ -1066,7 +1065,7 @@ function drawSelection(o, showHandles = true) {
         ctx.fillStyle = "#ffffff";
         ctx.strokeStyle = "#d4a45b";
         ctx.lineWidth = 2;
-        ctx.rect(hPos.x - 4, hPos.y - 4, 8, 8);
+        ctx.rect(hPos.x - 5, hPos.y - 5, 10, 10);
         ctx.fill(); ctx.stroke();
       }
     });
@@ -1144,7 +1143,7 @@ canvas.addEventListener("pointerdown", e => {
 
   if (state.selectedObjects.length === 1 && !state.selectedObjects[0].locked) {
     const singleObj = state.selectedObjects[0];
-    const handle = hitTestHandle(p.x, p.y, singleObj);
+    const handle = hitTestHandle(p.x, p.y, singleObj, e.pointerType === "touch" ? 18 : 11);
     if (handle) {
       state.pendingHistory = true;
       const worldP = screenToWorld(p.x, p.y);
@@ -1156,8 +1155,10 @@ canvas.addEventListener("pointerdown", e => {
         startP: worldP,
         origW: singleObj.w, origH: singleObj.h,
         origX: singleObj.x, origY: singleObj.y,
-        origRot: singleObj.rot || 0
+        origRot: singleObj.rot || 0,
+        pointerId: e.pointerId
       };
+      canvas.setPointerCapture?.(e.pointerId);
       return;
     }
   }
@@ -1198,8 +1199,10 @@ canvas.addEventListener("pointerdown", e => {
           startWorldX: o.x,
           startWorldY: o.y
         })),
-        startWorldP: q
+        startWorldP: q,
+        pointerId: e.pointerId
       };
+      canvas.setPointerCapture?.(e.pointerId);
     }
   } else {
     if (!isCtrl) {
@@ -1240,6 +1243,7 @@ canvas.addEventListener("pointermove", e => {
   }
 
   if (state.drag) {
+    if (state.drag.pointerId !== undefined && state.drag.pointerId !== e.pointerId) return;
     if (state.pendingHistory) {
       const dxScreen = p.x - state.drag.startScreenP.x;
       const dyScreen = p.y - state.drag.startScreenP.y;
@@ -1272,22 +1276,27 @@ canvas.addEventListener("pointermove", e => {
       o.rot = state.snap ? Math.round(deg / 15) * 15 : deg;
     } else if (state.drag.type === "resize") {
       const o = state.drag.o;
-      const h = state.drag.handle;
-      const dw = q.x - state.drag.startP.x;
-      const dh = q.y - state.drag.startP.y;
-
-      if (h.includes("e")) o.w = Math.max(0.1, snapVal(state.drag.origW + dw));
-      if (h.includes("s")) o.h = Math.max(0.1, snapVal(state.drag.origH + dh));
-      if (h.includes("w")) {
-        const nw = Math.max(0.1, snapVal(state.drag.origW - dw));
-        o.x = state.drag.origX + (state.drag.origW - nw);
-        o.w = nw;
-      }
-      if (h.includes("n")) {
-        const nh = Math.max(0.1, snapVal(state.drag.origH - dh));
-        o.y = state.drag.origY + (state.drag.origH - nh);
-        o.h = nh;
-      }
+      const handle = state.drag.handle;
+      // Transformar o deslocamento em eixos LOCAIS: necessário para objetos girados.
+      // O centro acompanha metade da variação em cada eixo para ancorar a borda oposta.
+      const rotation = (state.drag.origRot || 0) * Math.PI / 180;
+      const cos = Math.cos(rotation), sin = Math.sin(rotation);
+      const worldDx = q.x - state.drag.startP.x;
+      const worldDy = q.y - state.drag.startP.y;
+      const localDx = worldDx * cos + worldDy * sin;
+      const localDy = -worldDx * sin + worldDy * cos;
+      const sx = handle.includes("e") ? 1 : handle.includes("w") ? -1 : 0;
+      const sy = handle.includes("s") ? 1 : handle.includes("n") ? -1 : 0;
+      const newW = sx ? Math.max(0.1, snapVal(state.drag.origW + sx * localDx)) : state.drag.origW;
+      const newH = sy ? Math.max(0.1, snapVal(state.drag.origH + sy * localDy)) : state.drag.origH;
+      const centerDx = sx * (newW - state.drag.origW) / 2;
+      const centerDy = sy * (newH - state.drag.origH) / 2;
+      const cx = state.drag.origX + state.drag.origW / 2;
+      const cy = state.drag.origY + state.drag.origH / 2;
+      o.w = newW;
+      o.h = newH;
+      o.x = cx + centerDx * cos - centerDy * sin - newW / 2;
+      o.y = cy + centerDx * sin + centerDy * cos - newH / 2;
       updateGuides(o);
     }
 
@@ -1297,6 +1306,8 @@ canvas.addEventListener("pointermove", e => {
 });
 
 canvas.addEventListener("pointerup", e => {
+  if (state.drag && state.drag.pointerId !== undefined && state.drag.pointerId !== e.pointerId) return;
+  if (canvas.hasPointerCapture?.(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
   if(state.viewMode==="overview"&&state.overviewDrag){if(state.overviewDrag.moved){updateUI();scheduleAutoSave();}state.overviewDrag=null;}
   state.pan = false;
   state.guides = [];
@@ -1347,6 +1358,18 @@ canvas.addEventListener("pointerup", e => {
   } else {
     state.pendingHistory = false;
   }
+  requestDraw();
+});
+
+canvas.addEventListener("pointercancel", e => {
+  if (state.drag && state.drag.pointerId !== undefined && state.drag.pointerId !== e.pointerId) return;
+  state.drag = null;
+  state.pendingHistory = false;
+  state.pan = false;
+  state.marquee = null;
+  state.guides = [];
+  updateUI();
+  scheduleAutoSave();
   requestDraw();
 });
 

@@ -88,8 +88,8 @@ try{
     await cards.first().click();
     await page.locator('#confirmModal').waitFor({state:'visible'});
     assert.ok(await page.locator('#confirmBackup').isVisible());
-    assert.equal(await page.evaluate(()=>document.activeElement.closest('#confirmModal')!==null),true,
-      'Foco fora do diálogo de confirmação');
+    await page.waitForFunction(()=>Boolean(document.activeElement?.closest('#confirmModal')),
+      null,{timeout:5000});
     await page.keyboard.press('Escape');
     await page.locator('#confirmModal').waitFor({state:'hidden'});
     assert.equal((await state(page)).areas[0].objs.length,1,'Escape descartou mapa');

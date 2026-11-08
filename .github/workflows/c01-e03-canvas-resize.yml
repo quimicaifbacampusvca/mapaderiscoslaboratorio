@@ -1,0 +1,56 @@
+name: C01 E03 - redimensionamento direto Canvas
+
+on:
+  push:
+    branches:
+      - 'fix/c01-e03-redimensionamento-canvas'
+  pull_request:
+    branches:
+      - fix/c01-e03-inventario-restricoes
+
+permissions:
+  contents: read
+
+jobs:
+  editar-e-redimensionar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar sintaxe e contratos E03
+        run: |
+          node --check js/mapa.js
+          node --check tests/c01-e03-canvas-resize-browser.mjs
+          node tests/c01-e03-inventario-restricoes.mjs
+      - name: Instalar Playwright
+        run: npm install --no-save --no-package-lock playwright@1.65.0
+      - name: Preparar browser
+        run: npx playwright install --with-deps "${{ matrix.browser }}"
+      - name: Servir aplicativo
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/mrl-resize-server.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:8765/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/mrl-resize-server.log
+          exit 1
+      - name: Homologar alças de redimensionamento, rotação e bloqueio
+        run: node tests/c01-e03-canvas-resize-browser.mjs "${{ matrix.browser }}"
+        env:
+          MRL_TEST_URL: http://127.0.0.1:8765/
+      - name: Salvar capturas em falhas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: canvas-resize-${{ matrix.browser }}
+          path: qa/browser-artifacts/
+          if-no-files-found: ignore
+          retention-days: 14

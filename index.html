@@ -389,8 +389,8 @@
                 <output id="rotVal" aria-live="polite">0°</output>
               </div>
             </label>
-            <label id="epiField" for="epi" class="hidden">EPI recomendado (NR-6)
-              <input id="epi" type="text" maxlength="160" placeholder="Ex.: luvas nitrílicas, óculos de proteção">
+            <label id="epiField" for="epi" class="hidden">Registro de EPI (sujeito à avaliação da atividade — NR-6)
+              <input id="epi" type="text" maxlength="160" placeholder="Registre o EPI avaliado para esta atividade">
             </label>
             <label id="doorConnectionField" for="doorConnection" class="hidden">Conectar porta a
               <select id="doorConnection" aria-label="Área conectada à porta"></select>
@@ -423,7 +423,7 @@
             <div class="check" id="check-ventilation"><span></span> Capela ou janela representada</div>
             <div class="check" id="check-ergonomic"><span></span> Bancadas ou pias representadas</div>
             <div class="check" id="check-signaling"><span></span> Circulação e riscos identificados</div>
-            <div class="check" id="check-epi"><span></span> Sugestão de EPI registrada para um risco</div>
+            <div class="check" id="check-epi"><span></span> Registro de EPI associado a um risco (não valida sua adequação)</div>
           </div>
         </section>
       </div></aside><div id="mobilePanelBackdrop" class="mobile-panel-backdrop" hidden></div></main>
@@ -431,7 +431,7 @@
     <!-- CONTAINER DE TOASTS -->
     <div id="toastContainer" class="toast-container" aria-live="off" aria-label="Notificações da aplicação"></div>
 
-    <!-- RELATÓRIO GLOBAL DE CONFORMIDADE -->
+    <!-- RELATÓRIO GLOBAL DE REVISÃO DIDÁTICA -->
     <div id="complianceReportModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="complianceReportTitle">
       <div class="modal-card report-modal-card">
         <div class="modal-header">

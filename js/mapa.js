@@ -1702,7 +1702,7 @@ function updateUIInputsOnly() {
  * Calcula e atualiza os estados visualmente concluído/ativo/pendente do stepper.
  */
 function updateStepper() {
-  const activeObjects = state.objects.filter(o => !o.hidden);
+  const activeObjects = state.objects; // A ocultação modifica só o desenho, não a existência física.
   const hasStructural = activeObjects.some(o => ["wall", "door", "window"].includes(o.type));
   const hasRisk = activeObjects.some(o => RISK_TYPES.includes(o.type));
   const complianceBadge = $("compliance-badge");
@@ -1731,7 +1731,7 @@ function updateStepper() {
   if (hint) {
     hint.textContent = !hasStructural ? "Comece definindo o ambiente e adicionando estrutura."
       : !hasRisk ? "Adicione pelo menos um risco ao mapa."
-      : !allChecksOk ? "Revise os critérios de conformidade para concluir."
+      : !allChecksOk ? "Revise os itens de preenchimento didático para concluir."
       : "Mapa preenchido: 10 verificações didáticas registradas (não é laudo técnico).";
   }
 }
@@ -1803,7 +1803,7 @@ function updateUI() {
       epiField.classList.toggle("hidden", !isRisk);
       epiInput.value = isRisk ? (o.epi || "") : "";
       epiInput.disabled = !isRisk || o.locked;
-      epiInput.placeholder = isRisk ? (DEFAULT_EPI_BY_RISK[o.type] || "Informe o EPI recomendado") : "";
+      epiInput.placeholder = isRisk ? (DEFAULT_EPI_BY_RISK[o.type] || "Descreva o EPI avaliado para a atividade") : "";
     }
 
     const isLocked = o.locked;
@@ -2124,7 +2124,7 @@ function updateRiskSummary() {
 }
 
 /**
- * Calcula os dez critérios de conformidade para uma área específica.
+ * Calcula dez indicadores didáticos de preenchimento, sem atestar conformidade legal.
  */
 function calculateCompliance(area){
   if(!area)return {okCount:0,total:10,checks:{}};
@@ -2153,7 +2153,7 @@ function calculateCompliance(area){
   }finally{state.areaAtiva=prev;}
 }
 /**
- * Atualiza visualmente os dez checks normativos e o badge de pontuação.
+ * Atualiza visualmente os dez checks didáticos de preenchimento.
  */
 function updateComplianceCheck(){
   const result=calculateCompliance(activeArea());
@@ -2163,7 +2163,7 @@ function updateComplianceCheck(){
 }
 
 /**
- * Abre o relatório consolidado de conformidade do projeto.
+ * Abre o relatório consolidado de revisão didática do projeto.
  */
 function openComplianceReport(){
   const modal=$("complianceReportModal"); if(!modal)return;

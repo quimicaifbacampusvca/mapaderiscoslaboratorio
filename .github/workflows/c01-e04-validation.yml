@@ -1,0 +1,77 @@
+name: C01 E04 - regras normativas e revisao didatica
+
+on:
+  push:
+    branches:
+      - 'fix/c01-e04-*'
+  pull_request:
+    branches:
+      - fix/c01-e03-inventario-restricoes
+
+permissions:
+  contents: read
+
+jobs:
+  contratos-node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Sintaxe JavaScript
+        run: |
+          set -euo pipefail
+          for file in js/*.js tests/*.mjs; do node --check "$file"; done
+      - name: Regressões C01 E03 e C01 E04
+        run: |
+          set -euo pipefail
+          for file in \
+            tests/core-smoke.mjs \
+            tests/frontend-integrity-smoke.mjs \
+            tests/no-login-smoke.mjs \
+            tests/ui-bindings-smoke.mjs \
+            tests/uiux-*.mjs \
+            tests/c01-e03-inventario-restricoes.mjs \
+            tests/c01-e04-normative-contract.mjs; do
+            echo "Executando $file"
+            node "$file"
+          done
+
+  interface-navegadores:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar Playwright
+        run: npm install --no-save --no-package-lock playwright@1.65.0
+      - name: Preparar navegador
+        run: npx playwright install --with-deps "${{ matrix.browser }}"
+      - name: Servir app
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/mrl-server.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:8765/ > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/mrl-server.log
+          exit 1
+      - name: Regressão de interface C01 E03
+        run: |
+          node tests/c01-e03-browser-smoke.mjs "${{ matrix.browser }}"
+          node tests/c01-e03-a11y-browser.mjs "${{ matrix.browser }}"
+          node tests/c01-e03-h01-h10-browser.mjs "${{ matrix.browser }}"
+          node tests/c01-e03-responsive-matrix.mjs "${{ matrix.browser }}"
+          if [ -f tests/c01-e03-canvas-resize-browser.mjs ]; then
+            node tests/c01-e03-canvas-resize-browser.mjs "${{ matrix.browser }}"
+          fi
+        env:
+          MRL_TEST_URL: http://127.0.0.1:8765/

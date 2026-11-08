@@ -108,3 +108,13 @@ Arquivos inspecionados: `js/validation.js`, `js/geometry.js`, `js/mapa.js` e `in
 **Caminho escolhido:** continuar com indicadores didáticos e alertas geométricos, sem implementar cálculo automático de lotação, larguras, dimensionamento de extintores, aprovação de sinalização ou classificação de carga de incêndio neste encontro.
 
 **Próximo passo:** consolidar o aceite interno do C01/E04 no PR #6 (rascunho), sem integrar ao `main` e sem marcar a inspeção presencial como concluída.
+
+## 8. Passo 5 — Encerramento e transição (08/11/2026)
+
+**Concluído o escopo documental e de regressão do C01/E04**, após conferência de evidências e das exceções normativas. Não houve inspeção presencial ou emissão de certificado/laudo.
+
+**Relatório de aceite interno:** [ENCERRAMENTO-C01-E04-2026-11-08.md](ENCERRAMENTO-C01-E04-2026-11-08.md). Inclui matriz de oito critérios, evidências de execução, explicação da falha documental já resolvida, oito pendências técnicas e insumos para o C01/E05.
+
+**Gates de integração:** PR #6 permanece em rascunho e é dependente do PR #3. Não integrar à `main` sem revisão técnica, homologação necessária e autorização expressa.
+
+**Estado dos riscos reais:** `não verificado` até avaliação contextual da instalação. Os dez indicadores didáticos não são instrumento de aprovação normativa.

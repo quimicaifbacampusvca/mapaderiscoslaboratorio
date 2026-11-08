@@ -51,6 +51,10 @@ jobs:
         run: node tests/c01-e03-h01-h10-browser.mjs "${{ matrix.browser }}"
         env:
           MRL_TEST_URL: http://127.0.0.1:8765/
+      - name: Matriz responsiva de acessibilidade — 5 viewports e 2 perfis
+        run: node tests/c01-e03-responsive-matrix.mjs "${{ matrix.browser }}"
+        env:
+          MRL_TEST_URL: http://127.0.0.1:8765/
       - name: Guardar evidências visuais e capturas de falhas
         if: always()
         uses: actions/upload-artifact@v4

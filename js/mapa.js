@@ -2130,7 +2130,7 @@ function calculateCompliance(area){
   }finally{state.areaAtiva=prev;}
 }
 /**
- * Atualiza visualmente os dez indicadores didáticos de preenchimento.
+ * Atualiza visualmente os dez checks didáticos de preenchimento.
  */
 function updateComplianceCheck(){
   const result=calculateCompliance(activeArea());

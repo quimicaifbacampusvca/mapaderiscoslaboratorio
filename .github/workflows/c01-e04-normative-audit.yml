@@ -1,0 +1,40 @@
+name: C01 E04 - bases normativas e regressao
+
+on:
+  push:
+    branches:
+      - 'audit/c01-e04-*'
+  pull_request:
+    branches:
+      - 'fix/c01-e03-*'
+
+permissions:
+  contents: read
+
+jobs:
+  regras-e-regressoes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe JavaScript
+        run: |
+          set -euo pipefail
+          for file in js/*.js tests/*.mjs; do node --check "$file"; done
+      - name: Testes de regressão anteriores e C01 E04
+        run: |
+          set -euo pipefail
+          for file in \
+            tests/core-smoke.mjs \
+            tests/frontend-integrity-smoke.mjs \
+            tests/no-login-smoke.mjs \
+            tests/ui-bindings-smoke.mjs \
+            tests/uiux-*.mjs \
+            tests/c01-e03-inventario-restricoes.mjs \
+            tests/c01-e04-normas-didatica.mjs; do
+            echo "Executando $file"
+            node "$file"
+          done

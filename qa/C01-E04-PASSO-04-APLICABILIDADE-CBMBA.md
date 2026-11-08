@@ -28,6 +28,12 @@ A **Tabela 1 de ocupação do Decreto Estadual 16.302/2015** identifica **D-4** 
 | **IT 42/2024**, itens **1 e 2** e anexos | Procedimentos administrativos de **Projeto Técnico Simplificado** para edificações elegíveis segundo risco e outras condições. | Regularização anterior, ocupação, risco, área, altura, atividade e tipo de procedimento aplicável. | Não criar botão ou pontuação de “AVCB automático”; somente referência de orientação ao responsável técnico. |
 | **IT 04/2016** (símbolos gráficos); **IT 18/2017** (iluminação de emergência); **IT 16/2018** (plano de emergência) | Relevantes para documentação gráfica e rotas, conforme condições próprias. | Layout de iluminação, sinalização efetiva, brigada, instruções de evacuação, planta técnica completa. | **Backlog** de análise de aplicabilidade; não implementado como verificação no C01/E04. |
 
+### Exceções e limites que exigem contexto
+
+- **IT 21/2017, item 5.2.1.5:** a instrução prevê a possibilidade de uma única unidade extintora de pó ABC para determinadas edificações, mezaninos e pavimentos com área construída inferior a 50 m². **Não presumir** que a área isolada de uma sala laboratorial satisfaça essa hipótese nem deixar de verificar riscos específicos.
+- **IT 32/2021, item 2.4:** `750 m²` refere-se à **área de armazenagem** de produtos perigosos nas condições do dispositivo, não à área total do laboratório ou à classificação de segurança de produtos. Isenção **desta instrução** não elimina as demais obrigações pertinentes.
+- **Política de implementação:** não implementar valores condicionados, exceções ou certificação enquanto faltarem os dados verificáveis do edifício e a validação da aplicabilidade por responsável técnico.
+
 ### Referências oficiais diretas
 
 - [IT 11/2016 — Saídas de emergência](https://www.ba.gov.br/bombeiros/sites/site-cbmba/files/migracao_2024/arquivos/files/2025-09/it_11-2016_-_saidas_de_emergencia.pdf)

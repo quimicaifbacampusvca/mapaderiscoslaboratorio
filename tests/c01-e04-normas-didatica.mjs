@@ -47,4 +47,18 @@ for(const item of ['23.3.4.1','5.3.1(b)','IT 11/2016',
 }
 assert.match(doc,/não são calculados|NÃO são calculados|não é calculad/i,
   'Limitação de cálculo normativo deve estar explícita');
+const passo4=read('qa/C01-E04-PASSO-04-APLICABILIDADE-CBMBA.md');
+for(const norma of ['IT 11/2016','IT 20/2017','IT 21/2017',
+ 'IT 14/2026','IT 32/2021','IT 42/2024','16.302/2015']){
+ assert.ok(passo4.includes(norma),'Falta instrução/decreto na matriz C01/E04: '+norma);
+}
+for(const check of ['D-4','E-1','5.5.1.2','5.2.1.5','2.4','750 m²',
+ 'área de armazenagem','não implementar','10/10']){
+ assert.ok(passo4.toLowerCase().includes(check.toLowerCase()),
+   'Falta ressalva contextual em passo 4: '+check);
+}
+assert.match(doc,/C01-E04-PASSO-04-APLICABILIDADE-CBMBA\.md/,
+ 'Contrato do C01/E04 deve apontar para o detalhamento do passo 4');
+assert.doesNotMatch(app,/Revise os critérios de conformidade para concluir/,
+ 'Texto de conformidade legal não pode retornar ao stepper');
 console.log('C01/E04: fontes, limites e terminologia didática verificados');

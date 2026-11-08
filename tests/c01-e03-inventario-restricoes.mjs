@@ -75,7 +75,7 @@ assert.equal(sandbox.validateObject(emptyCornerL,[emptyCornerDoor,emptyCornerL],
 
 // A nota de saída deve avaliar a validade real do objeto, mesmo com obstáculos ocultos.
 const calcStart = mapa.indexOf('function calculateCompliance(area){');
-const calcEnd = mapa.indexOf('/**\n * Atualiza visualmente os dez checks',calcStart);
+const calcEnd = mapa.indexOf('function updateComplianceCheck(){',calcStart);
 assert.ok(calcStart >= 0 && calcEnd > calcStart,'Função de cálculo de avaliação não encontrada');
 const area = {id:'laboratorio',dimensoes:room,objetos:[door,bench]};
 const scoreContext = {

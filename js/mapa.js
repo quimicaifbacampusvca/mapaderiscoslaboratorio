@@ -1708,7 +1708,7 @@ function updateStepper() {
   if (hint) {
     hint.textContent = !hasStructural ? "Comece definindo o ambiente e adicionando estrutura."
       : !hasRisk ? "Adicione pelo menos um risco ao mapa."
-      : !allChecksOk ? "Revise os critérios de conformidade para concluir."
+      : !allChecksOk ? "Revise os indicadores didáticos de preenchimento para concluir."
       : "Mapa preenchido: 10 verificações didáticas registradas (não é laudo técnico).";
   }
 }
@@ -2101,7 +2101,7 @@ function updateRiskSummary() {
 }
 
 /**
- * Calcula os dez critérios de conformidade para uma área específica.
+ * Calcula dez indicadores didáticos de preenchimento para uma área específica.
  */
 function calculateCompliance(area){
   if(!area)return {okCount:0,total:10,checks:{}};
@@ -2130,7 +2130,7 @@ function calculateCompliance(area){
   }finally{state.areaAtiva=prev;}
 }
 /**
- * Atualiza visualmente os dez checks normativos e o badge de pontuação.
+ * Atualiza visualmente dez indicadores didáticos, sem certificação normativa.
  */
 function updateComplianceCheck(){
   const result=calculateCompliance(activeArea());
@@ -2140,7 +2140,7 @@ function updateComplianceCheck(){
 }
 
 /**
- * Abre o relatório consolidado de conformidade do projeto.
+ * Abre o relatório consolidado de revisão didática do projeto.
  */
 function openComplianceReport(){
   const modal=$("complianceReportModal"); if(!modal)return;

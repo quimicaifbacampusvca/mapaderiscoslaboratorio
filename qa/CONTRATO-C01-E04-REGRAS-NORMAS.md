@@ -94,3 +94,17 @@ Arquivos inspecionados: `js/validation.js`, `js/geometry.js`, `js/mapa.js` e `in
 4. Alertas de saídas continuam relevantes sem atribuir à NR-23 valores heurísticos (1,2 m, 40% ou 80%).
 5. Testes automatizados de regressão no branch, preservando os testes C01/E03.
 6. **Sem merge** no `main` ou no PR #3 antes da homologação expressa.
+
+## 7. Passo 4 — conferência aprofundada das ITs estaduais (08/11/2026)
+
+**Pesquisa documental concluída neste encontro.** Foi realizada leitura das versões oficiais das ITs 11/2016 (atualizada pela Portaria 067/2019), 20/2017, 21/2017, 14/2026, 32/2021 e 42/2024, além das tabelas de ocupações e exigências do Decreto Estadual 16.302/2015.
+
+**Documento de referência:** [C01-E04-PASSO-04-APLICABILIDADE-CBMBA.md](C01-E04-PASSO-04-APLICABILIDADE-CBMBA.md). Contém link direto para cada PDF oficial, número do item, aplicação, exceções, dependências de dados e consequência para o aplicativo.
+
+**Achado que altera o planejamento:** a divisão D-4 do decreto inclui laboratórios, mas a divisão E-1 abrange escolas; a **Tabela 6E, nota geral (c)** determina considerar a proteção dos laboratórios segundo os produtos utilizados. O sistema não possui contexto suficiente para declarar a ocupação ou a segurança do conjunto da edificação.
+
+**Achado de cautela:** o item 2.4 da IT 32/2021 se refere à **área de armazenagem de produtos perigosos** para condições específicas de aplicação **dessa IT**, não a um limite para todo laboratório nem a uma dispensa geral de prevenção de incêndio.
+
+**Caminho escolhido:** continuar com indicadores didáticos e alertas geométricos, sem implementar cálculo automático de lotação, larguras, dimensionamento de extintores, aprovação de sinalização ou classificação de carga de incêndio neste encontro.
+
+**Próximo passo:** consolidar o aceite interno do C01/E04 no PR #6 (rascunho), sem integrar ao `main` e sem marcar a inspeção presencial como concluída.

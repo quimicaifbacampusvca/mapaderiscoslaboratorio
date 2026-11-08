@@ -180,8 +180,8 @@ try{
     const prior=page.locator('#libraryList .library-item').filter({hasNotText:'Projeto ativo'}).first();
     assert.ok(await prior.isVisible());
     await prior.getByRole('button',{name:'Revisões'}).click();
-    assert.ok(await prior.locator('.library-revisions').isVisible());
-    assert.ok(await prior.locator('.library-revisions button').count()>=1);
+    await prior.locator('.library-revisions').waitFor({state:'visible',timeout:15000});
+    await prior.locator('.library-revisions button').first().waitFor({state:'visible',timeout:15000});
     await prior.getByRole('button',{name:'Renomear'}).click();
     await prior.locator('.library-rename-form input').fill('Mapa H03 de referência');
     await prior.getByRole('button',{name:'Salvar nome'}).click();

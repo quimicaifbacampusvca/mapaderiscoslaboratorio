@@ -61,3 +61,24 @@ html[data-mrl-cvd="acromatopsia"] .mrl-cvd-overlay {backdrop-filter:grayscale(1)
 html[data-mrl-theme="light"] .settings-panel .mrl-font-step output {color:var(--mrl-ui-ink)!important;}
 .settings-panel:is(dialog) {left:auto!important;right:max(12px,env(safe-area-inset-right))!important;top:max(56px,env(safe-area-inset-top))!important;}
 @media(max-width:540px){.settings-panel:is(dialog){left:12px!important;right:12px!important;top:auto!important;bottom:12px!important;}}
+
+/* C01/E03 — corrigir diálogo nativo em telas estreitas com fonte a 200%.
+ * Com left e right simultâneos, o posicionamento automático de <dialog>
+ * pode deslocar o painel após rolagem interna para controles inferiores.
+ * Fixar a origem na viewport evita que títulos e ações saiam pela lateral.
+ */
+@media (max-width: 540px) {
+  .settings-panel:is(dialog)[open] {
+    position: fixed !important;
+    inset: max(12px, env(safe-area-inset-top)) auto auto max(12px, env(safe-area-inset-left)) !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    min-width: 0 !important;
+    max-height: calc(100dvh - 24px) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    transform: none !important;
+  }
+}

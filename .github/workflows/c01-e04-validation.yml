@@ -26,8 +26,17 @@ jobs:
       - name: Regressões C01 E03 e C01 E04
         run: |
           set -euo pipefail
-          node tests/c01-e03-inventario-restricoes.mjs
-          node tests/c01-e04-normative-contract.mjs
+          for file in \
+            tests/core-smoke.mjs \
+            tests/frontend-integrity-smoke.mjs \
+            tests/no-login-smoke.mjs \
+            tests/ui-bindings-smoke.mjs \
+            tests/uiux-*.mjs \
+            tests/c01-e03-inventario-restricoes.mjs \
+            tests/c01-e04-normative-contract.mjs; do
+            echo "Executando $file"
+            node "$file"
+          done
 
   interface-navegadores:
     runs-on: ubuntu-latest
@@ -59,5 +68,6 @@ jobs:
         run: |
           node tests/c01-e03-browser-smoke.mjs "${{ matrix.browser }}"
           node tests/c01-e03-a11y-browser.mjs "${{ matrix.browser }}"
+          node tests/c01-e03-h01-h10-browser.mjs "${{ matrix.browser }}"
         env:
           MRL_TEST_URL: http://127.0.0.1:8765/

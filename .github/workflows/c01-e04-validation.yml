@@ -69,5 +69,9 @@ jobs:
           node tests/c01-e03-browser-smoke.mjs "${{ matrix.browser }}"
           node tests/c01-e03-a11y-browser.mjs "${{ matrix.browser }}"
           node tests/c01-e03-h01-h10-browser.mjs "${{ matrix.browser }}"
+          node tests/c01-e03-responsive-matrix.mjs "${{ matrix.browser }}"
+          if [ -f tests/c01-e03-canvas-resize-browser.mjs ]; then
+            node tests/c01-e03-canvas-resize-browser.mjs "${{ matrix.browser }}"
+          fi
         env:
           MRL_TEST_URL: http://127.0.0.1:8765/

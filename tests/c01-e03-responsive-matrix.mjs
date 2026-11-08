@@ -102,6 +102,18 @@ async function one(width,height){
         await closeRight(page);
         await openA11y(page);
         await setExtreme(page);
+        if(width<=390) {
+          const debug=await page.evaluate(()=>{
+            const panel=document.getElementById('settingsPanel'),summary=document.getElementById('mrlA11ySummary');
+            const p=panel.getBoundingClientRect(),s=summary.getBoundingClientRect(),style=getComputedStyle(panel);
+            return {panel:{x:p.x,y:p.y,width:p.width,height:p.height,top:p.top,right:p.right},summary:{x:s.x,y:s.y,width:s.width},
+              style:{position:style.position,left:style.left,right:style.right,top:style.top,bottom:style.bottom,
+                transform:style.transform,margin:style.margin,translate:style.translate,width:style.width},
+              window:{innerWidth,innerHeight,scrollX,scrollY,visualX:visualViewport?.offsetLeft,
+                docScrollX:document.documentElement.scrollLeft,bodyScrollX:document.body.scrollLeft}};
+          });
+          console.log('DIAG '+browserName+' '+label+' '+JSON.stringify(debug));
+        }
         await geometry(page,'#mrlA11ySummary');
         await page.locator('#mrlA11yReset').scrollIntoViewIfNeeded();
         // Esse botão deve ser alcançável pelo conteúdo rolável do diálogo.

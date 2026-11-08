@@ -112,3 +112,25 @@ html[data-mrl-theme="light"] .settings-panel .mrl-font-step output {color:var(--
     max-width: 100%;
   }
 }
+
+/* C01/E03 — a trilha "auto" do grid respeita a largura mínima do texto
+ * ampliado (ex.: "Restaurar padrões de acessibilidade") e pode crescer
+ * além da viewport. minmax(0,1fr) obriga quebra dentro do painel.
+ */
+.settings-panel .mrl-a11y-body {
+  display: grid;
+  grid-template-columns: minmax(0,1fr);
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.settings-panel .mrl-a11y-body > * {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.settings-panel :is(.mrl-a11y-reset,#mrlEnableVlibras) {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}

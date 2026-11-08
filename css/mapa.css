@@ -574,6 +574,7 @@ input[type="number"]:focus, input[type="text"]:focus {
 #canvas {
   width: 100%;
   height: 100%;
+  touch-action: none; /* Permite arrastar alças por toque sem o navegador sequestrar o gesto. */
   display: block;
 }
 

@@ -74,3 +74,21 @@ Ainda deverão ser verificados:
 - Correspondência entre ordem na árvore de camadas e ordem visual do Canvas; reordenação deliberada permanece fora do escopo deste PR.
 
 **Critério de encaminhamento:** o PR #3 permanece em rascunho e o \`main\` deve permanecer inalterado até a revisão das evidências visuais, homologação manual pertinente e aprovação expressa da integração.
+
+## Continuação — 8 de novembro de 2026: cenário H08 automatizado
+
+Após a retomada do desenvolvimento, foi adicionada a suíte `tests/c01-e03-a11y-browser.mjs` e integrada ao workflow `.github/workflows/c01-e03-browser.yml`.
+
+**Execução de referência:** [GitHub Actions #42445785268](https://github.com/quimicaifbacampusvca/mapaderiscoslaboratorio/actions/runs/42445785268), commit `dd882f500a39a7ad715d9e89a6d1c3ba21a90a23`, conclusão **success**.
+
+| Navegador | 390 × 844 | 1440 × 900 |
+|---|---|---|
+| Chromium | H08 automatizado aprovado | H08 automatizado aprovado |
+| Firefox | H08 automatizado aprovado | H08 automatizado aprovado |
+| WebKit | H08 automatizado aprovado | H08 automatizado aprovado |
+
+A suíte verifica operações reais na interface: modo claro/escuro, alto contraste, leitura simples, espaçamento, movimento reduzido, filtro de visão de cores, mudança de fonte entre 100%, 200% e 150%, persistência após reload, Escape e restituição do foco. Compara o estado de dados do editor antes e depois dos ajustes e rejeita rolagem horizontal global acima da tolerância estabelecida. Capturas são publicadas nos artefatos do Actions.
+
+**Ressalva:** esta é a **cobertura automatizada parcial do H08**, não uma aprovação integral do H08 em todas as combinações da matriz. Permanecem pendentes a conferência perceptiva, tecnologias assistivas, dispositivos físicos, outros tamanhos de viewport, análise de contraste pixel a pixel e as combinações completas de H01–H10. O teste não pode atestar certificação WCAG ou segurança normativa.
+
+O PR #3 continua em rascunho; sem integração ao `main`.

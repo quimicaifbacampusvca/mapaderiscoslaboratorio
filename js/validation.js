@@ -34,7 +34,7 @@ function validateObject(o, objects, room) {
       const zoneArea = isOtherZone ? other.w * other.h : (isZone ? o.w * o.h : 0);
       const ratio = zoneArea > 0 ? intersection / zoneArea : 0;
       if (ratio > 0.4) {
-        problems.push(`Sobreposição significativa com área de circulação (${Math.round(ratio * 100)}%).`);
+        problems.push(`Alerta didático: sobreposição com circulação (${Math.round(ratio * 100)}% da zona; gatilho de 40%, sem tolerância normativa universal).`);
       }
     }
 

@@ -26,15 +26,17 @@ const TYPES = {
 
 const RISK_TYPES = ["chemical","biological","physical","fire","electrical","ergonomic","radiation","slip"];
 const RISK_COLORS = {chemical:"#c8a16d",biological:"#8fb09a",physical:"#a9a0bf",fire:"#c8836f",electrical:"#d2b36e",ergonomic:"#9da8b5",radiation:"#b79cbd",slip:"#93aebc"};
+// Texto de orientação, exibido somente como placeholder; nunca é salvo como seleção de EPI.
+// A NR-6 requer avaliação da atividade e dos riscos antes da escolha do equipamento.
 const DEFAULT_EPI_BY_RISK = {
-  chemical: "Luvas nitrílicas, óculos de proteção e jaleco",
-  biological: "Luvas descartáveis, máscara e óculos de proteção",
-  physical: "Óculos de proteção e proteção adequada ao agente físico",
-  fire: "Óculos de proteção, luvas resistentes ao calor e jaleco",
-  electrical: "Luvas isolantes, calçado de segurança e proteção facial",
-  ergonomic: "Ajuste ergonômico do posto e mobiliário adequado",
-  radiation: "Dosímetro e proteção individual adequada ao tipo de radiação",
-  slip: "Calçado de segurança antiderrapante"
+  chemical: "Identifique substância, atividade e EPI avaliado (consulte a FDS)",
+  biological: "Identifique agente, atividade e EPI avaliado",
+  physical: "Identifique agente físico, exposição e EPI avaliado",
+  fire: "Registre EPI definido após análise do cenário de incêndio",
+  electrical: "Registre EPI definido para a tarefa e o risco elétrico",
+  ergonomic: "Registre avaliação ergonômica e medidas preventivas",
+  radiation: "Registre proteção definida por avaliação radiológica",
+  slip: "Registre medidas de prevenção e EPI avaliado"
 };
 const EQUIPMENT_TYPES = ["shower", "eyewash", "extinguisher"];
 const SOLID_BLOCKERS = ["bench", "benchL", "sink", "hood", "cabinet", "shelf", "equipment", "shower", "eyewash", "extinguisher"];

@@ -1,0 +1,65 @@
+name: C01 E03 - homologacao em navegadores
+
+on:
+  push:
+    branches:
+      - 'fix/c01-e03-*'
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  navegadores-reais:
+    name: E2E - ${{ matrix.browser }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar Playwright fixado
+        run: npm install --no-save --no-package-lock playwright@1.65.0
+      - name: Preparar navegador e dependências Linux
+        run: npx playwright install --with-deps "${{ matrix.browser }}"
+      - name: Servir o aplicativo localmente
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/mrl-server.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:8765/ > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/mrl-server.log
+          exit 1
+      - name: Homologar edição, camadas, responsividade, persistência e PWA
+        run: node tests/c01-e03-browser-smoke.mjs "${{ matrix.browser }}"
+        env:
+          MRL_TEST_URL: http://127.0.0.1:8765/
+      - name: Homologar acessibilidade H08 — fonte, temas, foco e persistência
+        run: node tests/c01-e03-a11y-browser.mjs "${{ matrix.browser }}"
+        env:
+          MRL_TEST_URL: http://127.0.0.1:8765/
+      - name: Homologar H01-H07 e H09-H10 — fluxos com dados descartáveis
+        run: node tests/c01-e03-h01-h10-browser.mjs "${{ matrix.browser }}"
+        env:
+          MRL_TEST_URL: http://127.0.0.1:8765/
+      - name: Matriz responsiva de acessibilidade — 5 viewports e 2 perfis
+        run: node tests/c01-e03-responsive-matrix.mjs "${{ matrix.browser }}"
+        env:
+          MRL_TEST_URL: http://127.0.0.1:8765/
+      - name: Guardar evidências visuais e capturas de falhas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: navegador-${{ matrix.browser }}-evidencias
+          path: qa/browser-artifacts/
+          if-no-files-found: warn
+          retention-days: 14

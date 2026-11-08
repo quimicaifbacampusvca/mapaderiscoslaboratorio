@@ -447,6 +447,7 @@ function groupObjects() {
     showToast("Selecione pelo menos 2 objetos para agrupar", "info");
     return;
   }
+  if (state.selectedObjects.some(o => o.locked)) return showToast("Desbloqueie os elementos antes de agrupá-los", "info");
   pushHistory();
   const groupId = crypto.randomUUID();
   state.selectedObjects.forEach(obj => {
@@ -462,6 +463,9 @@ function groupObjects() {
 function ungroupObjects() {
   if (!canEdit()) return showToast("Ação disponível apenas para o professor", "info");
   if (!state.selectedObjects.length) return;
+  const lockedGroups = new Set(state.objects.filter(o=>o.locked && o.groupId).map(o=>o.groupId));
+  if (state.selectedObjects.some(o=>o.locked || (o.groupId && lockedGroups.has(o.groupId))))
+    return showToast("Desbloqueie os elementos do grupo antes de desagrupar", "info");
   pushHistory();
   const groupIdsToRemove = new Set(
     state.selectedObjects.map(o => o.groupId).filter(Boolean)
@@ -1705,7 +1709,7 @@ function updateStepper() {
     hint.textContent = !hasStructural ? "Comece definindo o ambiente e adicionando estrutura."
       : !hasRisk ? "Adicione pelo menos um risco ao mapa."
       : !allChecksOk ? "Revise os critérios de conformidade para concluir."
-      : "Mapa revisado: todos os 10 critérios estão conformes.";
+      : "Mapa preenchido: 10 verificações didáticas registradas (não é laudo técnico).";
   }
 }
 
@@ -1770,6 +1774,8 @@ function updateUI() {
     const epiInput = $("epi");
     const isRisk = RISK_TYPES.includes(o.type);
     buildDoorConnectionField(o);
+    const doorConnection = $("doorConnection");
+    if (doorConnection) doorConnection.disabled = o.locked;
     if (epiField && epiInput) {
       epiField.classList.toggle("hidden", !isRisk);
       epiInput.value = isRisk ? (o.epi || "") : "";
@@ -2062,7 +2068,8 @@ function updateRiskSummary() {
   if (!riskListContainer) return;
   riskListContainer.innerHTML = "";
 
-  const activeObjects = state.objects.filter(o => !o.hidden);
+  // Inventário físico: esconder no Canvas não remove os riscos do resumo.
+  const activeObjects = state.objects;
   const counts = {};
   RISK_TYPES.forEach(type => counts[type] = 0);
 
@@ -2089,7 +2096,7 @@ function updateRiskSummary() {
   });
 
   if (!hasRisks) {
-    riskListContainer.innerHTML = `<div style="font-size: 10px; color: var(--muted); text-align: center; padding: 4px 0;">Nenhum risco visível.</div>`;
+    riskListContainer.innerHTML = `<div style="font-size: 10px; color: var(--muted); text-align: center; padding: 4px 0;">Nenhum risco cadastrado.</div>`;
   }
 }
 
@@ -2101,21 +2108,22 @@ function calculateCompliance(area){
   const prev=state.areaAtiva;
   state.areaAtiva=area.id;
   try{
-    const activeObjects=area.objetos.filter(o=>!o.hidden);
+    // Critérios didáticos consideram inventário físico, independentemente do filtro visual.
+    const activeObjects=area.objetos;
     const hasDim=area.dimensoes.w>=3&&area.dimensoes.h>=3;
     const doorsAndExits=activeObjects.filter(o=>EXITS.includes(o.type));
     let isExitValid=doorsAndExits.length>0;
-    for(const e of doorsAndExits){if(!isObjectValid(e,activeObjects)){isExitValid=false;break;}}
+    for(const e of doorsAndExits){if(!isObjectValid(e,activeObjects).valid){isExitValid=false;break;}}
     const checks={
       "check-dim":hasDim,
       "check-exit":isExitValid,
       "check-safety":activeObjects.some(o=>o.type==="shower"||o.type==="eyewash"),
-      "check-fire":activeObjects.some(o=>o.type==="extinguisher"||o.type==="fire"),
-      "check-electrical":activeObjects.some(o=>o.type==="electrical"||o.type==="equipment"),
+      "check-fire":activeObjects.some(o=>o.type==="extinguisher"),
+      "check-electrical":activeObjects.some(o=>o.type==="electrical"),
       "check-chemical-bio":activeObjects.some(o=>o.type==="chemical"||o.type==="biological"),
       "check-ventilation":activeObjects.some(o=>o.type==="hood"||o.type==="window"),
       "check-ergonomic":activeObjects.some(o=>["bench","benchL","sink"].includes(o.type)),
-      "check-signaling":activeObjects.some(o=>["cabinet","shelf","zone"].includes(o.type))&&activeObjects.some(o=>RISK_TYPES.includes(o.type)),
+      "check-signaling":activeObjects.some(o=>o.type==="zone")&&activeObjects.some(o=>RISK_TYPES.includes(o.type)),
       "check-epi":activeObjects.some(o=>RISK_TYPES.includes(o.type)&&typeof o.epi==="string"&&o.epi.trim().length>0)
     };
     return {okCount:Object.values(checks).filter(Boolean).length,total:10,checks};
@@ -2139,7 +2147,7 @@ function openComplianceReport(){
   const rows=state.areas.map(area=>({area,score:calculateCompliance(area)}));
   const compliant=rows.filter(r=>r.score.okCount===10).length;
   const pending=rows.length-compliant;
-  $("reportSummary").innerHTML=`<div class="report-stat"><b>${rows.length}</b><span>Áreas</span></div><div class="report-stat"><b>${compliant}</b><span>Conformes (10/10)</span></div><div class="report-stat"><b>${pending}</b><span>Com pendências</span></div>`;
+  $("reportSummary").innerHTML=`<div class="report-stat"><b>${rows.length}</b><span>Áreas</span></div><div class="report-stat"><b>${compliant}</b><span>Itens completos (10/10)</span></div><div class="report-stat"><b>${pending}</b><span>Em preenchimento</span></div>`;
   $("reportList").innerHTML=rows.map(({area,score})=>`<div class="report-row"><div><strong>${escapeHtml(area.nome)}</strong><small>${escapeHtml(area.tipo||"apoio")} · ${area.conexoes.length} conexão(ões)</small></div><span class="report-score ${score.okCount===10?"ok":"pending"}">${score.okCount}/10</span></div>`).join("");
   showAppModal(modal, $("btnCloseComplianceReport"));
 }
@@ -2278,6 +2286,7 @@ ctxHideBtn?.addEventListener("click", () => {
 on("ctxDuplicate", "click", () => {
   if (!canEdit()) return showToast("Ação disponível apenas para o professor", "info");
   if (!state.selectedObjects.length) return;
+  if (state.selectedObjects.some(o=>o.locked)) return showToast("Desbloqueie os elementos antes de duplicar", "info");
   pushHistory();
   const clones = state.selectedObjects.map(o => {
     const clone = { ...o, id: crypto.randomUUID(), x: o.x + 0.2, y: o.y + 0.2 };
@@ -2304,6 +2313,7 @@ on("ctxRotate", "click", () => {
 on("ctxDelete", "click", () => {
   if (!canEdit()) return showToast("Ação disponível apenas para o professor", "info");
   if (!state.selectedObjects.length) return;
+  if (state.selectedObjects.some(o=>o.locked)) return showToast("Desbloqueie os elementos antes de excluir", "info");
   pushHistory();
   state.objects = state.objects.filter(o => !state.selectedObjects.includes(o));
   state.selectedObjects = [];
@@ -2333,7 +2343,7 @@ on("applyProps", "click", () => {
     }
   });
 
-  if (state.selectedObjects.length === 1 && state.selectedObjects[0].type === "door") {
+  if (state.selectedObjects.length === 1 && state.selectedObjects[0].type === "door" && !state.selectedObjects[0].locked) {
     state.selectedObjects[0].connectionAreaId = $("doorConnection")?.value || null;
     syncAreaConnections();
   }
@@ -2361,15 +2371,26 @@ on("applyRoom", "click", () => {
   }
 });
 
+// Uma interação no slider é uma única edição reversível, com autosave independente.
+let rotationEditActive = false;
 on("rot", "input", e => {
+  if (!state.selectedObjects.length || state.selectedObjects.some(o=>o.locked)) return;
   const val = e.target.value;
+  if (!rotationEditActive) { pushHistory(); rotationEditActive = true; }
   const rotVal = $("rotVal");
   if (rotVal) rotVal.textContent = val + "°";
-  if (state.selectedObjects.length) {
-    state.selectedObjects.forEach(o => { if (!o.locked) o.rot = num(val); });
-    requestDraw();
-  }
+  state.selectedObjects.forEach(o => { o.rot = num(val); });
+  scheduleAutoSave();
+  requestDraw();
 });
+on("rot", "change", () => {
+  if (!rotationEditActive) return;
+  rotationEditActive = false;
+  scheduleAutoSave();
+  updateUI();
+  requestDraw();
+});
+on("rot", "blur", () => { rotationEditActive = false; });
 
 // TELA INICIAL (HUB)
 let homeLastFocus = null;

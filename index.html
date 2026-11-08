@@ -408,21 +408,22 @@
 
         </div><div class="panel-tab-content" id="panelContent-report" data-panel-content="report" role="tabpanel" aria-labelledby="panelTab-report" tabindex="0" hidden="hidden"><section class="map-check" id="complianceSection">
           <div class="tree-header">
-            <div class="section-title" style="margin:0;">Conformidade Técnica</div>
+            <div class="section-title" style="margin:0;">Revisão didática do mapa</div>
             <span class="badge" id="compliance-badge" aria-live="polite">0/10</span>
           </div>
           <button id="openComplianceReport" class="full" type="button" style="margin-top:8px;">Relatório do Projeto</button>
+          <p class="help-text">Indicadores de preenchimento, não uma certificação normativa ou laudo de segurança. A inspeção física e as regras aplicáveis exigem avaliação específica.</p>
           <div style="margin-top: 8px;">
-            <div class="check" id="check-dim"><span></span> Dimensões mínimas da sala (3x3m)</div>
-            <div class="check" id="check-exit"><span></span> Saídas e portas desobstruídas (NR-23)</div>
-            <div class="check" id="check-safety"><span></span> Equipamentos de emergência instalados</div>
-            <div class="check" id="check-fire"><span></span> Proteção contra incêndio presente</div>
-            <div class="check" id="check-electrical"><span></span> Área de risco elétrico / equipamentos</div>
-            <div class="check" id="check-chemical-bio"><span></span> Mapeamento de agente químico/biológico</div>
-            <div class="check" id="check-ventilation"><span></span> Sistemas de exaustão/ventilação</div>
-            <div class="check" id="check-ergonomic"><span></span> Mobiliário ergonômico (NR-17)</div>
-            <div class="check" id="check-signaling"><span></span> Sinalização e delimitação de áreas (NR-26)</div>
-            <div class="check" id="check-epi"><span></span> Recomendação de EPIs (NR-6)</div>
+            <div class="check" id="check-dim"><span></span> Dimensões de referência da área (3 × 3 m, critério didático)</div>
+            <div class="check" id="check-exit"><span></span> Saídas representadas sem obstruções geométricas detectadas</div>
+            <div class="check" id="check-safety"><span></span> Equipamentos de emergência representados</div>
+            <div class="check" id="check-fire"><span></span> Extintor representado no mapa</div>
+            <div class="check" id="check-electrical"><span></span> Risco elétrico identificado no mapa</div>
+            <div class="check" id="check-chemical-bio"><span></span> Riscos químicos ou biológicos registrados</div>
+            <div class="check" id="check-ventilation"><span></span> Capela ou janela representada</div>
+            <div class="check" id="check-ergonomic"><span></span> Bancadas ou pias representadas</div>
+            <div class="check" id="check-signaling"><span></span> Circulação e riscos identificados</div>
+            <div class="check" id="check-epi"><span></span> Sugestão de EPI registrada para um risco</div>
           </div>
         </section>
       </div></aside><div id="mobilePanelBackdrop" class="mobile-panel-backdrop" hidden></div></main>
@@ -434,7 +435,7 @@
     <div id="complianceReportModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="complianceReportTitle">
       <div class="modal-card report-modal-card">
         <div class="modal-header">
-          <h3 id="complianceReportTitle">Relatório de Conformidade do Projeto</h3>
+          <h3 id="complianceReportTitle">Relatório de Revisão Didática do Projeto</h3>
           <button id="btnCloseComplianceReport" class="btn-close" aria-label="Fechar relatório">×</button>
         </div>
         <div class="modal-body">

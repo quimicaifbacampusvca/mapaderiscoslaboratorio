@@ -42,6 +42,11 @@
     if (el('mrlFontPlus')) el('mrlFontPlus').disabled = state.font >= 200;
     const overlay = el('mrlCvdOverlay');
     if (overlay) overlay.hidden = state.cvd === 'none';
+    // Ao ampliar a fonte, o navegador pode rolar o <dialog> também no
+    // eixo horizontal para focalizar A+/A-. A rolagem útil é só vertical;
+    // devolver scrollLeft a zero mantém rótulos e controles alcançáveis.
+    const settings = el('settingsPanel');
+    if (settings?.open && settings.scrollLeft) settings.scrollLeft = 0;
   }
   function persist() {
     try { localStorage.setItem(KEY, JSON.stringify(state)); storageAvailable = true; }

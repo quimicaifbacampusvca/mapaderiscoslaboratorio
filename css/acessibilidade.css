@@ -82,3 +82,33 @@ html[data-mrl-theme="light"] .settings-panel .mrl-font-step output {color:var(--
     transform: none !important;
   }
 }
+
+/* C01/E03 — contenção intrínseca em acessibilidade ampliada.
+ * Campos e grupos podem se reorganizar em duas linhas, sem aumentar
+ * a largura rolável do <dialog> e sem reduzir o tamanho de fonte escolhido.
+ */
+@media (max-width: 540px) {
+  .settings-panel:is(dialog)[open] :is(.settings-panel-section,details,.mrl-a11y-body,.mrl-a11y-group) {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .settings-panel .mrl-a11y-row:not(.mrl-a11y-select-row) {
+    min-width: 0;
+    flex-wrap: wrap;
+    overflow-wrap: anywhere;
+  }
+  .settings-panel .mrl-a11y-row > span {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+  .settings-panel .mrl-font-step {
+    min-width: 0;
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+  .settings-panel :is(button,input,select,output) {
+    max-width: 100%;
+  }
+}

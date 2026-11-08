@@ -64,7 +64,16 @@ async function testViewport(width,height){
       o.rot=45;
       requestDraw();
     });
+    // Undo/redo limpa a seleção por design: selecionar de novo pelo próprio Canvas.
+    const center=await page.evaluate(()=>{
+      const o=window.MAPA_RUNTIME.state.objects[0];
+      const p=worldToScreen(o.x+o.w/2,o.y+o.h/2);
+      const r=document.getElementById('canvas').getBoundingClientRect();
+      return {x:r.left+p.x,y:r.top+p.y};
+    });
+    await page.mouse.click(center.x,center.y);
     const before=await snapshot(page,'e');
+    assert.equal(before.selected,1,'Clique no corpo deve selecionar objeto após redo');
     const rad=before.rot*Math.PI/180;
     const westBefore={x:before.x+before.w/2-Math.cos(rad)*before.w/2,
                       y:before.y+before.h/2-Math.sin(rad)*before.w/2};
